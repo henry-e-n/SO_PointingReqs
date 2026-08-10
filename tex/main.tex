@@ -1,0 +1,59 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, total={6.5in, 9in}]{geometry}
+
+\geometry{letterpaper}
+\geometry{portrait}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip} 
+\usepackage{times}
+\usepackage{wrapfig}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{physics}
+\usepackage{float}
+
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+% For Line spacing
+\usepackage{setspace}              % Load the setspace package
+\doublespacing                     % Make the entire document double-spaced
+
+
+% For including graphics
+\usepackage{graphicx} % allows figures to be added to the document
+
+% For referencing and bibliography
+\usepackage{hyperref} % add hyperlink and hypertext capabilities 
+\usepackage[]{natbib}
+\setcitestyle{authoryear, round}
+
+\bibliographystyle{abbrvnat}
+
+% For color text
+\usepackage{xcolor}
+\begin{document}
+%  NOW you can start changing stuff!
+
+\title{Title
+\thanks{
+Correspondence to:  henry.nachman@utexas.edu}
+}
+
+
+\author{H. Nachman\\
+{\it  University of Texas at Austin}\\
+{\it Austin, Texas}\\
+ }
+
+\maketitle
+
+\include{Chapters/Chapter1}
+
+\bibliography{bib}
+
+\end{document}

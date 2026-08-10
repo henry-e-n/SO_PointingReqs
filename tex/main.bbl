@@ -1,0 +1,37 @@
+\begin{thebibliography}{1}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Abazajian et~al.(2016)Abazajian, Adshead, Ahmed, Allen, Alonso,
+  Arnold, Baccigalupi, Bartlett, Battaglia, Benson, Bischoff, Borrill, Buza,
+  Calabrese, Caldwell, Carlstrom, Chang, Crawford, {Cyr-Racine}, Bernardis,
+  de~Haan, Alighieri, Dunkley, Dvorkin, Errard, Fabbian, Feeney, Ferraro,
+  Filippini, Flauger, Fuller, Gluscevic, Green, Grin, Grohs, Henning, Hill,
+  Hlozek, Holder, Holzapfel, Hu, Huffenberger, Keskitalo, Knox, Kosowsky,
+  Kovac, Kovetz, Kuo, Kusaka, Jeune, Lee, Lilley, Loverde, Madhavacheril,
+  Mantz, Marsh, McMahon, Meerburg, Meyers, Miller, Munoz, Nguyen, Niemack,
+  Peloso, Peloton, Pogosian, Pryke, Raveri, Reichardt, Rocha, Rotti, Schaan,
+  Schmittfull, Scott, Sehgal, Shandera, Sherwin, Smith, Sorbo, Starkman, Story,
+  van Engelen, Vieira, Watson, Whitehorn, and Wu]{abazajian_cmbs4_2016}
+K.~N. Abazajian, P.~Adshead, Z.~Ahmed, S.~W. Allen, D.~Alonso, K.~S. Arnold,
+  C.~Baccigalupi, J.~G. Bartlett, N.~Battaglia, B.~A. Benson, C.~A. Bischoff,
+  J.~Borrill, V.~Buza, E.~Calabrese, R.~Caldwell, J.~E. Carlstrom, C.~L. Chang,
+  T.~M. Crawford, F.-Y. {Cyr-Racine}, F.~D. Bernardis, T.~de~Haan, S.~d.~S.
+  Alighieri, J.~Dunkley, C.~Dvorkin, J.~Errard, G.~Fabbian, S.~Feeney,
+  S.~Ferraro, J.~P. Filippini, R.~Flauger, G.~M. Fuller, V.~Gluscevic,
+  D.~Green, D.~Grin, E.~Grohs, J.~W. Henning, J.~C. Hill, R.~Hlozek, G.~Holder,
+  W.~Holzapfel, W.~Hu, K.~M. Huffenberger, R.~Keskitalo, L.~Knox, A.~Kosowsky,
+  J.~Kovac, E.~D. Kovetz, C.-L. Kuo, A.~Kusaka, M.~L. Jeune, A.~T. Lee,
+  M.~Lilley, M.~Loverde, M.~S. Madhavacheril, A.~Mantz, D.~J.~E. Marsh,
+  J.~McMahon, P.~D. Meerburg, J.~Meyers, A.~D. Miller, J.~B. Munoz, H.~N.
+  Nguyen, M.~D. Niemack, M.~Peloso, J.~Peloton, L.~Pogosian, C.~Pryke,
+  M.~Raveri, C.~L. Reichardt, G.~Rocha, A.~Rotti, E.~Schaan, M.~M. Schmittfull,
+  D.~Scott, N.~Sehgal, S.~Shandera, B.~D. Sherwin, T.~L. Smith, L.~Sorbo, G.~D.
+  Starkman, K.~T. Story, A.~van Engelen, J.~D. Vieira, S.~Watson, N.~Whitehorn,
+  and W.~L.~K. Wu.
+\newblock {{CMB-S4 Science Book}}, {{First Edition}}, Oct. 2016.
+
+\end{thebibliography}
