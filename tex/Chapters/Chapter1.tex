@@ -1,1 +1,112 @@
-This is a template chapter file \citep{abazajian_cmbs4_2016}.
+\def\mnu{m_\nu}
+\def\neff{$N_{\rm eff.}$}
+\def\LCDM{$\Lambda$CDM}
+
+
+\section{Introduction}
+The basic goal of this project is to determine what the pointing requirements are for various SO LAT science goals, and evaluate whether these goals have been achieved (and ultimately, if not, explore what elements of pointing are limiting us). Some of the framework for how this project will proceed are based on Elisa Russier's talk at the F2F 2026. 
+
+The goal can be thought of in a sentence such as:
+\begin{quotation}
+    {\bf X} must be known to within {\bf a\%} to avoid biasing {\bf Y} by more than {\bf b\%}.
+\end{quotation}
+
+In the case of pointing, this might look like:
+\begin{quotation}
+    Pointing must be known to within 5 arcsec to avoid biasing {$\sigma_8$} by more than {2\%}.
+\end{quotation}
+
+Where do each of these components come from? 
+
+\subsection{Science Goals}
+
+The enhanced Large Aperture Telescope (LAT) has a number of science goals across cosmological, astrophysical, and particle physics fields, and stemming from a variety of different measurement/analysis channels. Understanding how pointing impacts the science results requires pairing each science goal with its respective analysis method. For example, \cite{abitbol_simons_2025} states the enhanced LAT will place a constraint on the number of relativistic species $\sigma(N_\text{eff}) = 0.045$. This constraint is largely set by imprints in the small-scale damping tail of the CMB temperature and polarization anisotropy power spectra. Thus, to determine how pointing impacts this constraint on $N_\text{eff}$, one would need to simulate how changes in pointing impact the power spectra (in this case we might predict that pointing errors that express themselves as smoothing of the beam would effective limit/increase uncertainty on the smallest scales of the power spectrum).
+
+
+
+\begin{table*}[h!]
+    \center
+\caption[Simons Observatory Surveys]{Summary of Enhanced Science Goals from SO LAT Survey\textsuperscript{a}}  \footnotesize
+\begin{tabular}{ l | c | c | c | l }
+\hline
+\hline
+
+ & Current\textsuperscript{b} & {\bf SO} & Using Rubin, & Reference \\
+ &                            & {\bf 2025--2034}             & DESI, or {\sl Euclid}    & \\
+\hline
+\hline
+{\bf Primordial perturbations}  &&&&\\
+\hline
+$n_s$ & 0.004 & 0.002 &  - & Shandera 2019\\%\citet{shandera/etal:2019} \\
+ $e^{-2\tau}\mathcal{P}(k=0.2\,\rm{Mpc^{-1}})$ & 3\% & 0.4\% &  - & Slosar 2019\\%\citet{slosar/etal:2019b}\\
+$f^{\rm local}_{\rm{NL}}$ &  5&  1 & \ding{51} & Meerburg 2019\\%\citet{meerburg/etal:2019}\\
+\hline
+{\bf Relativistic species} &&&&\\
+\hline
+$N_{\rm eff}$ &  0.2 & $0.045$  & - & Green 2019\\%\citet{green/etal:2019}\\
+\hline
+{\bf Neutrino mass\textsuperscript{c}} &&&&\\
+\hline
+$\sum \mnu$ (eV, $\sigma(\tau)=0.01$) & 0.1 &  0.03 & \ding{51}  & Dvorkin 2019\\%\citet{dvorkin/etal:2019} \\
+$\sum \mnu$ (eV, $\sigma(\tau)=0.002$) & &   0.015  & \ding{51} &\\
+\hline
+{\bf Accelerated expansion} &&&&\\
+\hline
+$\sigma_8(z=1-2)$& 7\%& 1\% & \ding{51} & Slosar 2019\\%\citet{slosar/etal:2019}\\
+\hline
+{\bf Galaxy evolution} &&&&\\
+\hline
+$\eta_{\rm feedback}$ & 50--100\% & 2\% & \ding{51} & Battaglia 2019\\%\citet{battaglia/etal:2019}\\
+$p_{\rm nt}$  & 50--100\% & 4\% & \ding{51} & Battaglia 2019\\%\citet{battaglia/etal:2019}\\
+\hline
+{\bf Reionization } &&&&\\
+\hline
+$\Delta z$ & 1.4 & 0.3 & - & Alvarez 2019\\%\citet{alvarez/etal:2019}\\
+$\tau$ & 0.007 & 0.0035 & - & Alvarez 2019\\%\citet{alvarez/etal:2019}\\
+\hline
+{\bf Cluster catalog} & 4000 & 33,000 & \ding{51} &\\
+{\bf AGN catalog} & 2000 & 96,000 & - &\\
+\hline
+{\bf Galactic science} &&&&\\
+\hline
+{Molecular cloud B-fields} & 10s & $>860$ & - & SO 2022 GS\\%\citet{SO_2022_Galactic_Science}\\
+{$\sigma (\beta_\mathrm{dust})$} & 0.02  & $0.005$ & - & SO 2022 GS\\%\citet{SO_2022_Galactic_Science} \\
+\hline
+{\bf Solar System Science } &&&&\\
+\hline
+{Distance limit for 5 $M_\oplus$ Planet 9} & 500 AU &  900 AU  & \ding{51} & Fienga 2020\\%\citet{Fienga2020} \\
+{Asteroid detections} &  &  $\sim10,000$  &  &\\
+\hline
+{\bf Transient detection } &&&&\\
+{\bf \,\,\, distance} &&&&\\
+\hline
+{Long GRBs, on-axis} &  &  
+1300 Mpc  & - &\\
+{Low-luminosity GRBs} &  & 
+70--210 Mpc  & - &\\
+{TDEs, on-axis} &  & 670 Mpc  & - &\\
+\hline
+\end{tabular}
+% \begin{tablenotes}
+% \item \textsuperscript{a}  Projected 1$\sigma$ errors computed with standard methodology as in \\%\citet{so_forecast:2019}, scaled to account for the improved noise from the enhanced infrastructure described in Sec.~\ref{sec:infrastructure} (see Appendix~\ref{app:sensitivities}).  Galactic science forecasts are computed as in \\%\citet{SO_2022_Galactic_Science}. \\%\citet{so_forecast:2019} describes our methods to account for noise properties and foreground uncertainties. We adopt ``goal'' noise levels for the SO LAT in these forecasts.  A 20\% end-to-end observation efficiency is used, matching that typically achieved in Chile \citep[as also assumed in][]{so_forecast:2019}. We assume the {\it Planck} data are included throughout. External data listed in the fourth column are those necessary to achieve the forecasted precision on each individual science target; for the cluster catalog the external data are needed only for obtaining redshifts.  Note that the time-domain science forecasts are new to this work, as this topic was not considered in the nominal SO science goals forecasting~\citep{so_forecast:2019}. 
+% \item \textsuperscript{b} Primarily from \PLANCK\ \citep{planck_cosmo:2018}. We anticipate constraints from existing ground-based data to improve on the ``current'' limits in the near future.  These constraints are expected to lie between the ``current'' and SO levels.
+% \item \textsuperscript{c} The forecast precision on $\sum m_\nu$ is highly sensitive to the projected error bar on $\tau$, and thus we provide two forecasts here (see Sec.~\ref{subsec:LSSmapping}).
+% \end{tablenotes}
+\label{tab:goals}
+\end{table*}
+
+
+
+\subsection{Sources of (LAT) Pointing Error}
+
+\begin{itemize}
+    \item Azimuth, Elevation, Corotator encoder offsets
+    \item Axis misalignment between corotator, mirrors, elevation space and the LATR
+    \item Physical elevation sag of mirrors with gravity
+    \item Tilts of the entire platform
+    \item Thermal fluctuations
+    \item Distortions in focal plane from off-axis mirror design
+\end{itemize}
+
+
+\citep{abitbol_simons_2025}.
