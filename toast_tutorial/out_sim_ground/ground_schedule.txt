@@ -1,0 +1,7 @@
+#Site           Telescope        Latitude [deg] Longitude [deg]   Elevation [m]
+atacama         telescope               -22.958         -67.786          5200.0
+#     Start time UTC        Stop time UTC Rotation Patch name                            Az min   Az max       El  Pass Sub
+ 2025-02-21 03:28:00  2025-02-21 06:53:00   180.00 bossn                                  43.98    66.34    40.00     0   0
+ 2025-02-21 07:19:40  2025-02-21 11:15:40   180.00 bossn                                 304.02   339.85    50.00     1   0
+ 2025-02-22 03:24:00  2025-02-22 06:49:00     0.00 bossn                                  43.98    66.34    40.00     2   0
+ 2025-02-22 07:15:40  2025-02-22 11:11:40     0.00 bossn                                 304.02   339.85    50.00     3   0
