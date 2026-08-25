@@ -3,7 +3,7 @@
 \def\LCDM{$\Lambda$CDM}
 
 
-\section{Introduction}
+\section{Overview}
 The basic goal of this project is to determine what the pointing requirements are for various SO LAT science goals, and evaluate whether these goals have been achieved (and ultimately, if not, explore what elements of pointing are limiting us). Some of the framework for how this project will proceed are based on Elisa Russier's talk at the F2F 2026. 
 
 The goal can be thought of in a sentence such as:
@@ -13,10 +13,53 @@ The goal can be thought of in a sentence such as:
 
 In the case of pointing, this might look like:
 \begin{quotation}
-    Pointing must be known to within 5 arcsec to avoid biasing {$\sigma_8$} by more than {2\%}.
+    Pointing must be known to within 5 arcsec to avoid biasing {$\sigma_8$} by more than {2\%}. (these are random numbers just for example)
 \end{quotation}
 
 Where do each of these components come from? 
+
+\subsection{Expected (simplified) Pipeline:}
+\begin{enumerate}
+    \item Simulate pointing errors in maps: \begin{itemize}
+        \item TOAST - TOD based simulation framework. Would allow me to consider pointing errors in maps, but might be more complex than needed.
+        \item SMARTIES - Map-space simulation, should allow me to consider pointing errors in maps - less documentation.
+    \end{itemize}
+    \item Maps to data product, primarily power spectra:\begin{itemize}
+        \item Pass simulated maps through realistic pipelines to achieve realistic power spectra.
+        \item What different `data products' (eg. types of power spectra) are needed to perform step 3.
+    \end{itemize}
+    \item Analyze data product to put constraints on parameters:\begin{itemize}
+        \item Which means I need to understand how to go from 'data product' (power spectra, etc.) to parameter constraints - potentially different for each parameter.
+        \item Is this via MCMC parameter estimation techniques like CosmoMC/CAMB/CLASS that will give me confidence intervals for parameters given a single pointing realization?
+        \item Or more simply, once I have the parameter constraints -- one with no pointing errors and one with pointing errors -- I can compare the two to see how the addition of pointing errors impacts the product. 
+		% \item Eg. How does the matter power spectrum change with pointing errors, and how does this change on the matter power spectrum impact our ability to measure Neff
+    \end{itemize}
+\end{enumerate}
+
+
+\subsection{How to start / guidance I need:}
+\begin{enumerate}
+    \item Figure out how to simulate maps + include pointing errors (jitter beams) into maps: \begin{itemize}
+        \item If the path is TOAST - then I think I have what I need to at least get started with sims but it might take a bit of figuring out before I have maps that I can use.  
+        \item If the path is SMARTIES - Who can I talk to about SMARTIES because I have not yet found much documentation. Using SMARTIES will require I have a better understanding of how exactly different sources of pointing errors impact maps - simple `beam smoothing', or more complex situations.
+        \item {\bf What sort of mapmaking simulation framework should I be using/starting on? And what resources are there (people/documentation/examples) to help facilitate me learning this framework?}
+    \end{itemize}
+    \item How do I determine the uncertainty in a parameter - this is very new to me? \begin{itemize}
+        \item {\bf What does the parameter estimation (and uncertainty estimation) pipeline look like? How should I behind to approach this?}
+        \item {\bf Which cosmological parameter should I focus on? Map science vs transient science?}
+        % \item Do I for now, pick 1 cosmological parameter?
+        \item Do we know which case(s) have the strictest pointing needs? 
+        \item Map science vs transient science? Does transient science analysis rely solely on the static pointing model or can it use point-source corrections? 
+        \item How does one go from a map to a parameter constraint? CosmoMC/CLASS/CAMB with MCMC parameter estimation methods (as in ACT)?
+
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Other questions I have}
+\begin{itemize}
+    \item 
+\end{itemize}
+\pagebreak
 
 \subsection{Science Goals}
 
@@ -109,4 +152,6 @@ $\tau$ & 0.007 & 0.0035 & - & Alvarez 2019\\%\citet{alvarez/etal:2019}\\
 \end{itemize}
 
 
-\citep{abitbol_simons_2025}.
+
+
+\citep{abitbol_simons_2025} \citep{aiola_atacama_2025}
