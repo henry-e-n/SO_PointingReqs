@@ -22,9 +22,9 @@ Where do each of these components come from?
 \begin{enumerate}
     \item Simulate pointing errors in maps: \begin{itemize}
         \item TOAST - TOD based simulation framework. Would allow me to consider pointing errors in maps, but might be more complex than needed.
-        \item SMARTIES - Map-space simulation, should allow me to consider pointing errors in maps - less documentation.
+        \item SMARTIES - Map-space simulation, should allow me to consider pointing errors in maps - less documentation. Might also be limited to static pointing offsets which could be accounted for in pointing models.
     \end{itemize}
-    \item Maps to data product, primarily power spectra:\begin{itemize}
+    \item Maps to power spectra:\begin{itemize}
         \item Pass simulated maps through realistic pipelines to achieve realistic power spectra.
         \item What different `data products' (eg. types of power spectra) are needed to perform step 3.
     \end{itemize}
@@ -41,8 +41,10 @@ Where do each of these components come from?
 \begin{enumerate}
     \item Figure out how to simulate maps + include pointing errors (jitter beams) into maps: \begin{itemize}
         \item If the path is TOAST - then I think I have what I need to at least get started with sims but it might take a bit of figuring out before I have maps that I can use.  
-        \item If the path is SMARTIES - Who can I talk to about SMARTIES because I have not yet found much documentation. Using SMARTIES will require I have a better understanding of how exactly different sources of pointing errors impact maps - simple `beam smoothing', or more complex situations.
+        \item If the path is SMARTIES - Who can I talk to about SMARTIES because I have not yet found much documentation. Using SMARTIES will require I have a better understanding of how exactly different sources of pointing errors impact maps
+        \item {\bf What pointing errors am I concerned with? Beam pointing offsets $\rightarrow$ simple `beam smoothing'. Jitter beams and more complex situations?}
         \item {\bf What sort of mapmaking simulation framework should I be using/starting on? And what resources are there (people/documentation/examples) to help facilitate me learning this framework?}
+        \item {\bf How realistic should my maps be? Do I start simple and ignore things like point sources, atmosphere models, noise? Presumably different science cases rely on different things, so different maps needed, point-sourced filtered, delensed?}
     \end{itemize}
     \item How do I determine the uncertainty in a parameter - this is very new to me? \begin{itemize}
         \item {\bf What does the parameter estimation (and uncertainty estimation) pipeline look like? How should I behind to approach this?}
@@ -55,9 +57,13 @@ Where do each of these components come from?
     \end{itemize}
 \end{enumerate}
 
-\subsection{Other questions I have}
+\subsection{Useful resources}
 \begin{itemize}
-    \item 
+    \item Elle Shaw F2F 2026 - T1a: LAT Calibration - Pointing Summary 
+    \item Zach Atkins + F2F 2026 - W1a: LAT Science Readiness - Power-spectrum pipelines
+    \item Cristian Vargas F2F 2026 - W1a: LAT Science Readiness - Beam Jitter
+    \item Magdy Morshed F2F 2026 - W2b: Simulations - SMARTIES
+    \item Elisa Russier F2F 2026 - W2b: Simulations - Beam Systematics Requirements
 \end{itemize}
 \pagebreak
 
