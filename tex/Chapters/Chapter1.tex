@@ -18,6 +18,8 @@ In the case of pointing, this might look like:
 
 Where do each of these components come from? 
 
+\pagebreak
+
 \subsection{Expected (simplified) Pipeline:}
 \begin{enumerate}
     \item Simulate pointing errors in maps: \begin{itemize}
@@ -28,8 +30,8 @@ Where do each of these components come from?
         \item Pass simulated maps through realistic pipelines to achieve realistic power spectra.
         \item What different `data products' (eg. types of power spectra) are needed to perform step 3.
     \end{itemize}
-    \item Analyze data product to put constraints on parameters:\begin{itemize}
-        \item Which means I need to understand how to go from 'data product' (power spectra, etc.) to parameter constraints - potentially different for each parameter.
+    \item Analyze power spectra to put constraints on parameters:\begin{itemize}
+        \item Different parameters might have different estimation pipelines.
         \item Is this via MCMC parameter estimation techniques like CosmoMC/Cobaya + CAMB/CLASS that will give me confidence intervals for parameters given a single pointing realization?
         \item Or more simply, once I have the parameter constraints -- one with no pointing errors and one with pointing errors -- I can compare the two to see how the addition of pointing errors impacts the product. 
 		% \item Eg. How does the matter power spectrum change with pointing errors, and how does this change on the matter power spectrum impact our ability to measure Neff
