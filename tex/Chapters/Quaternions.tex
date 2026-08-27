@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+
+\newcommand{\vect}[1]{\vec{#1}}
+
+\title{Quaternions}
+\date{26 August 2026}
+\author{}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+
+\section*{Definition}
+
+A hyper-complex number of rank 4:
+\[
+q = \underbrace{q_0}_{\text{scalar part}} + \underbrace{\vect{q}}_{\text{vector part}}
+ = q_0 + i q_1 + j q_2 + k q_3
+\]
+
+where $q_0, q_1, q_2, q_3$ are components.
+
+Because quaternions are the sum of a scalar and a vector, they do not obey the typical rules of linear algebra.
+
+\section*{Addition}
+
+\[
+p = p_0 + i p_1 + j p_2 + k p_3, \qquad q = q_0 + i q_1 + j q_2 + k q_3
+\]
+\[
+p + q = (p_0 + q_0) + i(p_1+q_1) + j(p_2+q_2) + k(p_3+q_3)
+\]
+
+\section*{Scalar Multiplication}
+
+\[
+cp = c p_0 + i c p_1 + j c p_2 + k c p_3
+\]
+
+\section*{Special Products}
+
+\begin{align*}
+i^2 = j^2 = k^2 = ijk &= -1 \\
+ij = k &= -ji \\
+jk = i &= -kj \\
+ki = j &= -ik
+\end{align*}
+
+\section*{Quaternion Product}
+
+\[
+pq = p_0 q_0 - \vect{p}\cdot\vect{q} + p_0 \vect{q} + q_0 \vect{p} + \vect{p}\times\vect{q}
+\]
+
+\section*{Matrix Representation}
+
+Alternatively, a quaternion product can be written as a matrix product:
+\[
+pq = r = r_0 + \vect{r} = r_0 + i r_1 + j r_2 + k r_3
+\]
+
+\[
+\begin{bmatrix} r_0 \\ r_1 \\ r_2 \\ r_3 \end{bmatrix}
+=
+\begin{bmatrix}
+p_0 & -p_1 & -p_2 & -p_3 \\
+p_1 & p_0 & -p_3 & p_2 \\
+p_2 & p_3 & p_0 & -p_1 \\
+p_3 & -p_2 & p_1 & p_0
+\end{bmatrix}
+\begin{bmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix}
+\]
+
+Since the cross product is not commutative, neither is the quaternion product.
+
+\section*{Complex Conjugate}
+
+\[
+q = q_0 + \vect{q}, \qquad q^* = q_0 - \vect{q}
+\]
+\[
+(pq)^* = q^* p^*
+\]
+\[
+q + q^* = (q_0 + \vect{q}) + (q_0 - \vect{q}) = 2q_0
+\]
+
+\section*{Quaternion Operators}
+
+\[
+L_q(\vect{v}) = \vect{w} = q\vect{v}q^*
+ = (q_0^2 - |\vect{q}|^2)\vect{v} + 2(\vect{q}\cdot\vect{v})\vect{q} + 2q_0(\vect{q}\times\vect{v})
+\]
+
+operated on vector $\vect{v}$ in $\mathbb{R}^3$.
+
+\textbf{Properties:}
+\begin{itemize}
+    \item \textbf{Linear Operator:} $L_q(k\vect{a} + \vect{b}) = k L_q(\vect{a}) + L_q(\vect{b})$
+    \item \textbf{Norm:} $|L_q(\vect{v})| = |\vect{v}|$
+    \begin{itemize}
+        \item[$\hookrightarrow$] note: $|x| = \sqrt{x^*x}$
+    \end{itemize}
+\end{itemize}
+
+\[
+L_q(\vect{v}) = \vect{w} = q^*\vect{v}q = (2q_0^2 - 1)\vect{v} + 2(\vect{v}\cdot\vect{q})\vect{q} - 2q_0(\vect{v}\times\vect{q})
+\]
+
+\end{document}
