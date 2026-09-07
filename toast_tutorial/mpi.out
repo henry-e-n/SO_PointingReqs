@@ -1,0 +1,5 @@
+TOAST INFO: Loading schedule from out_sim_ground/test_schedule.txt
+TOAST INFO: Loaded 4 scans from out_sim_ground/test_schedule.txt totaling 12.6 hours.
+TOAST INFO: Pixel data in out_sim_ground/fake_sky.fits does not have TUNIT1 key.  Assuming 'K'.
+Time to complete with 1 processes : 141.44647979736328
+Done!
