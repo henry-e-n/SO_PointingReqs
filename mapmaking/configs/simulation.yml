@@ -35,8 +35,6 @@ operators:
       '@config:/operators/sim_noise',\
       '@config:/operators/sim_atmosphere',\
       '@config:/operators/sim_atmosphere_coarse',\
+      '@config:/operators/remove_dc',\
+      '@config:/operators/fill_gaps'\
       ]"
-
-      # 
-      # '@config:/operators/remove_dc',\
-      # '@config:/operators/fill_gaps'\
