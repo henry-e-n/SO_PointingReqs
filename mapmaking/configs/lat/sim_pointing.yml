@@ -1,0 +1,48 @@
+# LAT-specific pointing model
+
+operators:
+
+  # Stokes weights
+
+  weights_radec_sim:
+    class: toast.ops.stokes_weights.stokes_weights.StokesWeights
+    detector_pointing: "@config:/operators/det_pointing_radec_sim"
+    IAU: false # If True, use the IAU convention rather than COSMO
+    fp_gamma: gamma # Focalplane key for detector gamma offset angle
+    mode: IQU # The Stokes weights to generate (I or IQU)
+    name: weights_radec_sim # The 'name' of this class instance
+    single_precision: false # If True, use 32bit float in output
+    weights: weights_radec_sim
+
+  weights_azel_sim:
+    class: toast.ops.stokes_weights.stokes_weights.StokesWeights
+    detector_pointing: "@config:/operators/det_pointing_azel_sim"
+    IAU: false # If True, use the IAU convention rather than COSMO
+    fp_gamma: gamma # Focalplane key for detector gamma offset angle
+    mode: IQU # The Stokes weights to generate (I or IQU)
+    name: weights_azel_sim # The 'name' of this class instance
+    single_precision: false # If True, use 32bit float in output
+    weights: weights_azel_sim
+
+  # Healpix pixelization
+
+  pixels_healpix_radec_sim:
+    class: toast.ops.pixels_healpix.pixels_healpix.PixelsHealpix
+    detector_pointing: "@config:/operators/det_pointing_radec_sim"
+    name: pixels_healpix_radec_sim # The 'name' of this class instance
+    nest: true # If True, use NESTED ordering instead of RING
+    nside: 4096 # The NSIDE resolution
+    nside_submap: 16 # The NSIDE of the submap resolution
+    single_precision: false # If True, use 32bit int in output
+    pixels: pixels_radec_sim
+
+  # CAR pixelization
+
+  pixels_car_radec_sim:
+    class: toast.ops.pixels_wcs.PixelsWCS
+    name: pixels_car_radec_sim
+    detector_pointing: "@config:/operators/det_pointing_radec_sim"
+    submaps: 10
+    use_astropy: true
+    fits_header: None  # Specify the footprint at run-time.
+    pixels: pixels_radec_sim

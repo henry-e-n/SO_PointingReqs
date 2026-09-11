@@ -1,0 +1,59 @@
+operators:
+
+  # Simulate atmosphere timestreams
+
+  sim_atmosphere:
+    class: toast.ops.sim_tod_atm.SimAtmosphere
+    name: sim_atmosphere
+    detector_pointing: "@config:/operators/det_pointing_azel_sim"
+    detector_weights: "@config:/operators/weights_azel_sim"
+    add_loading: true # Add elevation-dependent loading.
+    gain: 1.0e-04
+    view: scanning
+    lmax_center: Quantity('1.0 m')
+    lmax_sigma: Quantity('0.1 m')
+    lmin_center: Quantity('1.0e-03 m')
+    lmin_sigma: Quantity('1.0e-04 m')
+    n_bandpass_freqs: 100
+    nelem_sim_max: 10000
+    polarization_fraction: 0.0 # Polarization fraction (only Q polarization).
+    realization: 0 # If simulating multiple realizations, the realization index
+    sample_rate: Quantity('10 Hz') # Rate at which to sample atmospheric TOD before interpolation.  Default is no interpolation.
+    wind_dist: Quantity('1.0e3 m') # Maximum wind drift before discarding the volume and creating a new one
+    fade_time: Quantity('120 s')
+    xstep: Quantity('10.0 m') # Size of volume elements in X direction
+    ystep: Quantity('10.0 m') # Size of volume elements in Y direction
+    z0_center: Quantity('2000 m') # Central value of the water vapor distribution
+    z0_sigma: Quantity('0.0 m') # Sigma of the water vapor distribution
+    zatm: Quantity('4.0e+04 m') # Atmosphere extent for temperature profile
+    zmax: Quantity('200 m') # Atmosphere extent for water vapor integration
+    zstep: Quantity('10.0 m') # Size of volume elements in Z direction
+    timing: true
+
+  sim_atmosphere_coarse:
+    class: toast.ops.sim_tod_atm.SimAtmosphere
+    name: sim_atmosphere_coarse
+    detector_pointing: "@config:/operators/det_pointing_azel_sim"
+    detector_weights: "@config:/operators/weights_azel_sim"
+    add_loading: false
+    gain: 4.0e-04
+    view: scanning
+    lmax_center: Quantity('1.0e4 m')
+    lmax_sigma: Quantity('1.0e3 m')
+    lmin_center: Quantity('3.0e2 m')
+    lmin_sigma: Quantity('3.0e1 m')
+    n_bandpass_freqs: 100
+    nelem_sim_max: 10000
+    polarization_fraction: 0.0
+    realization: 1000000
+    sample_rate: Quantity('10 Hz')
+    wind_dist: Quantity('1.0e3 m')
+    fade_time: Quantity('120 s')
+    xstep: Quantity('50.0 m')
+    ystep: Quantity('50.0 m')
+    z0_center: Quantity('2000 m')
+    z0_sigma: Quantity('0.0 m')
+    zatm: Quantity('4.0e+04 m')
+    zmax: Quantity('200 m')
+    zstep: Quantity('50.0 m')
+    timing: true

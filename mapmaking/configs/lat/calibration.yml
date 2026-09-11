@@ -1,0 +1,17 @@
+# LAT-specific calibration
+
+operators:
+
+  # Relative calibration
+  # FIXME: Restore once it is in the default context
+  # cal_rel:
+  #   class: toast.ops.calibrate.CalibrateDetectors
+  #   name: cal_rel
+  #   cal_name: "relcal:rel_factor"
+
+  # Absolute calibration
+  cal_abs:
+    class: toast.ops.calibrate.CalibrateDetectors
+    name: cal_abs
+    cal_name: "abscal:abscal_cmb"
+    timing: true

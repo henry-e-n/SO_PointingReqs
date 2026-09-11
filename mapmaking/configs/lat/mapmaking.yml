@@ -1,0 +1,13 @@
+# Mapmaking config for ML mapmaker
+
+operators:
+
+  mapmaker:
+    class: sotodlib.toast.ops.mlmapmaker.MLMapmaker
+    name: mapmaker
+    checkpoint_interval: 0
+    downsample: '[10,1]' # Downsample TOD by these factors.
+    maxiter: '[30,20]' # List of maximum number of CG iterations for each pass.
+    nmat_mode: build # How to initialize the noise matrix.
+    skip_existing: true
+    write_iter_map: 0 # Number of iterations between saved maps.

@@ -1,0 +1,23 @@
+# Load a toast HDF5 volume containing pre-converted raw data
+# in DAQ units, along with housekeeping data.  This is useful
+# for testing, but for production use, one should load from
+# a Context that uses the toast loader.  This way additional
+# metadata can also be loaded.
+
+operators:
+  load_hdf5:
+    class: toast.ops.load_hdf5.LoadHDF5
+    name: load_hdf5
+  daq_to_phase:
+    name: daq_to_phase
+    class: toast.ops.calibrate.CalibrateDetectors
+    # This is PI / 2^15
+    cal_value: 9.58737992428526e-05
+    cal_units: "Unit('K')"
+  load:
+    name: load
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/load_hdf5',\
+      '@config:/operators/daq_to_phase'\
+      ]"

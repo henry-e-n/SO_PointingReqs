@@ -1,0 +1,15 @@
+# Load data from a Context.  Ensure that detectors within the same
+# pixel are distributed together.  Create an analytic bandpass as
+# a starting point.  Ignore any preprocessing archives on disk,
+# since those may be stale or incomplete.
+
+operators:
+
+  load:
+    class: sotodlib.toast.ops.load_context.LoadContext
+    name: load # The 'name' of this class instance
+    detset_key: pixel
+    analytic_bandpass: true # Add analytic bandpass to each detector
+    bandwidth: 0.2 # Fractional bandwith used in analytic bandpass
+    ignore_preprocess_archive: true
+    timing: true

@@ -1,0 +1,157 @@
+# In general, to goal is to preprocess by removing effects
+# in the reverse order that they occur, starting with the
+# readout and moving back to the detector.
+#
+# The basic idea is:
+#
+# - Extend flagged regions from smurf gaps (packet drops)
+#   and bad ACU samples.
+#
+# - Pass through telescope pointing and identify scans and
+#   turnarounds.
+#
+# - Cut detectors that are clearly "bad" (unresponsive, not
+#   biased properly, etc), while flagging "large" jumps and
+#   glitches that might impact the Fourier domain operations.
+#
+# - Calibrate from phase units to pW
+#
+# - Deconvolve the readout filter effects and the bolometer
+#   timeconstant.  Flagged regions are extended to prevent
+#   any contamination from data in flagged samples.
+#
+# - Additional cut based on white noise level outliers
+#
+
+operators:
+
+  # Extend invalid shared flags.  These are usually smurf
+  # gaps (dropped packets).  We do this before anything else,
+  # in particular before estimating the scanning intervals.
+  extend_invalid:
+    class: toast.ops.extend_flags.ExtendFlags
+    name: extend_invalid
+    shared_flag_mask: 1
+    shared_buffer_samples: 200
+    timing: true
+
+  az_intervals:
+    class: toast.ops.azimuth_intervals.AzimuthIntervals
+    name: az_intervals # The 'name' of this class instance
+    window_seconds: 0.5 # Smoothing window in seconds
+    short_limit: "Quantity('5 s')"
+    cut_short: true
+    timing: true
+
+  # Cut detectors that are not biased properly.  This
+  # uses only focalplane table information, not the TOD.
+  bias_cuts:
+    class: sotodlib.toast.ops.bias_cut.DetBiasCuts
+    name: bias_cuts
+    rfrac_range: "(0.2,0.8)"
+    si_nan: true
+    timing: true
+
+  # Remove large jumps.  These jumps can contaminate even basic
+  # steps, such as the trend cuts.
+  raw_jumps:
+    class: toast.ops.simple_jumpcorrect.SimpleJumpCorrect
+    name: raw_jumps
+    filterlen: 2000
+    jump_radius: 200
+    jump_limit: 20
+    timing: true
+
+  # Look at slopes in phase units.  Sharp slopes can indicate
+  # unlocked detectors.
+  trend_cuts:
+    class: sotodlib.toast.ops.trend_cut.DetTrendCuts
+    name: trend_cuts
+    max_trend: 2.5
+    t_piece: "Quantity('10 s')"
+    timing: true
+
+  # Prior to deconvolving the detector timeconstant, we flag
+  # any large glitches which might contaminate nearby samples.
+  # For this pass we use a narrow window for the median filter,
+  # but set the threshold relatively high.  We fill flagged
+  # samples with white noise before and after, which is the default.
+  raw_deglitch:
+    class: toast.ops.simple_deglitch.SimpleDeglitch
+    name: raw_deglitch
+    glitch_radius: 100
+    glitch_limit: 20
+    nglitch_limit: 10
+    medfilt_kernel_size: 101
+    timing: true
+
+  # Calibrate data from phase units to power
+  cal_to_pw:
+    class: toast.ops.calibrate.CalibrateDetectors
+    name: cal_to_pw
+    cal_name: "det_cal:phase_to_pW"
+    timing: true
+
+  # Fourier domain deconvolution.  We deconvolve the effective
+  # filter from the readout as well as the bolometer timeconstant.
+
+  readout_filter:
+    class: sotodlib.toast.ops.readout_filter.ReadoutFilter
+    name: readout_filter
+    timing: true
+
+  deconvolve_timeconstant:
+    class: toast.ops.time_constant.TimeConstant
+    name: deconvolve_timeconstant
+    tau_name: "det_cal:tau_eff"
+    deconvolve: true
+    timing: true
+
+  # The operations above work with all detectors and samples
+  # that are not cut with the det_mask_invalid flag.  In other
+  # words, this includes data in turnarounds, etc.
+
+  pre_proc:
+    name: pre_proc
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/extend_invalid',\
+      '@config:/operators/az_intervals',\
+      '@config:/operators/bias_cuts',\
+      '@config:/operators/raw_jumps',\
+      '@config:/operators/trend_cuts',\
+      '@config:/operators/raw_deglitch',\
+      '@config:/operators/cal_to_pw',\
+      '@config:/operators/readout_filter',\
+      '@config:/operators/deconvolve_timeconstant'\
+      ]"
+
+  # Cut optical detectors that have pathological white noise
+  # properties. This will cut detectors that are "flat lined"
+  # and have unphysically low RMS values.  We do not include
+  # dark detectors here, since they can have very different
+  # noise properties.
+
+  diff_noise:
+    class: toast.ops.signal_diff_noise_model.SignalDiffNoiseModel
+    name: diff_noise
+    noise_model: noise_model
+    det_mask: 7
+    timing: true
+  diff_noise_cut:
+    class: toast.ops.noise_model.FlagNoiseFit
+    name: diff_noise_cut
+    noise_model: noise_model
+    sigma_NET: 10.0
+    sigma_rms: 10.0
+    low_noise_limit: 0.1 # Fraction of median RMS below which to cut
+    det_mask: 7
+    timing: true
+
+  noise_cut:
+    name: noise_cut
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/diff_noise',\
+      '@config:/operators/diff_noise_cut'\
+      ]"
