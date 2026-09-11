@@ -1,0 +1,26 @@
+# Low-level preprocessing applied to data when loading from
+# a context.  This config should conform to the syntax used
+# by the site pipeline.
+
+process_pipe:
+  # FIXME: Re-enable once wiregrid is included in the default context
+  # - name: "move"
+  #   skip_on_sim: True
+  #   process:
+  #     name: "det_info.wiregrid_cal.gamma"
+  #     new_name: "focal_plane.gamma"
+
+  - name: "pointing_model"
+    skip_on_sim: True
+    process: True
+
+  - name: "hwp_angle_model"
+    skip_on_sim: True
+    process: True
+    calc:
+      on_sign_ambiguous: 'fail'
+    save: True
+
+  - name: "correct_iir_params"
+    skip_on_sim: False
+    process: True

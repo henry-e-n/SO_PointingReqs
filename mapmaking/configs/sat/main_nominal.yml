@@ -1,0 +1,42 @@
+# This is an example yaml file that defines the "main" operator
+# to pass to toast_run or so-toast-run.  To use this, in your
+# slurm script you should include the following config files:
+#
+# projects/config/load_context.yml (general data loading)
+# projects/config/pre_proc.yml (low-level preproc)
+# projects/config/pointing_detector.yml (detector pointing/quaternions)
+# projects/sat/config/pointing.yml (wobble correct, pointing matrix)
+# projects/sat/config/hwpss.yml (HWPSS filter and post-cleaning)
+# projects/sat/config/demodulation.yml (demodulation and demod stokes weights)
+# projects/sat/config/mapmaking_*.yml (include one of the mapmaking files)
+# projects/sat/config/main_nominal.yml (this file)
+#
+# Additionally, on the command line, you should set / override
+# the following traits:
+#
+# --load.preprocess_config projects/sat/config/site_proc.yml
+#
+# If using CAR pixelization, additionally set:
+#
+# --pixels_car_radec.fits_header path/to/FITS/file
+#
+# And then also override any mapmaking-specific options
+#
+
+operators:
+  # Main operator to run
+  main:
+    name: main
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/load',\
+      '@config:/operators/pre_proc',\
+      '@config:/operators/noise_cut',\
+      '@config:/operators/wobble_correct',\
+      '@config:/operators/hwpss',\
+      '@config:/operators/hwpss_noise_cut',\
+      '@config:/operators/cal_rel',\
+      '@config:/operators/cal_abs',\
+      '@config:/operators/demodulate',\
+      '@config:/operators/mapmaking'\
+      ]"

@@ -1,0 +1,42 @@
+# Config that specifies the sequence of simulation operations to use
+
+operators:
+
+  # Clear detector data
+
+  clear_detdata:
+    class: toast.ops.reset.Reset
+    name: clear_detdata
+    detdata: "['signal']"
+
+  # Remove DC level at the end of sims
+
+  remove_dc:
+    class: toast.ops.polyfilter.polyfilter.PolyFilter
+    name: remove_dc
+    order: 0
+    det_mask: 1
+
+  # Fill gaps at the end, since non-science samples from the
+  # original, real-data processing are flagged.  This is for
+  # visualization- flagged data is not used in the analysis.
+
+  fill_gaps:
+    class: toast.ops.fill_gaps.FillGaps
+    name: fill_gaps
+
+  # Simulation pipeline
+
+  simulate:
+    name: simulate
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/clear_detdata',\
+      '@config:/operators/sim_noise',\
+      '@config:/operators/sim_atmosphere',\
+      '@config:/operators/sim_atmosphere_coarse',\
+      ]"
+
+      # 
+      # '@config:/operators/remove_dc',\
+      # '@config:/operators/fill_gaps'\

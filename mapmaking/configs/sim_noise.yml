@@ -1,0 +1,9 @@
+operators:
+
+  # Simulate instrument noise
+
+  sim_noise:
+    class: toast.ops.sim_tod_noise.SimNoise
+    name: sim_noise
+    noise_model: noise_model
+    timing: true

@@ -1,0 +1,22 @@
+operators:
+
+  # Demodulation
+
+  demodulate:
+    class: toast.ops.demodulation.Demodulate
+    stokes_weights: "@config:/operators/weights_azel"
+    do_2f: false
+    name: demodulate
+    noise_model: noise_model
+    nskip: 10 # Downsampling factor
+    in_place: true
+    window: hamming # Window function name recognized by scipy.signal.firwin
+    wkernel: # Override automatic filter kernel size
+    timing: true
+
+  weights_demod:
+    name: weights_demod
+    class: toast.ops.demodulation.StokesWeightsDemod
+    weights: weights_demod
+    detector_pointing_in: "@config:/operators/det_pointing_azel"
+    detector_pointing_out: "@config:/operators/det_pointing_radec"

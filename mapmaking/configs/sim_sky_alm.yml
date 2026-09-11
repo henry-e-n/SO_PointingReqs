@@ -1,0 +1,12 @@
+operators:
+
+  # Simulate sky signal timestreams from a_lms
+
+  sim_sky_alm:
+    class: toast.ops.scan_alm.ScanAlm
+    name: sim_sky_alm
+    detector_pointing: "@config:/operators/det_pointing_radec_sim"
+    stokes_weights: "@config:/operators/weights_radec_sim"
+    fwhm: "Quantity('0 deg')" # Override with nominal beam size at runtime
+    timing: true
+

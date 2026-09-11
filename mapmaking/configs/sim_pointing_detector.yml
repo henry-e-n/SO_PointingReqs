@@ -1,0 +1,15 @@
+operators:
+
+  # Detector (geometric) pointing
+
+  det_pointing_radec_sim:
+    class: toast.ops.pointing_detector.PointingDetectorSimple
+    name: det_pointing_radec_sim
+    boresight: boresight_radec
+    quats: quats_radec_sim
+
+  det_pointing_azel_sim:
+    class: toast.ops.pointing_detector.PointingDetectorSimple
+    name: det_pointing_azel_sim
+    boresight: boresight_azel
+    quats: quats_azel_sim

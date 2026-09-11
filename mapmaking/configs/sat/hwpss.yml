@@ -1,0 +1,71 @@
+# This set of operators filters HWPSS and then does another
+# pass of jump and glitch removal.
+
+operators:
+
+  # HWPSS signal removal
+  hwpss_filter:
+    class: toast.ops.hwpfilter.HWPFilter
+    name: hwpss_filter
+    filter_order: 9
+    trend_order: 1
+    detrend: true
+    timing: true
+
+  # Post HWPSS cleaning
+  post_hwpss_jumps:
+    class: toast.ops.simple_jumpcorrect.SimpleJumpCorrect
+    name: post_hwpss_jumps
+    filterlen: 1000
+    jump_radius: 10
+    jump_limit: 20
+    timing: true
+
+  post_hwpss_deglitch:
+    class: toast.ops.simple_deglitch.SimpleDeglitch
+    name: post_hwpss_deglitch
+    glitch_radius: 25
+    glitch_limit: 20
+    nglitch_limit: 10
+    medfilt_kernel_size: 501
+    timing: true
+
+  # Pipeline the above operators in a particular order.
+  hwpss:
+    name: hwpss
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/hwpss_filter',\
+      '@config:/operators/post_hwpss_jumps',\
+      '@config:/operators/post_hwpss_deglitch'\
+      ]"
+
+  # Cut optical detectors that have pathological white noise
+  # properties. This will cut detectors that are "flat lined"
+  # and have unphysically low RMS values.  We do not include
+  # dark detectors here, since they can have very different
+  # noise properties.
+
+  hwpss_diff_noise:
+    class: toast.ops.signal_diff_noise_model.SignalDiffNoiseModel
+    name: hwpss_diff_noise
+    noise_model: noise_model
+    det_mask: 7
+    timing: true
+  hwpss_diff_noise_cut:
+    class: toast.ops.noise_model.FlagNoiseFit
+    name: hwpss_diff_noise_cut
+    noise_model: noise_model
+    sigma_NET: 10.0
+    sigma_rms: 10.0
+    low_noise_limit: 0.1 # Fraction of median RMS below which to cut
+    det_mask: 7
+    timing: true
+
+  hwpss_noise_cut:
+    name: hwpss_noise_cut
+    class: toast.ops.pipeline.Pipeline
+    operators: "[\
+      '@config:/operators/hwpss_diff_noise',\
+      '@config:/operators/hwpss_diff_noise_cut'\
+      ]"
