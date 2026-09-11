@@ -1,0 +1,8 @@
+\section{Simulating Time-Ordered Data}
+
+Simulation of the TOD from a telescope scan is done in TOAST. TOAST works by generating data from a simulated scan of a sky. Adjustments to either the TOD or the telescope properties (such as pointing) is done via apply operators. To simulate pointing errors I need to create a new pointing error operator, scan a simulated CMB map, then proceed with parameter estimation.
+
+Before I can implement pointing errors, I need a way to qualify, and quantify, the efficacy of my operator. While I could scan a basic simulated CMB map, I am not confident I would be able to tell if my operator is doing exactly what I want it to do. Instead I want to scan a blank map with a single point source. In this way, the effects of my pointing errors will be more evident. To create this map I will use \verb+healpy+.
+
+I also need a way of recreating maps from the TOD. Both \verb+TOAST+ and \verb+sotodlib+ have methods for this.
+
