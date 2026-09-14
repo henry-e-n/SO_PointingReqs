@@ -1,5 +1,6 @@
 # Large Output files
 toast_tutorial/toast_out_hdf5/*.h5
+mapmaking/*/*.fits
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
