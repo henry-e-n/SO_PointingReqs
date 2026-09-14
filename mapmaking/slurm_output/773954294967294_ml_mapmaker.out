@@ -1,0 +1,539 @@
+TOAST INFO: Executing workflow with 1 MPI tasks, each with 8 OpenMP threads at 2026-09-14 22:14:23.597537
+TOAST INFO: Start of the workflow:  Memory usage (whole node)
+       total : 1007.054 GB
+   available :  998.191 GB
+     percent :    0.900 % 
+        used :    4.235 GB
+        free :  999.115 GB
+      active :    1.587 GB
+    inactive :    2.236 GB
+     buffers :   50.512 MB
+      cached :    3.654 GB
+      shared :    7.418 MB
+        slab :    1.115 GB
+
+TOAST WARNING: so3g_compat_mode overrides use_ephem=True
+TOAST INFO: ML mapmaker is enabled, forcing process group size to 1
+TOAST INFO:   Created a TOAST communicator with 1 ranks and 1 process groups of 1 ranks each
+TOAST INFO: Running load_data_hdf5...
+TOAST INFO: Finished load_data_hdf5 in 1.24 s
+TOAST INFO: Running load_data_books...
+TOAST INFO: Finished load_data_books in 0.00 s
+TOAST INFO: Running load_data_context...
+TOAST INFO: Finished load_data_context in 0.00 s
+TOAST INFO: Running act_responsivity_sign...
+TOAST INFO: Finished act_responsivity_sign in 0.00 s
+TOAST INFO: Running create_az_intervals...
+TOAST INFO: Finished create_az_intervals in 0.00 s
+TOAST INFO: Running apply_readout_filter...
+TOAST INFO: Finished apply_readout_filter in 0.00 s
+TOAST INFO: Running deconvolve_detector_timeconstant...
+TOAST INFO: Finished deconvolve_detector_timeconstant in 0.00 s
+TOAST INFO: Running append_weather_model...
+TOAST INFO: Finished append_weather_model in 0.00 s
+TOAST INFO: Running diff_noise_estimation...
+TOAST INFO: Finished diff_noise_estimation in 0.00 s
+TOAST INFO: Running simple_jumpcorrect...
+TOAST INFO: Finished simple_jumpcorrect in 0.00 s
+TOAST INFO: Running simple_deglitch...
+TOAST INFO: Finished simple_deglitch in 0.00 s
+TOAST INFO: Running raw_statistics...
+TOAST INFO: Finished raw_statistics in 0.00 s
+TOAST INFO: Running diff_noise_estimation...
+TOAST INFO: Finished diff_noise_estimation in 0.00 s
+TOAST INFO: Running noise_estimation...
+TOAST INFO: Noise_estim disabled, nothing to fit
+TOAST INFO: Finished noise_estimation in 0.00 s
+TOAST INFO: Running demodulate...
+TOAST INFO: Finished demodulate in 0.00 s
+TOAST INFO: Running filter_ground...
+TOAST INFO: Finished filter_ground in 0.00 s
+TOAST INFO: Running filter_common_mode...
+TOAST INFO: Finished filter_common_mode in 0.00 s
+TOAST INFO: Running filter_poly1d...
+TOAST INFO: Finished filter_poly1d in 0.00 s
+TOAST INFO: Running filter_poly2d...
+TOAST INFO: Finished filter_poly2d in 0.00 s
+TOAST INFO: Running diff_noise_estimation...
+TOAST INFO: Finished diff_noise_estimation in 0.00 s
+TOAST INFO: Running noise_estimation...
+TOAST INFO: Noise_estim disabled, nothing to fit
+TOAST INFO: Finished noise_estimation in 0.00 s
+TOAST INFO: Running processing_mask...
+TOAST INFO: Finished processing_mask in 0.00 s
+TOAST INFO: Running flag_sso...
+TOAST INFO: Finished flag_sso in 0.00 s
+TOAST INFO: Running hn_map...
+TOAST INFO: Finished hn_map in 0.00 s
+TOAST INFO: Running cadence_map...
+TOAST INFO: Finished cadence_map in 0.00 s
+TOAST INFO: Running crosslinking_map...
+TOAST INFO: Finished crosslinking_map in 0.00 s
+TOAST INFO: Running mapmaker_ml...
+TOAST INFO: Starting pass 1/1, maxit=400 down=1, interp=nearest
+TOAST INFO: MLMapmaker wrapped observations and built noise models in 5.36 s
+TOAST INFO: MLMapmaker finished prepare in 0.60 s
+TOAST INFO: Wrote rhs to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_rhs.fits
+TOAST INFO: Wrote divTT to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divTT.fits
+TOAST INFO: Wrote divTQ to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divTQ.fits
+TOAST INFO: Wrote divTU to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divTU.fits
+TOAST INFO: Wrote divQT to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divQT.fits
+TOAST INFO: Wrote divQQ to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divQQ.fits
+TOAST INFO: Wrote divQU to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divQU.fits
+TOAST INFO: Wrote divUT to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divUT.fits
+TOAST INFO: Wrote divUQ to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divUQ.fits
+TOAST INFO: Wrote divUU to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_divUU.fits
+TOAST INFO: Wrote hits to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_hits.fits
+TOAST INFO: Wrote bin to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_bin.fits
+TOAST INFO: MLMapmaker finished writing rhs, div, bin in 0.47 s
+TOAST INFO: MLMapmaker   CG step    1   2.0117903e-01 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step    2   1.0196665e-01 write=False  0.62 s
+TOAST INFO: MLMapmaker   CG step    3   1.2252918e-01 write=False  0.63 s
+TOAST INFO: MLMapmaker   CG step    4   1.1652617e-01 write=False  0.62 s
+TOAST INFO: MLMapmaker   CG step    5   7.0671753e-02 write=False  0.63 s
+TOAST INFO: MLMapmaker   CG step    6   3.7958645e-02 write=False  0.63 s
+TOAST INFO: MLMapmaker   CG step    7   3.2832808e-02 write=False  0.63 s
+TOAST INFO: MLMapmaker   CG step    8   3.3117164e-02 write=False  0.62 s
+TOAST INFO: MLMapmaker   CG step    9   2.5409795e-02 write=False  0.63 s
+TOAST INFO: MLMapmaker   CG step   10   1.6931015e-02 write=False  0.62 s
+TOAST INFO: MLMapmaker   CG step   11   1.3529449e-02 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step   12   1.3449652e-02 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   13   1.2011084e-02 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   14   9.7130296e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   15   8.2891048e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   16   7.5122729e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   17   6.6002297e-03 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   18   5.5438713e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   19   4.8651728e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   20   4.3778702e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   21   3.8590791e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   22   3.4741120e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   23   3.2449351e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   24   3.0151835e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   25   2.7848287e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   26   2.5857994e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   27   2.4147837e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   28   2.2812733e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   29   2.1730239e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   30   2.0784138e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   31   2.0182953e-03 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   32   1.9632375e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   33   1.9039603e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   34   1.8649713e-03 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step   35   1.7883226e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   36   1.6672888e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   37   1.5470746e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   38   1.4477733e-03 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   39   1.3567604e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   40   1.2678780e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   41   1.1839278e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   42   1.1176949e-03 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   43   1.0518108e-03 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   44   9.8280685e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   45   9.2076767e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   46   8.6424895e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   47   8.1472955e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   48   7.7630795e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   49   7.4272835e-04 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   50   7.0982075e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   51   6.8670237e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   52   6.7051623e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   53   6.5576251e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   54   6.3673522e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   55   6.1933856e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   56   6.1379562e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   57   6.1573458e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   58   6.1099270e-04 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step   59   5.8709441e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   60   5.5545574e-04 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step   61   5.2989590e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   62   5.0856802e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   63   4.8674336e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   64   4.6531316e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   65   4.4302862e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   66   4.2305082e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   67   4.0332310e-04 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step   68   3.8118568e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   69   3.5993872e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   70   3.4176378e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   71   3.2633308e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   72   3.1092780e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   73   2.9561038e-04 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   74   2.8244516e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   75   2.7055160e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   76   2.6055400e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   77   2.5102062e-04 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   78   2.4292475e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   79   2.3754362e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   80   2.3451585e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   81   2.3122888e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   82   2.2558287e-04 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step   83   2.1904750e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   84   2.1077021e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   85   2.0411391e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   86   1.9944862e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   87   1.9511863e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   88   1.9033653e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   89   1.8592612e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   90   1.8266563e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step   91   1.7995085e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   92   1.7805657e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   93   1.7646091e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   94   1.7361135e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   95   1.6755032e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   96   1.6041138e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   97   1.5326761e-04 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step   98   1.4819263e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step   99   1.4495737e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  100   1.4052144e-04 write=True  0.67 s
+TOAST INFO: Wrote signal to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_map0100.fits in 0.05 s
+TOAST INFO: MLMapmaker   CG step  101   1.3519155e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  102   1.3055032e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  103   1.2830856e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  104   1.2717953e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  105   1.2614747e-04 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  106   1.2529012e-04 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  107   1.2339945e-04 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  108   1.1970720e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  109   1.1471880e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  110   1.1116599e-04 write=False  0.65 s
+TOAST INFO: MLMapmaker   CG step  111   1.0928879e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  112   1.0828849e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  113   1.0701184e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  114   1.0520898e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  115   1.0404272e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  116   1.0282808e-04 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  117   1.0159828e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  118   1.0058477e-04 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  119   9.9675302e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  120   9.8612612e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  121   9.7825378e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  122   9.6899605e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  123   9.5557937e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  124   9.4348547e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  125   9.4050112e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  126   9.3428783e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  127   9.2055119e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  128   9.1119405e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  129   9.0447362e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  130   8.9977737e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  131   8.9669375e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  132   8.8784970e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  133   8.7979306e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  134   8.7514816e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  135   8.7593464e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  136   8.7657729e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  137   8.7692147e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  138   8.7672012e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  139   8.7271191e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  140   8.6565093e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  141   8.5890605e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  142   8.5143937e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  143   8.5065454e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  144   8.5742141e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  145   8.7157913e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  146   8.7590614e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  147   8.6060280e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  148   8.3941534e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  149   8.2625373e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  150   8.1408115e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  151   8.0811387e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  152   8.1098682e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  153   8.1074548e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  154   8.0487656e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  155   7.9407880e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  156   7.7358316e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  157   7.5378683e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  158   7.4170303e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  159   7.3610465e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  160   7.2805365e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  161   7.1822445e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  162   7.1068088e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  163   7.1014260e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  164   7.1345752e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  165   7.1638745e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  166   7.1180739e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  167   6.9259777e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  168   6.7249896e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  169   6.5699895e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  170   6.4314717e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  171   6.3077956e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  172   6.1852854e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  173   6.0681560e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  174   5.9411176e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  175   5.8553030e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  176   5.7358289e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  177   5.6145504e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  178   5.5115691e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  179   5.4259656e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  180   5.3199368e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  181   5.2275013e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  182   5.1198660e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  183   5.0312862e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  184   4.9640888e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  185   4.8972723e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  186   4.8201298e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  187   4.7455101e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  188   4.6464597e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  189   4.5531754e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  190   4.4686346e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  191   4.3974267e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  192   4.3552200e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  193   4.3209594e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  194   4.3460013e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  195   4.3643780e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  196   4.2776037e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  197   4.0923421e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  198   3.9277737e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  199   3.8283202e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  200   3.7531186e-05 write=True  0.68 s
+TOAST INFO: Wrote signal to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_map0200.fits in 0.04 s
+TOAST INFO: MLMapmaker   CG step  201   3.6745913e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  202   3.6046957e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  203   3.5362025e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  204   3.4713767e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  205   3.4165138e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  206   3.3709606e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  207   3.3326004e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  208   3.2931439e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  209   3.2724438e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  210   3.2640267e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  211   3.2577719e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  212   3.2320951e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  213   3.1813280e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  214   3.1024546e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  215   3.0231271e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  216   2.9685255e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  217   2.9115302e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  218   2.8721635e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  219   2.8204993e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  220   2.7648474e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  221   2.7196821e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  222   2.6837476e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  223   2.6432856e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  224   2.6106852e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  225   2.5986275e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  226   2.6084952e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  227   2.6091791e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  228   2.5774485e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  229   2.5032764e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  230   2.4246925e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  231   2.3583139e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  232   2.3128725e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  233   2.2736072e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  234   2.2449814e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  235   2.2181861e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  236   2.1744076e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  237   2.1431631e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  238   2.1315745e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  239   2.1324278e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  240   2.1519831e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  241   2.1969151e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  242   2.2192144e-05 write=False  0.66 s
+TOAST INFO: MLMapmaker   CG step  243   2.1937537e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  244   2.1360416e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  245   2.1011640e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  246   2.0821873e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  247   2.0768274e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  248   2.0855696e-05 write=False  0.65 s
+TOAST INFO: MLMapmaker   CG step  249   2.0888250e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  250   2.0884289e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  251   2.0989022e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  252   2.1233068e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  253   2.1218169e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  254   2.1155947e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  255   2.1149336e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  256   2.1218415e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  257   2.1192084e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  258   2.1135881e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  259   2.1185242e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  260   2.1146366e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  261   2.1076200e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  262   2.1049369e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  263   2.1024480e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  264   2.1006440e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  265   2.0916891e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  266   2.0835268e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  267   2.0807913e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  268   2.0829210e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  269   2.0985087e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  270   2.1068968e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  271   2.1077110e-05 write=False  0.65 s
+TOAST INFO: MLMapmaker   CG step  272   2.1175462e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  273   2.1458822e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  274   2.1766279e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  275   2.1906968e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  276   2.1635548e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  277   2.1276495e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  278   2.1064660e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  279   2.0981161e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  280   2.1022629e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  281   2.0990689e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  282   2.0886128e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  283   2.0862770e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  284   2.1085500e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  285   2.1463810e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  286   2.1942145e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  287   2.1922955e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  288   2.1487534e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  289   2.1186371e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  290   2.1039180e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  291   2.0885233e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  292   2.0839289e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  293   2.1003663e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  294   2.1317286e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  295   2.1580309e-05 write=False  0.67 s
+TOAST INFO: MLMapmaker   CG step  296   2.1609815e-05 write=False  0.68 s
+TOAST INFO: MLMapmaker   CG step  297   2.1347164e-05 write=False  0.73 s
+TOAST INFO: MLMapmaker   CG step  298   2.0847418e-05 write=False  0.72 s
+TOAST INFO: MLMapmaker   CG step  299   2.0512119e-05 write=False  0.72 s
+TOAST INFO: MLMapmaker   CG step  300   2.0340766e-05 write=True  0.72 s
+TOAST INFO: Wrote signal to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_map0300.fits in 0.05 s
+TOAST INFO: MLMapmaker   CG step  301   2.0244544e-05 write=False  0.72 s
+TOAST INFO: MLMapmaker   CG step  302   2.0232093e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  303   2.0171612e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  304   2.0167802e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  305   2.0209495e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  306   2.0152374e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  307   2.0032488e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  308   1.9935531e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  309   1.9786097e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  310   1.9745174e-05 write=False  0.73 s
+TOAST INFO: MLMapmaker   CG step  311   1.9749036e-05 write=False  0.72 s
+TOAST INFO: MLMapmaker   CG step  312   1.9722107e-05 write=False  0.73 s
+TOAST INFO: MLMapmaker   CG step  313   1.9704232e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  314   1.9623890e-05 write=False  0.73 s
+TOAST INFO: MLMapmaker   CG step  315   1.9509261e-05 write=False  0.74 s
+TOAST INFO: MLMapmaker   CG step  316   1.9530255e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  317   1.9656582e-05 write=False  0.71 s
+TOAST INFO: MLMapmaker   CG step  318   1.9746844e-05 write=False  0.73 s
+TOAST INFO: MLMapmaker   CG step  319   1.9773667e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  320   1.9798971e-05 write=False  0.69 s
+TOAST INFO: MLMapmaker   CG step  321   1.9867397e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  322   1.9915022e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  323   1.9983972e-05 write=False  0.73 s
+TOAST INFO: MLMapmaker   CG step  324   2.0158782e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  325   2.0380987e-05 write=False  0.70 s
+TOAST INFO: MLMapmaker   CG step  326   2.0688958e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  327   2.1407529e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  328   2.2105088e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  329   2.2221913e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  330   2.1864019e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  331   2.1654303e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  332   2.1580136e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  333   2.1634955e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  334   2.2035871e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  335   2.2644420e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  336   2.3388824e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  337   2.3799254e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  338   2.3696643e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  339   2.3414738e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  340   2.3400976e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  341   2.3591922e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  342   2.3841170e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  343   2.4220438e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  344   2.4528869e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  345   2.4653689e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  346   2.4884235e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  347   2.5200625e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  348   2.5589696e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  349   2.5964232e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  350   2.6487438e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  351   2.6865378e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  352   2.7013019e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  353   2.6881084e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  354   2.6655127e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  355   2.6672523e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  356   2.6864695e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  357   2.7024185e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  358   2.7188154e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  359   2.7364623e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  360   2.7590740e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  361   2.7824659e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  362   2.8139138e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  363   2.8279692e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  364   2.8419864e-05 write=False  0.80 s
+TOAST INFO: MLMapmaker   CG step  365   2.8460550e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  366   2.8539433e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  367   2.8682901e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  368   2.8729608e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  369   2.8715783e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  370   2.8755195e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  371   2.8941243e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  372   2.9201472e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  373   2.9457725e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  374   2.9545405e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  375   2.9951878e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  376   3.0615831e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  377   3.1412188e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  378   3.1712984e-05 write=False  0.80 s
+TOAST INFO: MLMapmaker   CG step  379   3.1334884e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  380   3.1025206e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  381   3.0873797e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  382   3.0923836e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  383   3.0959609e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  384   3.0706013e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  385   3.0626393e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  386   3.0739563e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  387   3.0814893e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  388   3.0843783e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  389   3.0999505e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  390   3.1296827e-05 write=False  0.78 s
+TOAST INFO: MLMapmaker   CG step  391   3.1306724e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  392   3.1322612e-05 write=False  0.80 s
+TOAST INFO: MLMapmaker   CG step  393   3.1408988e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  394   3.1578125e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  395   3.1590178e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  396   3.1844075e-05 write=False  0.79 s
+TOAST INFO: MLMapmaker   CG step  397   3.2212941e-05 write=False  0.77 s
+TOAST INFO: MLMapmaker   CG step  398   3.2779509e-05 write=False  0.75 s
+TOAST INFO: MLMapmaker   CG step  399   3.3455791e-05 write=False  0.76 s
+TOAST INFO: MLMapmaker   CG step  400   3.4077909e-05 write=True  0.78 s
+TOAST INFO: Wrote signal to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_map0400.fits in 0.05 s
+TOAST INFO: MLMapmaker finished solve in 279.35 s
+TOAST INFO: Wrote /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mlmapmaker_sky_map.fits
+TOAST INFO: MLMapmaker wrote map in 0.04 s
+TOAST INFO: Finished mapmaker_ml in 285.83 s
+TOAST INFO: Running mapmaker...
+TOAST INFO:   Using regression templates:
+TOAST INFO:   baselines (disabled), azss (disabled), 
+TOAST INFO:   Using fake noise model with uniform weighting
+TOAST INFO: Running mapmaker_run...
+TOAST INFO: MapMaker  finished template amplitude solve in 0.00 s
+TOAST INFO: MapMaker Caching pixel distribution
+TOAST INFO: MapMaker  finished build of pixel distribution in 0.85 s
+TOAST INFO: MapMaker begin build of final binning covariance
+TOAST INFO: MapMaker  finished build of final covariance in 3.19 s
+TOAST INFO: Wrote /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mapmaker_hits.fits in 0.01 s
+TOAST INFO: Wrote /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mapmaker_rcond.fits in 0.01 s
+TOAST INFO: MapMaker begin map binning
+TOAST INFO: MapMaker  finished binning in 19.09 s
+TOAST INFO: Wrote /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mapmaker_binmap.fits in 0.02 s
+TOAST INFO: MapMaker begin final map binning
+TOAST INFO: MapMaker  finished final binning in 19.26 s
+TOAST INFO: Wrote /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mapmaker_map.fits in 0.02 s
+TOAST INFO: Wrote /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395/mapmaker_cov.fits in 0.02 s
+TOAST INFO: MapMaker  finished output write in 0.04 s
+TOAST INFO: Finished mapmaker_run in 42.43 s
+TOAST INFO: Finished mapmaker in 42.53 s
+TOAST INFO: Running mapmaker_filterbin...
+TOAST INFO: Finished mapmaker_filterbin in 0.00 s
+TOAST INFO: Running mapmaker_madam...
+TOAST INFO: Finished mapmaker_madam in 0.00 s
+TOAST INFO: Running filtered_statistics...
+TOAST INFO: Finished filtered_statistics in 0.00 s
+TOAST INFO: After reducing data:  Memory usage (whole node)
+       total : 1007.054 GB
+   available :  997.730 GB
+     percent :    0.900 % 
+        used :    4.696 GB
+        free :  998.533 GB
+      active :    2.470 GB
+    inactive :    2.357 GB
+     buffers :   50.625 MB
+      cached :    3.776 GB
+      shared :    7.418 MB
+        slab :    1.115 GB
+
+TOAST INFO: Workflow completed in 330.16 s
+Done. Output written to /shared_home/henachman/SO_PointingReqs/mapmaking/slurm_mlmapmaking_run_77395
