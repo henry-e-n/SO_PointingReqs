@@ -1,5 +1,6 @@
 # Large Output files
 *.h5
+*.hdf5
 mapmaking/*/*.fits
 
 # Byte-compiled / optimized / DLL files
