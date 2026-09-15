@@ -6,7 +6,7 @@
 #SBATCH --error slurm_output/%A%a_ml_mapmaker.err
 # Email job changes
 #SBATCH --mail-type=ALL
-# SBATCH --mail-user=henry.nachman@utexas.edu
+#SBATCH --mail-user=henry.nachman+mlmapmaking@utexas.edu
 # Time limit (1 minute)
 #SBATCH --time 00:10:00
 # Number of MPI tasks needed for use case (example):
