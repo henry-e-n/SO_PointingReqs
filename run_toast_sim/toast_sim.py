@@ -10,6 +10,13 @@ os.environ["TOAST_LOGLEVEL"] = "INFO"
 import numpy as np
 import astropy.units as u
 from astropy.table import QTable
+
+# If running offline astropy will complain about not being able to find the IERS data.
+# This blocks the warning (but does not fix the problem)
+from astropy.utils.iers import conf
+conf.auto_max_age = None
+
+
 import pandas as pd
 import os
 from time import time
@@ -23,6 +30,7 @@ from toast.observation import default_values as defaults
 import inspect
 import healpy as hp
 import h5py
+from time import time
 
 from toast import Telescope, Data
 from toast.instrument import Focalplane, GroundSite
@@ -32,6 +40,15 @@ from toast.instrument_sim import (
     fake_hexagon_focalplane,
     plot_focalplane
 )
+
+# Add the path to my custom operators here
+abspath = os.path.dirname(os.path.abspath(__file__))
+repo_path = abspath.split("SO_PointingReqs")[0]
+ops_path = os.path.join(repo_path, "SO_PointingReqs/custom_toast_ops")
+if ops_path not in os.sys.path:
+    os.sys.path.append(ops_path)
+from pointing_offset import PointingOffset
+
 # Start the timer
 time_start = time()
 
@@ -142,8 +159,8 @@ def main(args):
                 group = f.create_group("telescope")
                 telescope.save_hdf5(group)
             print(f"Telescope saved to {telescope_save_path}")
-
-    print(f"Telescope Object {telescope.__dict__}")
+    ck1 = time()
+    print(f"Time to load telescope {ck1 - time_start:.2f} seconds")
 
     data = toast.Data(comm)
     schedule = toast.schedule.GroundSchedule()
@@ -194,12 +211,25 @@ def main(args):
     pixels_radec.apply(data)
     weights_radec.apply(data)
 
+
     # Pixel Distribution
     pix_dist = toast.ops.BuildPixelDistribution(
         pixel_dist="pixel_dist",
         pixel_pointing=pixels_radec,
     )
     pix_dist.apply(data)
+
+    if args.pointing_offset:
+        pointing_offset = PointingOffset(
+            dxi=[0.0],  # Deflection in Xi coordinates (in radians)
+            deta=[0.0],  # Deflection in Eta coordinates (in radians)
+            boresight_azel=defaults.boresight_azel,
+            boresight_radec=defaults.boresight_radec,
+        )
+        pointing_offset.apply(data)
+
+    ck2 = time()
+    print(f"Time to apply pointing {ck2 - ck1:.2f} seconds")
 
     # MARK: Scan Sky
     # Scan the map
@@ -210,48 +240,59 @@ def main(args):
     )
     scan_map.apply(data)
 
-    # MARK: Instrument Noise
-    if args.nominal_noise is not None:
-        # load the nominal noise from disk
-        nominal_noise = op_from_file(args.nominal_noise)
-    else:
-        nominal_noise = toast.ops.DefaultNoiseModel()
-    nominal_noise.apply(data)
+    ck3 = time()
+    print(f"Time to scan map {ck3 - ck2:.2f} seconds")
 
-    # MARK: Sim noise
-    if args.sim_noise is not None:
-        # load the sim noise from disk
-        sim_noise = op_from_file(args.sim_noise)
-    else:
-        sim_noise = toast.ops.SimNoise(
-            noise_model=nominal_noise.noise_model,
-        )
-    sim_noise.apply(data)
+    if not args.no_noise:
+        # MARK: Instrument Noise
+        if args.nominal_noise is not None:
+            # load the nominal noise from disk
+            nominal_noise = op_from_file(args.nominal_noise)
+        else:
+            nominal_noise = toast.ops.DefaultNoiseModel()
+        nominal_noise.apply(data)
 
+        # MARK: Sim noise
+        if args.sim_noise is not None:
+            # load the sim noise from disk
+            sim_noise = op_from_file(args.sim_noise)
+        else:
+            sim_noise = toast.ops.SimNoise(
+                noise_model=nominal_noise.noise_model,
+            )
+        sim_noise.apply(data)
+
+    ck4 = time()
+    print(f"Time to apply noise {ck4 - ck3:.2f} seconds")
     # MARK: Scan Sync Signal
-    ground_pickup = toast.ops.SimScanSynchronousSignal(
-        detector_pointing=det_point_azel,
-        scale=0.001 * u.K,
-        stokes_weights=weights_azel,
-    )
-    ground_pickup.apply(data)
+    if not args.no_scan_sync:
+        ground_pickup = toast.ops.SimScanSynchronousSignal(
+            detector_pointing=det_point_azel,
+            scale=0.001 * u.K,
+            stokes_weights=weights_azel,
+        )
+        ground_pickup.apply(data)
 
     # MARK: Sim Atm
-    sim_atm = toast.ops.SimAtmosphere(
-        detector_pointing=det_point_azel,
-        add_loading=True,
-        lmin_center=0.001 * u.m,
-        lmin_sigma=0.0001 * u.m,
-        lmax_center=1.0 * u.m,
-        lmax_sigma=0.1 * u.m,
-        xstep=20 * u.m,
-        ystep=20 * u.m,
-        zstep=20 * u.m,
-        zmax=200 * u.m,
-        gain=4e-5,
-        wind_dist=1000 * u.m,
-    )
-    sim_atm.apply(data)
+    if not args.no_atmosphere:
+        sim_atm = toast.ops.SimAtmosphere(
+            detector_pointing=det_point_azel,
+            add_loading=True,
+            lmin_center=0.001 * u.m,
+            lmin_sigma=0.0001 * u.m,
+            lmax_center=1.0 * u.m,
+            lmax_sigma=0.1 * u.m,
+            xstep=20 * u.m,
+            ystep=20 * u.m,
+            zstep=20 * u.m,
+            zmax=200 * u.m,
+            gain=4e-5,
+            wind_dist=1000 * u.m,
+        )
+        sim_atm.apply(data)
+
+    ck5 = time()
+    print(f"Time to apply atmosphere {ck5 - ck4:.2f} seconds")
 
     # MARK: Save Obs
     data_save_path = os.path.join(out_dir, "toast_obs")
@@ -263,6 +304,9 @@ def main(args):
         print(f"Clearing and replacing existing directory: {data_save_path}")
     save_data = toast.ops.SaveHDF5(volume=data_save_path)
     save_data.apply(data)
+
+    end_time = time()
+    print(f"Total time for simulation: {end_time - time_start:.2f} seconds")
     return
 
 # MARK: Argparse
@@ -388,6 +432,27 @@ if __name__ == "__main__":
         "--save_intermediate",
         action="store_true",
         help="Flag to save intermediate results (optional)",
+    )
+
+    parser.add_argument(
+        "--no_noise",
+        action="store_true",
+        help="Flag to skip simulating noise (optional)",
+    )
+    parser.add_argument(
+        "--no_scan_sync",
+        action="store_true",
+        help="Flag to skip simulating scan synchronous signal (optional)",
+    )
+    parser.add_argument(
+        "--no_atmosphere",
+        action="store_true",
+        help="Flag to skip simulating the atmosphere (optional)",
+    )
+    parser.add_argument(
+        "--pointing_offset",
+        action="store_true",
+        help="Flag to apply a pointing offset (optional)",
     )
 
     args = parser.parse_args()
