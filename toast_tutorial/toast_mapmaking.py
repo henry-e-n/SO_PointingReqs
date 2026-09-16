@@ -1,0 +1,274 @@
+import os
+import healpy as hp
+import numpy as np
+import toast
+from toast.tests import helpers
+import matplotlib.pyplot as plt
+import argparse
+import astropy.units as u
+from toast.observation import default_values as defaults
+
+# MPI communicator
+world, procs, rank = toast.mpi.get_world()
+comm = helpers.create_comm(world, single_group=True)
+
+
+# Helper functions to plot all the maps
+
+def plot_maps(
+    root,
+    range_I=(-0.01, 0.01),
+    range_Q=(-0.0002, 0.0002),
+    range_U=(-0.0002, 0.0002),
+    max_hits=1000,
+    truth=None,
+):
+    cmap = "viridis"
+    gnomres = 8.0
+    gnomrot = (199.5, 8.3)
+    xsize = 800
+    
+    hits_file = f"{root}_hits.fits"
+    rcond_file = f"{root}_rcond.fits"
+    binmap_file = f"{root}_binmap.fits"
+    map_file = f"{root}_map.fits"
+
+    # Load hits
+    hits = hp.read_map(hits_file, field=None, nest=True)
+    goodhits = hits > 0
+    badhits = np.logical_not(goodhits)
+
+    # Load rcond
+    rcond = hp.read_map(rcond_file, field=None, nest=True)
+    rcond[badhits] = hp.UNSEEN
+
+    # Maps
+    maps = hp.read_map(map_file, field=None, nest=True)
+    binmaps = hp.read_map(binmap_file, field=None, nest=True)
+    resid = None
+    resid_bin = None
+    if truth is not None:
+        truth_maps = hp.read_map(truth, field=None, nest=True)
+        resid = list()
+        resid_bin = list()
+        for i in range(3):
+            resid.append(np.array(maps[i]) - truth_maps[i])
+            resid_bin.append(np.array(binmaps[i]) - truth_maps[i])
+    for i in range(3):
+        maps[i][badhits] = hp.UNSEEN
+        binmaps[i][badhits] = hp.UNSEEN
+        if truth is not None:
+            truth_maps[i][badhits] = hp.UNSEEN
+            resid[i][badhits] = hp.UNSEEN
+            resid_bin[i][badhits] = hp.UNSEEN
+
+    # Plot hits and rcond
+    fig = plt.figure(dpi=100, figsize=(18, 12))
+    hp.gnomview(
+        map=hits,
+        fig=fig.number,
+        sub=(1, 2, 1),
+        rot=gnomrot,
+        xsize=xsize,
+        reso=gnomres,
+        nest=True,
+        cmap=cmap,
+        min=0,
+        max=max_hits,
+        title="Hits",
+    )
+    hp.gnomview(
+        map=rcond,
+        fig=fig.number,
+        sub=(1, 2, 2),
+        rot=gnomrot,
+        xsize=xsize,
+        reso=gnomres,
+        nest=True,
+        cmap=cmap,
+        min=0,
+        max=0.5,
+        title="Inverse Condition Number",
+    )
+    plt.show()
+    plt.close()
+
+    # Plot maps
+    
+    plot_cols = 2
+    if truth is not None:
+        plot_cols = 4
+    plot_rows = 3
+    fig = plt.figure(dpi=100, figsize=(18, 18))
+    counter = 1
+    for row, (stokes, rng) in enumerate([("I", range_I), ("Q", range_Q), ("U", range_U)]):
+        for mps, res, name in [(maps, resid, "Destriped"), (binmaps, resid_bin, "Binned")]:
+            hp.gnomview(
+                map=mps[row],
+                fig=fig.number,
+                sub=(plot_rows, plot_cols, counter),
+                rot=gnomrot,
+                xsize=xsize,
+                reso=gnomres,
+                nest=True,
+                cmap=cmap,
+                min=rng[0],
+                max=rng[1],
+                title=f"{name} Stokes {stokes}",
+            )
+            counter += 1
+            if truth is not None:
+                hp.gnomview(
+                    map=res[row],
+                    fig=fig.number,
+                    sub=(plot_rows, plot_cols, counter),
+                    rot=gnomrot,
+                    xsize=xsize,
+                    reso=gnomres,
+                    nest=True,
+                    cmap=cmap,
+                    min=rng[0],
+                    max=rng[1],
+                    title=f"{name} Stokes {stokes} Minus Input",
+                )
+                counter += 1
+    plt.savefig(os.path.join(root, f"filterbinned_maps.png"), dpi=100)
+    plt.show()
+    plt.close()
+
+
+def main(args):
+    """
+    Perform a simple generalized destriper mapmaking operation on a set
+    of TOAST data.
+    """
+
+    # Load the data from the input file
+    data = toast.Data(comm)
+    load_data = toast.ops.LoadHDF5(volume=args.data_volume)
+    load_data.apply(data)
+
+
+    # Filtering
+    filter = toast.ops.CommonModeFilter(
+        redistribute=False,
+        regress=True,
+    )
+
+    filter.apply(data)
+
+    # Estimate noise
+    estim = toast.ops.NoiseEstim(
+        out_model="noise_estimate",
+        lagmax=100,
+        nbin_psd=32,
+        nsum=1,
+    )
+    estim.apply(data)
+
+    # Compute a 1/f fit to this
+    noise_fitter = toast.ops.FitNoiseModel(
+        noise_model=estim.out_model,
+        out_model="fit_noise_model",
+    )
+    noise_fitter.apply(data)
+
+    # MARK: Pointing Matrix
+
+    det_point_azel = toast.ops.PointingDetectorSimple(
+        boresight=defaults.boresight_azel,
+        quats="quats_azel"
+    )
+
+    det_point_radec = toast.ops.PointingDetectorSimple(
+        boresight=defaults.boresight_radec,
+        quats="quats_radec"
+    )
+
+    nside = 256
+    pixels_radec = toast.ops.PixelsHealpix(
+        nside=nside,
+        nest=True,
+        detector_pointing=det_point_radec,
+    )
+
+    weights_azel = toast.ops.StokesWeights(
+        mode="IQU",
+        detector_pointing=det_point_azel,
+    )
+
+    weights_radec = toast.ops.StokesWeights(
+        mode="IQU",
+        detector_pointing=det_point_radec,
+    )
+
+    pix_dist = toast.ops.BuildPixelDistribution(
+        pixel_dist="pixel_dist",
+        pixel_pointing=pixels_radec,
+    )
+
+    # MARK: BINNING
+    # Set up binning operator for solving
+    binner = toast.ops.BinMap(
+        pixel_dist=pix_dist.pixel_dist,
+        pixel_pointing=pixels_radec,
+        stokes_weights=weights_radec,
+        noise_model=noise_fitter.out_model,
+    )
+
+    # The Offset template models 1/f noise as a stepwise function, which
+    # is the same as a "classic" destriper.
+
+    tmpl_offset = toast.templates.Offset(
+        times=defaults.times,
+        noise_model=noise_fitter.out_model,
+        step_time=1.0 * u.second,
+    )
+
+    # Build a template matrix with our templates.
+
+    tmatrix = toast.ops.TemplateMatrix(
+        templates=[tmpl_offset],
+    )
+
+    # If the outdir doesn't exist, make it
+    if not os.path.exists(args.out_dir):
+        os.makedirs(args.out_dir)
+
+    map_maker = toast.ops.MapMaker(
+        name="mapmaker",
+        binning=binner,
+        template_matrix=tmatrix,
+        solve_rcond_threshold=1.0e-1,
+        map_rcond_threshold=1.0e-1,
+        iter_min=200,
+        iter_max=300,
+        write_hits=True,
+        write_map=True,
+        write_binmap=True,
+        write_cov=False,
+        write_invcov=False,
+        write_rcond=True,
+        output_dir=args.out_dir,
+        keep_solver_products=True, # We set this to True so we can plot solved template amplitudes later
+    )
+    map_maker.apply(data)
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="TOAST Mapmaking Tutorial")
+    parser.add_argument(
+        "--data_volume",
+        type=str,
+        required=True,
+        help="Path to the input data volume (HDF5 file)",
+    )
+    parser.add_argument(
+        "--out_dir",
+        type=str,
+        required=True,
+        help="Directory to save output maps and plots",
+    )
+    args = parser.parse_args()
+
+    main(args)
