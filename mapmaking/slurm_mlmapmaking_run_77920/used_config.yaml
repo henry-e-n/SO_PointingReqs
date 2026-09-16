@@ -19,7 +19,7 @@ operators:
     sort_by_size: false # If True, sort observations by size before load balancing
     timing: false # If True, print timing of exec()
     timing_total: false # If True, print timing of finalize()
-    volume: SO_PointingReqs/toast_tutorial/toast_out_hdf5 # Top-level directory containing the data volume
+    volume: /shared_home/henachman/SO_PointingReqs/run_toast_sim/test/toast_obs # Top-level directory containing the data volume
     volume_index: DEFAULT # Path to index file.  None disables use of index.  'DEFAULT' uses the default VolumeIndex name at the top of the volume.
     volume_select: # SQL selection string applied to the observation table of the index.
   load_books:
@@ -1186,7 +1186,7 @@ operators:
     class: sotodlib.toast.ops.mlmapmaker.MLMapmaker
     API: 0  # Internal interface version for this operator
     Nmat: # The noise matrix to use
-    area: SO_PointingReqs/sim_sky_maps/maps/area.fits # Load the enmap geometry from this file
+    area: /shared_home/henachman/SO_PointingReqs/sim_sky_maps/maps/area.fits # Load the enmap geometry from this file
     boresight: boresight_azel # Observation shared key for boresight Az/El
     center_at: # The format is [from=](ra:dec|name),[to=(ra:dec|name)],[up=(ra:dec|name|system)]
     checkpoint_interval: 0 # If greater than zero, the CG solver will store its state andrestart from a checkpoint when available.
@@ -1202,7 +1202,7 @@ operators:
     interpol: nearest # Either one or a comma-separated list of interpolation modes
     kernel_implementation: 0 # Which kernel implementation to use (DEFAULT, COMPILED, NUMPY, JAX).
     maxerr: 1e-06 # Maximum error in the CG solver
-    maxiter: '[500,]' # List of maximum number of CG iterations for each pass.
+    maxiter: '[400]' # List of maximum number of CG iterations for each pass.
     name: mlmapmaker # The 'name' of this class instance
     nmat_dir: # Where to read/write/cache noise matrices. See nmat_mode. If None, write to {out_dir}/nmats
     nmat_mode: build # How to initialize the noise matrix.  'build': Always build from data in obs.  'cache': Use if available in nmat_dir, otherwise build and save.  'load': Load from nmat_dir, error if missing.  'save': Build from obs data and save.
@@ -1226,7 +1226,7 @@ operators:
     write_bin: true # Write out the binned map
     write_div: all # Components (must be 'T', 'QU', 'TQU', 'all', None, or '')
     write_hits: true # Write out the hitcount map
-    write_iter_map: 10 # Number of iterations between saved maps.  Set to zero to disable.
+    write_iter_map: 100 # Number of iterations between saved maps.  Set to zero to disable.
     write_rhs: true # Write out the right hand side of the mapmaking equation
   binner:
     class: toast.ops.mapmaker_binning.BinMap

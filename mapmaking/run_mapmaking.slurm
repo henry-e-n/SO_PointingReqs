@@ -47,7 +47,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # -----------------------------------------------------------------------
 # Paths -- fill these in
 # -----------------------------------------------------------------------
-HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/toast_tutorial/toast_out_hdf5   # directory of per-observation .h5 files
+HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/run_toast_sim/test/toast_obs   # directory of per-observation .h5 files
 AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/maps/area.fits           # geometry file from the earlier steps
 OUT_DIR=${SLURM_SUBMIT_DIR}/slurm_mlmapmaking_run_${SLURM_JOB_ID}
 
@@ -74,4 +74,5 @@ srun --ntasks=$((SLURM_NTASKS)) toast_so_map \
     --out_dir "${OUT_DIR}" \
     --log_config "${OUT_DIR}/used_config.yaml"
 
+python map_loader.py "${OUT_DIR}"
 echo "Done. Output written to ${OUT_DIR}"
