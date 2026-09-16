@@ -6,6 +6,9 @@ import os
 def main(args):
     path_to_file = os.path.join(args.directory, "mlmapmaker_sky_map.fits")
 
+    if not os.path.exists(path_to_file):
+        raise FileNotFoundError(f"File {path_to_file} does not exist.")
+
     toast.vis.plot_wcs_maps(
         mapfile=str(path_to_file),
         format="png",

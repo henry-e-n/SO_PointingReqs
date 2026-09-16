@@ -5,8 +5,8 @@
 #SBATCH --output slurm_output/%A%a_ml_mapmaker.out
 #SBATCH --error slurm_output/%A%a_ml_mapmaker.err
 # Email job changes
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=henry.nachman+mlmapmaking@utexas.edu
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=henry.nachman@utexas.edu
 # Time limit (1 minute)
 #SBATCH --time 00:10:00
 # Number of MPI tasks needed for use case (example):
@@ -47,7 +47,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # -----------------------------------------------------------------------
 # Paths -- fill these in
 # -----------------------------------------------------------------------
-HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/run_toast_sim/test/toast_obs   # directory of per-observation .h5 files
+HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/run_toast_sim/PS_10FWHM/toast_obs   # directory of per-observation .h5 files
 AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/maps/area.fits           # geometry file from the earlier steps
 OUT_DIR=${SLURM_SUBMIT_DIR}/slurm_mlmapmaking_run_${SLURM_JOB_ID}
 
