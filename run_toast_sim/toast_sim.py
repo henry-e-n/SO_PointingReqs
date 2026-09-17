@@ -26,6 +26,7 @@ import shutil
 import toast
 from toast.tests import helpers
 from toast.observation import default_values as defaults
+from toast.vis import plot_projected_quats
 
 import inspect
 import healpy as hp
@@ -221,12 +222,39 @@ def main(args):
 
     if args.pointing_offset:
         pointing_offset = PointingOffset(
-            dxi=[0.0],  # Deflection in Xi coordinates (in radians)
-            deta=[0.0],  # Deflection in Eta coordinates (in radians)
+            dxi=args.dxi,  # Deflection in Xi coordinates (in radians)
+            deta=args.deta,  # Deflection in Eta coordinates (in radians)
             boresight_azel=defaults.boresight_azel,
             boresight_radec=defaults.boresight_radec,
         )
         pointing_offset.apply(data)
+
+
+    # Pointing vis
+    ob = data.obs[0]
+    slc = slice(500, 510, 10)
+
+    # Boresight quaternion for the slice — use boresight_azel for ground data,
+    # boresight_radec if you want celestial coordinates
+    bquat = np.array(ob.shared[defaults.boresight_radec].data[slc, :])
+
+    # Detector quaternions for the slice, shape (n_det, n_samp, 4)
+    dets = ob.local_detectors
+    print(ob.detdata)
+    dquat = np.array([ob.detdata["quats_radec"][d][slc, :] for d in dets])
+    print(dquat)
+    # Mask out flagged samples
+    invalid = np.array(ob.shared[defaults.shared_flags][slc])
+    invalid &= defaults.shared_mask_invalid
+    valid = np.logical_not(invalid)
+
+    plot_projected_quats(
+        os.path.join(out_dir, "pointing_celestial.png"),
+        qbore=bquat,
+        qdet=dquat,
+        valid=valid,
+        scale=1.0,
+    )
 
     ck2 = time()
     print(f"Time to apply pointing {ck2 - ck1:.2f} seconds")
@@ -388,7 +416,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--fov",
         type=float,
-        default=7.8,
+        default=1.3,
         help="Field of view of the focal plane in degrees (default: 10.0)",
     )
     parser.add_argument(
@@ -453,6 +481,25 @@ if __name__ == "__main__":
         "--pointing_offset",
         action="store_true",
         help="Flag to apply a pointing offset (optional)",
+    )
+
+    # Pointing offset parameters
+    idx = int(os.environ["SLURM_ARRAY_TASK_ID"])
+    dxi_params  = [0.0, 0.01, 0.02, 0.03, 0.0, 0.0, 0.0]
+    deta_params = [0.0, 0.0, 0.0, 0.0, 0.01, 0.02, 0.03]
+    parser.add_argument(
+        "--dxi",
+        type=float,
+        nargs='+',
+        default=[dxi_params[idx]],
+        help="Deflection in Xi coordinates (in radians) for pointing offset (default: [0.0])",
+    )
+    parser.add_argument(
+        "--deta",
+        type=float,
+        nargs='+',
+        default=[deta_params[idx]],
+        help="Deflection in Eta coordinates (in radians) for pointing offset (default: [0.0])",
     )
 
     args = parser.parse_args()

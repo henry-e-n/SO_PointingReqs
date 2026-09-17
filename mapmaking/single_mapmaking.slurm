@@ -17,7 +17,6 @@
 #SBATCH --ntasks-per-node=1
 # Set memory requirement
 #SBATCH --mem 256GB
-#SBATCH --array=1-6
 
 # -----------------------------------------------------------------------
 # Environment setup
@@ -47,9 +46,9 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # -----------------------------------------------------------------------
 # Paths -- fill these in
 # -----------------------------------------------------------------------
-HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/run_toast_sim/PS_3FWHM_${SLURM_ARRAY_TASK_ID}/toast_obs   # directory of per-observation .h5 files
+HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/toast_tutorial/toast_out_hdf5   # directory of per-observation .h5 files
 AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/area.fits           # geometry file from the earlier steps
-OUT_DIR=${SLURM_SUBMIT_DIR}/PS_3FWHM_${SLURM_ARRAY_TASK_ID}
+OUT_DIR=${SLURM_SUBMIT_DIR}/PS_3FWHM
 
 mkdir -p "${OUT_DIR}"
 

@@ -1,7 +1,14 @@
 import numpy as np
 import toast
+from toast.tests import helpers
+
 import argparse
 import os
+
+
+# MPI communicator
+world, procs, rank = toast.mpi.get_world()
+comm = helpers.create_comm(world, single_group=True)
 
 def main(args):
     path_to_file = os.path.join(args.directory, "mlmapmaker_sky_map.fits")
