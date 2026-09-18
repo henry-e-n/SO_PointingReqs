@@ -229,7 +229,7 @@ def main(args):
         )
         pointing_offset.apply(data)
 
-
+    
     # Pointing vis
     ob = data.obs[0]
     slc = slice(500, 510, 10)
