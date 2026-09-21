@@ -45,10 +45,11 @@ from toast.instrument_sim import (
 # Add the path to my custom operators here
 abspath = os.path.dirname(os.path.abspath(__file__))
 repo_path = abspath.split("SO_PointingReqs")[0]
-ops_path = os.path.join(repo_path, "SO_PointingReqs/custom_toast_ops")
+ops_path = os.path.join(repo_path, "SO_PointingReqs")
 if ops_path not in os.sys.path:
     os.sys.path.append(ops_path)
-from pointing_offset import PointingOffset
+
+from custom_toast_ops import PointingOffset, PointingJitter
 
 # Start the timer
 time_start = time()
@@ -221,6 +222,7 @@ def main(args):
     pix_dist.apply(data)
 
     if args.pointing_offset:
+        # Code to apply a constant pointing offset
         pointing_offset = PointingOffset(
             dxi=args.dxi,  # Deflection in Xi coordinates (in radians)
             deta=args.deta,  # Deflection in Eta coordinates (in radians)
@@ -229,6 +231,18 @@ def main(args):
         )
         pointing_offset.apply(data)
 
+    if args.pointing_jitter:
+        # Code to apply a random pointing jitter
+        pointing_jitter = PointingJitter(
+            max_daz=args.max_daz,  # Maximum deflection in Azimuth coordinates (in radians)
+            max_del=args.max_del,  # Maximum deflection in Elevation coordinates (in radians)
+            corotator_max=args.corotator_max,  # Maximum deflection in the corotator angle (in radians)
+            sin_amp=args.sin_amp,  # Amplitude of the sinusoidal jitter (in radians)
+            sin_freq=args.sin_freq,  # Frequency of the sinusoidal jitter (in 1/samples)
+            boresight_azel=defaults.boresight_azel,
+            boresight_radec=defaults.boresight_radec,
+        )
+        pointing_jitter.apply(data)
     
     # Pointing vis
     ob = data.obs[0]
@@ -240,9 +254,7 @@ def main(args):
 
     # Detector quaternions for the slice, shape (n_det, n_samp, 4)
     dets = ob.local_detectors
-    print(ob.detdata)
     dquat = np.array([ob.detdata["quats_radec"][d][slc, :] for d in dets])
-    print(dquat)
     # Mask out flagged samples
     invalid = np.array(ob.shared[defaults.shared_flags][slc])
     invalid &= defaults.shared_mask_invalid
@@ -500,6 +512,45 @@ if __name__ == "__main__":
         nargs='+',
         default=[deta_params[idx]],
         help="Deflection in Eta coordinates (in radians) for pointing offset (default: [0.0])",
+    )
+    parser.add_argument(
+        "--pointing_jitter",
+        action="store_true",
+        help="Flag to apply a pointing jitter (optional)",
+    )
+
+    
+    daz_params  = [0.0, 0.01, 0.02, 0.03]
+    del_params = [0.0, 0.01, 0.02, 0.03]
+    parser.add_argument(
+        "--max_daz",
+        type=float,
+        default=daz_params[idx],
+        help="Maximum deflection in Azimuth coordinates (in radians) for pointing jitter (default: 0.01)",
+    )
+    parser.add_argument(
+        "--max_del",
+        type=float,
+        default=del_params[idx],
+        help="Maximum deflection in Elevation coordinates (in radians) for pointing jitter (default: 0.01)",
+    )
+    parser.add_argument(
+        "--corotator_max",
+        type=float,
+        default=((0 * u.arcsec).to(u.rad)).value,
+        help="Maximum deflection in the corotator angle (in radians) for pointing jitter (default: 0.01)",
+    )
+    parser.add_argument(
+        "--sin_amp",
+        type=float,
+        default=((100 * u.arcsec).to(u.rad)).value,
+        help="Amplitude of the sinusoidal jitter (in radians) for pointing jitter (default: 0.005)",
+    )
+    parser.add_argument(
+        "--sin_freq",
+        type=float,
+        default=0.1,
+        help="Frequency of the sinusoidal jitter (in 1/samples) for pointing jitter (default: 0.1)",
     )
 
     args = parser.parse_args()

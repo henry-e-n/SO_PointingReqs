@@ -2,8 +2,8 @@
 # Job name:
 # SBATCH --job-name=toast_sim
 # Job output
-#SBATCH --output run_toast_sim/slurm_output/%A_%a_toast_sim.out
-#SBATCH --error run_toast_sim/slurm_output/%A_%a_toast_sim.err
+#SBATCH --output sim_outputs/slurm_outputs/%A_%a_toast_sim.out
+#SBATCH --error sim_outputs/slurm_outputs/%A_%a_toast_sim.err
 # Email job changes
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=henry.nachman@utexas.edu
@@ -17,7 +17,7 @@
 #SBATCH --ntasks-per-node=1
 # Set memory requirement
 #SBATCH --mem 256GB
-#SBATCH --array=1-6
+#SBATCH --array=0-0
 
 # -----------------------------------------------------------------------
 # Environment setup
@@ -40,7 +40,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # -----------------------------------------------------------------------
 # Paths -- fill these in
 # -----------------------------------------------------------------------
-OUT_DIR=${SLURM_SUBMIT_DIR}/run_toast_sim/PS_3FWHM_${SLURM_ARRAY_TASK_ID}
+OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/toast_outputs/$1_${SLURM_ARRAY_TASK_ID}
 
 mkdir -p "${OUT_DIR}"
 
@@ -60,8 +60,8 @@ echo "Running with dxi = $SLURM_ARRAY_TASK_ID"
 srun python run_toast_sim/toast_sim.py \
 sim_sky_maps/maps/map_with_3FWHM_source.fits \
 toast_tutorial/out_sim_ground/custom_map/test_schedule.txt \
---load_telescope run_toast_sim/PS_3FWHM_0/telescope.hdf5 \
+--load_telescope run_toast_sim/telescope.hdf5 \
 --pointing_offset \
---out_dir run_toast_sim/PS_3FWHM_${SLURM_ARRAY_TASK_ID}/ \
+--out_dir "${OUT_DIR}" \
 
 echo "Done. Output written to ${OUT_DIR}"
