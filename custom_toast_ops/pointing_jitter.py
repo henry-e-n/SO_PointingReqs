@@ -27,7 +27,7 @@ class PointingJitter(Operator):
 
     API = Int(0, help="Internal interface version for this operator")
 
-    max_daz = List(
+    max_daz = Float(
         0.0,
         help="The maximum deflection in Azimuth coordinates (in radians) to be applied to the telescope boresight pointing",
     )
@@ -43,11 +43,12 @@ class PointingJitter(Operator):
     )
 
     sin_amp = Float(
-        0.0,
+        1.0,
         help="The amplitude of the sinusoidal jitter (in radians) to be applied to the telescope boresight pointing",
     )
 
     sin_freq = Float(
+        1.0,
         help="The frequency of the sinusoidal jitter (in 1/samples) to be applied to the telescope boresight pointing",
     )
 
