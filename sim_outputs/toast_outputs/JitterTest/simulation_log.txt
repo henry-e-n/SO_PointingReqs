@@ -1,0 +1,14 @@
+Simulation run Start Time : 2026-09-22 23:29:16.218475
+Simulation Command :
+run_toast_sim/toast_sim.py
+--input_map sim_sky_maps/maps/map_with_3FWHM_source.fits
+--schedule_file toast_tutorial/out_sim_ground/custom_map/test_schedule.txt
+--load_telescope run_toast_sim/telescope.hdf5
+--out_dir sim_outputs/toast_outputs/JitterTest
+--pointing_jitter --max_daz 5e-5
+--max_del 5e-5
+--sin_amp 5e-4
+--sin_freq 5
+
+Simulation run End Time : 2026-09-22 23:30:14.088870
+Total time for simulation: 0:00:57.870395
