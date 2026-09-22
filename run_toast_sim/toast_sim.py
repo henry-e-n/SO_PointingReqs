@@ -19,9 +19,11 @@ conf.auto_max_age = None
 
 import pandas as pd
 import os
+import sys
 from time import time
 import pickle
 import shutil
+from datetime import datetime
 
 import toast
 from toast.tests import helpers
@@ -50,9 +52,10 @@ if ops_path not in os.sys.path:
     os.sys.path.append(ops_path)
 
 from custom_toast_ops import PointingOffset, PointingJitter
-
+from run_toast_sim.pointing_vis import boresight_pointing_3dvis, boresight_pointing_residualplot
 # Start the timer
 time_start = time()
+dt_timestart = datetime.fromtimestamp(time_start)
 
 # MPI communicator
 world, procs, rank = toast.mpi.get_world()
@@ -94,7 +97,7 @@ def load_from_hdf5(file_path, class_type):
     
     return obj
 
-def main(args):
+def main(args, log_file_path=None):
     out_dir = args.out_dir
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
@@ -221,6 +224,8 @@ def main(args):
     )
     pix_dist.apply(data)
 
+    init_boreradec = np.array(data.obs[0].shared[defaults.boresight_radec].data)
+
     if args.pointing_offset:
         # Code to apply a constant pointing offset
         pointing_offset = PointingOffset(
@@ -244,29 +249,14 @@ def main(args):
         )
         pointing_jitter.apply(data)
     
+
+
     # Pointing vis
     ob = data.obs[0]
-    slc = slice(500, 510, 10)
 
-    # Boresight quaternion for the slice — use boresight_azel for ground data,
-    # boresight_radec if you want celestial coordinates
-    bquat = np.array(ob.shared[defaults.boresight_radec].data[slc, :])
-
-    # Detector quaternions for the slice, shape (n_det, n_samp, 4)
-    dets = ob.local_detectors
-    dquat = np.array([ob.detdata["quats_radec"][d][slc, :] for d in dets])
-    # Mask out flagged samples
-    invalid = np.array(ob.shared[defaults.shared_flags][slc])
-    invalid &= defaults.shared_mask_invalid
-    valid = np.logical_not(invalid)
-
-    plot_projected_quats(
-        os.path.join(out_dir, "pointing_celestial.png"),
-        qbore=bquat,
-        qdet=dquat,
-        valid=valid,
-        scale=1.0,
-    )
+    jitter_boreradec = np.array(ob.shared[defaults.boresight_radec].data)
+    boresight_pointing_3dvis(jitter_boreradec, init_boreradec, ob, n_slices=30, step_size=10, rad_threshold=0.15, show_dets=False, out_dir=out_dir)
+    boresight_pointing_residualplot(jitter_boreradec, init_boreradec, n_slices=30, step_size=10, out_dir=out_dir)
 
     ck2 = time()
     print(f"Time to apply pointing {ck2 - ck1:.2f} seconds")
@@ -346,7 +336,11 @@ def main(args):
     save_data.apply(data)
 
     end_time = time()
-    print(f"Total time for simulation: {end_time - time_start:.2f} seconds")
+    dt_timeend = datetime.fromtimestamp(end_time)
+    if log_file_path:
+        with open(log_file_path, "a") as log_file:
+            log_file.write(f"Simulation run End Time : {dt_timeend}\n")
+            log_file.write(f"Total time for simulation: {dt_timeend - dt_timestart}\n")
     return
 
 # MARK: Argparse
@@ -358,17 +352,22 @@ if __name__ == "__main__":
 
     # Add required command line arguments
     parser.add_argument(
-        "input_map",
+        "-i",
+        "--input_map",
         type=str,
+        required=True,
         help="Path to the input sky map file (FITS format)",
     )
     parser.add_argument(
-        "schedule_file",
+        "-s",
+        "--schedule_file",
         type=str,
+        required=True,
         help="Path to the schedule file (required)",
     )
     # Add optional command line arguments for loading simulation configuration files
     parser.add_argument(
+        "-t",
         "--load_telescope",
         type=str,
         default=None,
@@ -394,6 +393,7 @@ if __name__ == "__main__":
         help="Name of the telescope to be created (default: MyTelescope)",
     )
     parser.add_argument(
+        "-o",
         "--out_dir",
         type=str,
         default=".",
@@ -496,7 +496,11 @@ if __name__ == "__main__":
     )
 
     # Pointing offset parameters
-    idx = int(os.environ["SLURM_ARRAY_TASK_ID"])
+    try:
+        idx = int(os.environ["SLURM_ARRAY_TASK_ID"])
+    except KeyError:
+        # This means the script is not running as part of a SLURM array job, so we can set idx to 0 or any other default value.
+        idx = 0
     dxi_params  = [0.0, 0.01, 0.02, 0.03, 0.0, 0.0, 0.0]
     deta_params = [0.0, 0.0, 0.0, 0.0, 0.01, 0.02, 0.03]
     parser.add_argument(
@@ -514,6 +518,7 @@ if __name__ == "__main__":
         help="Deflection in Eta coordinates (in radians) for pointing offset (default: [0.0])",
     )
     parser.add_argument(
+        "-j",
         "--pointing_jitter",
         action="store_true",
         help="Flag to apply a pointing jitter (optional)",
@@ -526,25 +531,25 @@ if __name__ == "__main__":
         "--max_daz",
         type=float,
         default=daz_params[idx],
-        help="Maximum deflection in Azimuth coordinates (in radians) for pointing jitter (default: 0.01)",
+        help="Maximum deflection in Azimuth coordinates (in radians) for pointing jitter (default: 0.01). For reference: 10arcsec ~= 5e-5 rad",
     )
     parser.add_argument(
         "--max_del",
         type=float,
         default=del_params[idx],
-        help="Maximum deflection in Elevation coordinates (in radians) for pointing jitter (default: 0.01)",
+        help="Maximum deflection in Elevation coordinates (in radians) for pointing jitter (default: 0.01). For reference: 10arcsec ~= 5e-5 rad",
     )
     parser.add_argument(
         "--corotator_max",
         type=float,
         default=((0 * u.arcsec).to(u.rad)).value,
-        help="Maximum deflection in the corotator angle (in radians) for pointing jitter (default: 0.01)",
+        help="Maximum deflection in the corotator angle (in radians) for pointing jitter (default: 0.01). For reference: 10arcsec ~= 5e-5 rad",
     )
     parser.add_argument(
         "--sin_amp",
         type=float,
         default=((100 * u.arcsec).to(u.rad)).value,
-        help="Amplitude of the sinusoidal jitter (in radians) for pointing jitter (default: 0.005)",
+        help="Amplitude of the sinusoidal jitter (in radians) for pointing jitter (default: 0.005). For reference: 100arcsec ~= 5e-4 rad",
     )
     parser.add_argument(
         "--sin_freq",
@@ -553,6 +558,24 @@ if __name__ == "__main__":
         help="Frequency of the sinusoidal jitter (in 1/samples) for pointing jitter (default: 0.1)",
     )
 
+
     args = parser.parse_args()
 
-    main(args)
+    out_dir = args.out_dir
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
+    # Make a log file that records the command line arguments and the time of execution
+    log_file_path = os.path.join(args.out_dir, "simulation_log.txt")
+    with open(log_file_path, "w") as log_file:
+        log_file.write(f"Simulation run Start Time : {dt_timestart}\n")
+        log_file.write(f"Simulation Command :\n")
+        # Write the arguments split by dashes
+        for arg in sys.argv:
+            if arg.startswith("-"):
+                log_file.write(f"{arg} ")
+            else:
+                log_file.write(f"{arg}\n")
+        log_file.write("\n")
+
+    main(args, log_file_path=log_file_path)

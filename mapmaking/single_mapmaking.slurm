@@ -2,8 +2,8 @@
 # Job name:
 # SBATCH --job-name=sim_mlmapmaking
 # Job output
-#SBATCH --output slurm_output/%A_%a_ml_mapmaker.out
-#SBATCH --error slurm_output/%A_%a_ml_mapmaker.err
+#SBATCH --output sim_outputs/slurm_outputs/%A_%a_ml_mapmaker.out
+#SBATCH --error sim_outputs/slurm_outputs/%A_%a_ml_mapmaker.err
 # Email job changes
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=henry.nachman@utexas.edu
@@ -46,9 +46,9 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # -----------------------------------------------------------------------
 # Paths -- fill these in
 # -----------------------------------------------------------------------
-HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/toast_tutorial/toast_out_hdf5   # directory of per-observation .h5 files
+HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/sim_outputs/toast_outputs/JitterTest/toast_obs   # directory of per-observation .h5 files
 AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/area.fits           # geometry file from the earlier steps
-OUT_DIR=${SLURM_SUBMIT_DIR}/PS_3FWHM
+OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/map_outputs/JitterTest
 
 mkdir -p "${OUT_DIR}"
 
@@ -73,5 +73,5 @@ srun --ntasks=$((SLURM_NTASKS)) toast_so_map \
     --out_dir "${OUT_DIR}" \
     --log_config "${OUT_DIR}/used_config.yaml"
 
-srun python map_loader.py "${OUT_DIR}"
+srun python mapmaking/map_loader.py "${OUT_DIR}"
 echo "Done. Output written to ${OUT_DIR}"
