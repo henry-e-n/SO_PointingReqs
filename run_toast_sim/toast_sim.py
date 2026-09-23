@@ -573,9 +573,9 @@ if __name__ == "__main__":
         # Write the arguments split by dashes
         for arg in sys.argv:
             if arg.startswith("-"):
-                log_file.write(f"{arg} ")
+                log_file.write(f"\n{arg}")
             else:
-                log_file.write(f"{arg}\n")
+                log_file.write(f"{arg} \\")
         log_file.write("\n")
 
     main(args, log_file_path=log_file_path)
