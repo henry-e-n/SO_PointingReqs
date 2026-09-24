@@ -191,10 +191,12 @@ def main(args, log_file_path=None):
         boresight=defaults.boresight_radec,
         quats="quats_radec"
     )
-    # Pixelization.  Choose a coarse pixelization for this exercise since there is
-    # a small patch and only a few detectors.
+    # Pixelization. 
 
-    nside = 256
+    # Load the input map and match the nside to the map.
+    load_input_map = hp.read_map(args.input_map, verbose=False)
+
+    nside = hp.get_nside(load_input_map)
     pixels_radec = toast.ops.PixelsHealpix(
         nside=nside,
         nest=True,
@@ -263,6 +265,7 @@ def main(args, log_file_path=None):
 
     # MARK: Scan Sky
     # Scan the map
+
     scan_map = toast.ops.ScanHealpixMap(
         file=args.input_map,
         pixel_pointing=pixels_radec,
@@ -334,6 +337,11 @@ def main(args, log_file_path=None):
         print(f"Clearing and replacing existing directory: {data_save_path}")
     save_data = toast.ops.SaveHDF5(volume=data_save_path)
     save_data.apply(data)
+
+
+    # MARK: Mapmaking
+    # if requested, run a simple filter bin mapmaker.
+    
 
     end_time = time()
     dt_timeend = datetime.fromtimestamp(end_time)
@@ -571,11 +579,12 @@ if __name__ == "__main__":
         log_file.write(f"Simulation run Start Time : {dt_timestart}\n")
         log_file.write(f"Simulation Command :\n")
         # Write the arguments split by dashes
+        log_file.write(f"python ")
         for arg in sys.argv:
             if arg.startswith("-"):
-                log_file.write(f"\n{arg}")
+                log_file.write(f" \\\n{arg} ")
             else:
-                log_file.write(f"{arg} \\")
+                log_file.write(f"{arg}")
         log_file.write("\n")
 
     main(args, log_file_path=log_file_path)
