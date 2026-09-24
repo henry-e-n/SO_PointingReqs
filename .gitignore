@@ -1,11 +1,11 @@
 # Large Output files
-*.h5
-*.hdf5
-mapmaking/*/*.fits
-*.out
-*.err
 *.sqlite
 *.sqlite-journal
+
+# Ignore the following directories
+toast_tutorial/out_sim_ground/*
+sim_outputs/*
+sim_sky_maps/maps/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -228,4 +228,3 @@ __marimo__/
 
 # Tex .aux files
 *.aux
-
