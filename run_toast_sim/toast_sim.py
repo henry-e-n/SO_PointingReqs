@@ -360,9 +360,9 @@ def main(args, log_file_path=None):
     
     plot_maps(
         root=os.path.join(out_dir, "mapmaker"),
-        gnom_res = 8.0,
+        gnomres = 2.0,
         gnomrot=(290, -60),
-        xsize = 2000,
+        xsize = 200,
         range_I=(-0.01, 0.01),
         range_Q=(-0.0002, 0.0002),
         range_U=(-0.0002, 0.0002),

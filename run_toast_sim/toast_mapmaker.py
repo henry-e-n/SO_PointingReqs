@@ -14,8 +14,8 @@ from toast import Data
 
 def plot_maps(
     root,
-    gnom_res = 8.0,
-    gnom_rot=(199.5, 8.3),
+    gnomres = 8.0,
+    gnomrot=(199.5, 8.3),
     xsize = 800,
     range_I=(-0.01, 0.01),
     range_Q=(-0.0002, 0.0002),
