@@ -53,6 +53,8 @@ if ops_path not in os.sys.path:
 
 from custom_toast_ops import PointingOffset, PointingJitter
 from run_toast_sim.pointing_vis import boresight_pointing_3dvis, boresight_pointing_residualplot
+from run_toast_sim.toast_mapmaker import toast_mapmaker
+from run_toast_sim.plotting_utils import plot_dets, plot_scanning
 # Start the timer
 time_start = time()
 dt_timestart = datetime.fromtimestamp(time_start)
@@ -273,6 +275,11 @@ def main(args, log_file_path=None):
     )
     scan_map.apply(data)
 
+    # Checkpoint : Save a plot of some detector data to make sure that we are actually scanning the map correctly.
+    if rank == 0:
+        plot_scanning(ob, s_start=0, s_end=None, out_dir=out_dir)
+        plot_dets(ob, d_start=148, d_end=None, s_start=0, s_end=80000, view="scanning", out_dir=out_dir, file_name="post_scan_")
+
     ck3 = time()
     print(f"Time to scan map {ck3 - ck2:.2f} seconds")
 
@@ -324,6 +331,11 @@ def main(args, log_file_path=None):
         )
         sim_atm.apply(data)
 
+
+    # Checkpoint : Save a plot of some detector data to make sure that we are actually scanning the map correctly.
+    if rank == 0:
+        plot_dets(ob, d_start=148, d_end=None, s_start=0, s_end=80000, view="scanning", out_dir=out_dir, file_name="post_atm_")
+
     ck5 = time()
     print(f"Time to apply atmosphere {ck5 - ck4:.2f} seconds")
 
@@ -341,7 +353,9 @@ def main(args, log_file_path=None):
 
     # MARK: Mapmaking
     # if requested, run a simple filter bin mapmaker.
-    
+    if args.make_map:
+        print("Running mapmaker...")
+        toast_mapmaker(data=data, out_dir=os.path.join(out_dir, "mapmaker"))
 
     end_time = time()
     dt_timeend = datetime.fromtimestamp(end_time)
@@ -566,6 +580,11 @@ if __name__ == "__main__":
         help="Frequency of the sinusoidal jitter (in 1/samples) for pointing jitter (default: 0.1)",
     )
 
+    parser.add_argument(
+        "--make_map",
+        action="store_true",
+        help="Flag to run the mapmaker after simulation (optional)",
+    )
 
     args = parser.parse_args()
 
