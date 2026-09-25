@@ -53,7 +53,7 @@ if ops_path not in os.sys.path:
 
 from custom_toast_ops import PointingOffset, PointingJitter
 from run_toast_sim.pointing_vis import boresight_pointing_3dvis, boresight_pointing_residualplot
-from run_toast_sim.toast_mapmaker import toast_mapmaker
+from run_toast_sim.toast_mapmaker import toast_mapmaker, plot_maps
 from run_toast_sim.plotting_utils import plot_dets, plot_scanning
 # Start the timer
 time_start = time()
@@ -129,7 +129,7 @@ def main(args, log_file_path=None):
             focalplane = load_from_hdf5(args.load_focalplane, Focalplane)
         else:
             # Create a site
-            print(f"Focal Plane file note specified, creating a new focal plane with the following parameters:\n  {args.fov=}\n  {args.pix_num=}\n  {args.fwhm=}\n  {args.band_center=}\n  {args.band_width=}")
+            print(f"Focal Plane file not specified, creating a new focal plane with the following parameters:\n  {args.fov=}\n  {args.pix_num=}\n  {args.fwhm=}\n  {args.band_center=}\n  {args.band_width=}")
             fp_fwhm = args.fwhm * u.arcmin
 
             focalplane = fake_rhombihex_focalplane(
@@ -196,7 +196,7 @@ def main(args, log_file_path=None):
     # Pixelization. 
 
     # Load the input map and match the nside to the map.
-    load_input_map = hp.read_map(args.input_map, verbose=False)
+    load_input_map = hp.read_map(args.input_map)
 
     nside = hp.get_nside(load_input_map)
     pixels_radec = toast.ops.PixelsHealpix(
@@ -259,7 +259,7 @@ def main(args, log_file_path=None):
     ob = data.obs[0]
 
     jitter_boreradec = np.array(ob.shared[defaults.boresight_radec].data)
-    boresight_pointing_3dvis(jitter_boreradec, init_boreradec, ob, n_slices=30, step_size=10, rad_threshold=0.15, show_dets=False, out_dir=out_dir)
+    boresight_pointing_3dvis(jitter_boreradec, init_boreradec, ob, n_slices=30, step_size=10, rad_threshold=0.15, show_dets=True, out_dir=out_dir)
     boresight_pointing_residualplot(jitter_boreradec, init_boreradec, n_slices=30, step_size=10, out_dir=out_dir)
 
     ck2 = time()
@@ -277,8 +277,9 @@ def main(args, log_file_path=None):
 
     # Checkpoint : Save a plot of some detector data to make sure that we are actually scanning the map correctly.
     if rank == 0:
-        plot_scanning(ob, s_start=0, s_end=None, out_dir=out_dir)
-        plot_dets(ob, d_start=148, d_end=None, s_start=0, s_end=80000, view="scanning", out_dir=out_dir, file_name="post_scan_")
+        # only plot a few detectors
+        plot_scanning(ob, s_start=0, s_end=5000, out_dir=out_dir)
+        plot_dets(ob, d_start=0, d_end=5, s_start=0, s_end=5000, view="scanning", out_dir=out_dir, file_name="post_scan_")
 
     ck3 = time()
     print(f"Time to scan map {ck3 - ck2:.2f} seconds")
@@ -334,7 +335,7 @@ def main(args, log_file_path=None):
 
     # Checkpoint : Save a plot of some detector data to make sure that we are actually scanning the map correctly.
     if rank == 0:
-        plot_dets(ob, d_start=148, d_end=None, s_start=0, s_end=80000, view="scanning", out_dir=out_dir, file_name="post_atm_")
+        plot_dets(ob, d_start=0, d_end=5, s_start=0, s_end=5000, view="scanning", out_dir=out_dir, file_name="post_atm_")
 
     ck5 = time()
     print(f"Time to apply atmosphere {ck5 - ck4:.2f} seconds")
@@ -356,7 +357,20 @@ def main(args, log_file_path=None):
     if args.make_map:
         print("Running mapmaker...")
         toast_mapmaker(data=data, out_dir=os.path.join(out_dir, "mapmaker"))
+    
+    plot_maps(
+        root=os.path.join(out_dir, "mapmaker"),
+        gnom_res = 8.0,
+        gnomrot=(290, -60),
+        xsize = 2000,
+        range_I=(-0.01, 0.01),
+        range_Q=(-0.0002, 0.0002),
+        range_U=(-0.0002, 0.0002),
+        max_hits=1000,
+        truth=None,  # You can specify a truth map file here if available
+    )
 
+    # END
     end_time = time()
     dt_timeend = datetime.fromtimestamp(end_time)
     if log_file_path:
@@ -457,7 +471,7 @@ if __name__ == "__main__":
         "--pix_num",
         type=int,
         default=16,
-        help="Number of pixels per rhombus (must be a perfect square, default: 16)",
+        help="Number of pixels per rhombus (must be a perfect square, default: 25)",
     )
     parser.add_argument(
         "--fwhm",
