@@ -314,6 +314,8 @@ def main(args, log_file_path=None):
         )
         ground_pickup.apply(data)
 
+    ckss = time()
+    print(f"Time to apply Scan Sync Signal {ckss-ck4:.2f} seconds")
     # MARK: Sim Atm
     if not args.no_atmosphere:
         sim_atm = toast.ops.SimAtmosphere(
@@ -360,14 +362,14 @@ def main(args, log_file_path=None):
     
     plot_maps(
         root=os.path.join(out_dir, "mapmaker"),
-        gnomres = 2.0,
+        gnomres = 1.5,
         gnomrot=(290, -60),
         xsize = 200,
         range_I=(-0.01, 0.01),
         range_Q=(-0.0002, 0.0002),
         range_U=(-0.0002, 0.0002),
         max_hits=1000,
-        truth=None,  # You can specify a truth map file here if available
+        truth=args.input_map,  # You can specify a truth map file here if available
     )
 
     # END
@@ -470,7 +472,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--pix_num",
         type=int,
-        default=16,
+        default=289,
         help="Number of pixels per rhombus (must be a perfect square, default: 25)",
     )
     parser.add_argument(

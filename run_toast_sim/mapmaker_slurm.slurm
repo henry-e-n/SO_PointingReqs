@@ -1,14 +1,14 @@
 #!/bin/bash
 # Job name:
-# SBATCH --job-name=sim_mlmapmaking
+# SBATCH --job-name=toast_sim
 # Job output
-#SBATCH --output sim_outputs/slurm_outputs/%A_%a_ml_mapmaker.out
-#SBATCH --error sim_outputs/slurm_outputs/%A_%a_ml_mapmaker.err
+#SBATCH --output sim_outputs/slurm_outputs/%A_toast_map.out
+#SBATCH --error sim_outputs/slurm_outputs/%A_toast_map.err
 # Email job changes
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=henry.nachman@utexas.edu
 # Time limit (1 minute)
-#SBATCH --time 03:00:00
+#SBATCH --time 01:00:00
 # Number of MPI tasks needed for use case (example):
 #SBATCH --ntasks=1
 # Processors per task:
@@ -21,13 +21,6 @@
 # -----------------------------------------------------------------------
 # Environment setup
 # -----------------------------------------------------------------------
-# Match whatever you use interactively in the notebooks, e.g. a soconda
-# build such as:
-#   source /shared_home/software/soconda_builds/soconda_20260813_0.2.5/bin/activate
-# or, on a module-based cluster (e.g. NERSC):
-#   module load python
-#   conda activate <your_toast_env>
-
 
 module use /shared_home/software/modulefiles/
 module load soconda/stable
@@ -45,12 +38,11 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 # -----------------------------------------------------------------------
 # Paths -- fill these in
+# If running array
 # -----------------------------------------------------------------------
-HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/sim_outputs/toast_outputs/simple_hr20arcmin/toast_obs   # directory of per-observation .h5 files
-AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/PS_maps/area.fits           # geometry file from the earlier steps
-OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/map_outputs/simple_hr20arcmin
+TEST_NAME="simple_lr20arcmin"
 
-mkdir -p "${OUT_DIR}"
+# mkdir -p "${OUT_DIR}"
 
 # -----------------------------------------------------------------------
 # Run
@@ -63,17 +55,12 @@ mkdir -p "${OUT_DIR}"
 # sit idle. For a single test observation, set --ntasks-per-node=1 and rely
 # on --cpus-per-task for speed instead.
 
-srun --ntasks=$((SLURM_NTASKS)) toast_so_map \
-    --load_hdf5.enable \
-    --load_hdf5.volume "${HDF5_VOLUME}" \
-    --mlmapmaker.enable \
-    --mlmapmaker.area "${AREA_FILE}" \
-    --mlmapmaker.write_iter_map 50 \
-    --mlmapmaker.maxiter [400] \
-    --out_dir "${OUT_DIR}" \
-    --log_config "${OUT_DIR}/used_config.yaml"
+# echo "Running with dxi = $SLURM_ARRAY_TASK_ID"
 
-echo "------------------------------------------------"
-echo "Finished MLMapmaker. Now loading the map and writing to FITS."
-srun python mapmaking/map_loader.py "${OUT_DIR}"
-echo "Done. Output written to ${OUT_DIR}"
+echo "Running run_toast_mapmaker.py"
+
+srun python run_toast_sim/run_toast_mapmaker.py \
+--data_vol /shared_home/henachman/SO_PointingReqs/sim_outputs/toast_outputs/$TEST_NAME/toast_obs \
+--out_dir /shared_home/henachman/SO_PointingReqs/sim_outputs/toast_outputs/$TEST_NAME/mapmaker \
+
+echo "Done"

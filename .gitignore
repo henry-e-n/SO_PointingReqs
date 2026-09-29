@@ -5,7 +5,7 @@
 # Ignore the following directories
 toast_tutorial/out_sim_ground/*
 sim_outputs/*
-sim_sky_maps/maps/*
+sim_sky_maps/PS_maps/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

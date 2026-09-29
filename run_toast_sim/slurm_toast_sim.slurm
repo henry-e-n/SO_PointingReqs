@@ -8,7 +8,7 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=henry.nachman@utexas.edu
 # Time limit (1 minute)
-#SBATCH --time 00:10:00
+#SBATCH --time 00:30:00
 # Number of MPI tasks needed for use case (example):
 #SBATCH --ntasks=1
 # Processors per task:
@@ -39,10 +39,11 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 # -----------------------------------------------------------------------
 # Paths -- fill these in
+# If running array
 # -----------------------------------------------------------------------
-OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/toast_outputs/$1_${SLURM_ARRAY_TASK_ID}
+# OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/toast_outputs/$1_${SLURM_ARRAY_TASK_ID}
 
-mkdir -p "${OUT_DIR}"
+# mkdir -p "${OUT_DIR}"
 
 # -----------------------------------------------------------------------
 # Run
@@ -55,13 +56,17 @@ mkdir -p "${OUT_DIR}"
 # sit idle. For a single test observation, set --ntasks-per-node=1 and rely
 # on --cpus-per-task for speed instead.
 
-echo "Running with dxi = $SLURM_ARRAY_TASK_ID"
+# echo "Running with dxi = $SLURM_ARRAY_TASK_ID"
+
+echo "Running toast_sim.py"
 
 srun python run_toast_sim/toast_sim.py \
-sim_sky_maps/maps/map_with_3FWHM_source.fits \
-toast_tutorial/out_sim_ground/custom_map/test_schedule.txt \
---load_telescope run_toast_sim/telescope.hdf5 \
---pointing_offset \
---out_dir "${OUT_DIR}" \
+--input_map sim_sky_maps/PS_maps/sim_maps/hr_simple_map_10arcmin.fits \
+--schedule_file sim_sky_maps/PS_maps/test_schedule.txt \
+--save_intermediate \
+--out_dir sim_outputs/toast_outputs/simple_hr10arcmin \
+--make_map  \
+--no_atmosphere  \
+--no_scan_sync
 
-echo "Done. Output written to ${OUT_DIR}"
+echo "Done"
