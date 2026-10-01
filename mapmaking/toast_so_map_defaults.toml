@@ -1,0 +1,2758 @@
+SO mapmaking pipeline
+
+options:
+  -h, --help            show this help message and exit
+  --out_dir OUT_DIR     The output directory
+  --obsmaps             Map each observation separately.
+  --detmaps             Map each detector separately.
+  --intervalmaps        Map each interval separately.
+  --preprocess_copy     Perform preprocessing on a copy of the data.
+  --log_config LOG_CONFIG
+                        Dump out config log to this yaml file
+  --hardware HARDWARE   Input hardware file
+  --det_info_file DET_INFO_FILE
+                        Input detector info file for real hardware maps
+  --det_info_version DET_INFO_VERSION
+                        Detector info file version such as 'Cv4'
+  --thinfp THINFP       Thin the focalplane by this factor
+  --bands BANDS         Comma-separated list of bands: LAT_f030 (27GHz),
+                        LAT_f040 (39GHz), LAT_f090 (93GHz), LAT_f150 (145GHz),
+                        LAT_f230 (225GHz), LAT_f290 (285GHz), SAT_f030
+                        (27GHz), SAT_f040 (39GHz), SAT_f090 (93GHz), SAT_f150
+                        (145GHz), SAT_f230 (225GHz), SAT_f290 (285GHz).
+  --telescope TELESCOPE
+                        Telescope to simulate: LAT, SAT1, SAT2, SAT3, SAT4.
+  --tube_slots TUBE_SLOTS
+                        Comma-separated list of optics tube slots: c1
+                        (LAT_UHF), i5 (LAT_UHF), i6 (LAT_MF), i1 (LAT_MF), i3
+                        (LAT_MF), i4 (LAT_MF), o6 (LAT_LF), ST1 (SAT_MF), ST2
+                        (SAT_MF), ST3 (SAT_UHF), ST4 (SAT_LF).
+  --wafer_slots WAFER_SLOTS
+                        Comma-separated list of wafer slots.
+  --sample_rate SAMPLE_RATE
+                        Sampling rate
+  --schedule SCHEDULE   Input observing schedule
+  --sort_schedule       Sort the observing schedule by mean boresight RA. This
+                        can limit the area of sky each process group deals
+                        with.
+  --realization REALIZATION
+                        Realization index
+  --pwv_limit PWV_LIMIT
+                        If set, discard observations with simulated PWV higher
+                        than the limit [mm]
+  --full_pointing       Save detector pointing rather than regenerating to
+                        save memory.
+  --dry_run             Exit after setting up job options.
+  --config CONFIG [CONFIG ...]
+                        One or more input config files.
+  --job_group_size JOB_GROUP_SIZE
+                        (Advanced) Size of the process groups
+  --job_node_mem JOB_NODE_MEM
+                        (Advanced) Override the detected memory per node in
+                        bytes
+  --defaults DEFAULTS   Dump default config values to a file
+  --load_hdf5.attrs LOAD_HDF5.ATTRS
+                        Only load this list of observation attributes
+  --load_hdf5.det_select LOAD_HDF5.DET_SELECT
+                        Keep a subset of detectors whose focalplane columns
+                        match.
+  --load_hdf5.detdata LOAD_HDF5.DETDATA
+                        Only load this list of detdata objects
+  --load_hdf5.enable    Enable use of load_hdf5
+  --load_hdf5.disable   Disable use of load_hdf5
+  --load_hdf5.files LOAD_HDF5.FILES
+                        Override `volume` and load a list of files
+  --load_hdf5.force_serial
+                        Use serial HDF5 operations, even if parallel support
+                        available
+  --load_hdf5.intervals LOAD_HDF5.INTERVALS
+                        Only load this list of intervals objects
+  --load_hdf5.meta LOAD_HDF5.META
+                        Only load this list of meta objects
+  --load_hdf5.name LOAD_HDF5.NAME
+                        The 'name' of this class instance
+  --load_hdf5.pattern LOAD_HDF5.PATTERN
+                        Regexp pattern to match files against (if not using
+                        volume_select).
+  --load_hdf5.process_rows LOAD_HDF5.PROCESS_ROWS
+                        The size of the rectangular process grid in the
+                        detector direction.
+  --load_hdf5.shared LOAD_HDF5.SHARED
+                        Only load this list of shared objects
+  --load_hdf5.sort_by_size
+                        If True, sort observations by size before load
+                        balancing
+  --load_hdf5.timing    If True, print timing of exec()
+  --load_hdf5.timing_total
+                        If True, print timing of finalize()
+  --load_hdf5.volume LOAD_HDF5.VOLUME
+                        Top-level directory containing the data volume
+  --load_hdf5.volume_index LOAD_HDF5.VOLUME_INDEX
+                        Path to index file. None disables use of index.
+                        'DEFAULT' uses the default VolumeIndex name at the top
+                        of the volume.
+  --load_hdf5.volume_select LOAD_HDF5.VOLUME_SELECT
+                        SQL selection string applied to the observation table
+                        of the index.
+  --load_books.azimuth LOAD_BOOKS.AZIMUTH
+                        Observation shared key for boresight Azimuth
+  --load_books.bands LOAD_BOOKS.BANDS
+                        Only load detectors from these bands
+  --load_books.books LOAD_BOOKS.BOOKS
+                        List of observation book directories
+  --load_books.boresight_angle LOAD_BOOKS.BORESIGHT_ANGLE
+                        Observation shared key for boresight rotation angle
+                        (if it is used)
+  --load_books.boresight_azel LOAD_BOOKS.BORESIGHT_AZEL
+                        Observation shared key for boresight Az/El quaternions
+  --load_books.boresight_radec LOAD_BOOKS.BORESIGHT_RADEC
+                        Observation shared key for boresight RA/DEC
+                        quaternions
+  --load_books.corotator_angle LOAD_BOOKS.COROTATOR_ANGLE
+                        Observation shared key for corotator_angle (if it is
+                        used)
+  --load_books.det_data LOAD_BOOKS.DET_DATA
+                        Observation detdata key for detector signal
+  --load_books.det_flags LOAD_BOOKS.DET_FLAGS
+                        Observation detdata key for detector flags
+  --load_books.detset_key LOAD_BOOKS.DETSET_KEY
+                        If specified, use this column of the focalplane
+                        detector_data to group detectors
+  --load_books.elevation LOAD_BOOKS.ELEVATION
+                        Observation shared key for boresight Elevation
+  --load_books.enable   Enable use of load_books
+  --load_books.disable  Disable use of load_books
+  --load_books.focalplane_dir LOAD_BOOKS.FOCALPLANE_DIR
+                        Directory for focalplane models
+  --load_books.frame_intervals LOAD_BOOKS.FRAME_INTERVALS
+                        Observation interval key for frame boundaries
+  --load_books.hwp_angle LOAD_BOOKS.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --load_books.name LOAD_BOOKS.NAME
+                        The 'name' of this class instance
+  --load_books.noise_dir LOAD_BOOKS.NOISE_DIR
+                        Directory for noise models
+  --load_books.shared_flags LOAD_BOOKS.SHARED_FLAGS
+                        Observation shared key for common flags
+  --load_books.times LOAD_BOOKS.TIMES
+                        Observation shared key for timestamps
+  --load_books.timing   If True, print timing of exec()
+  --load_books.timing_total
+                        If True, print timing of finalize()
+  --load_books.wafers LOAD_BOOKS.WAFERS
+                        Only load detectors from these wafers / stream_ids
+  --load_context.analytic_bandpass
+                        Add analytic bandpass to each detector
+  --load_context.ax_boresight_angle LOAD_CONTEXT.AX_BORESIGHT_ANGLE
+                        Field with boresight rotation angle (included in roll)
+  --load_context.ax_boresight_az LOAD_CONTEXT.AX_BORESIGHT_AZ
+                        Field with boresight Az
+  --load_context.ax_boresight_el LOAD_CONTEXT.AX_BORESIGHT_EL
+                        Field with boresight El
+  --load_context.ax_boresight_roll LOAD_CONTEXT.AX_BORESIGHT_ROLL
+                        Field with boresight Roll
+  --load_context.ax_corotator_angle LOAD_CONTEXT.AX_COROTATOR_ANGLE
+                        Field with corotator angle
+  --load_context.ax_det_flags LOAD_CONTEXT.AX_DET_FLAGS
+                        Tuples of (field, bit_value) merged to det_flags
+  --load_context.ax_det_signal LOAD_CONTEXT.AX_DET_SIGNAL
+                        Name of field to associate with det_data
+  --load_context.ax_detinfo_wafer_key LOAD_CONTEXT.AX_DETINFO_WAFER_KEY
+                        Name of the det_info property containing the wafer ID
+  --load_context.ax_flags LOAD_CONTEXT.AX_FLAGS
+                        Tuples of (field, bit value) merged to shared_flags
+  --load_context.ax_hwp_angle LOAD_CONTEXT.AX_HWP_ANGLE
+                        Field with HWP angle
+  --load_context.ax_pathsep LOAD_CONTEXT.AX_PATHSEP
+                        Path separator when flattening nested fields
+  --load_context.ax_times LOAD_CONTEXT.AX_TIMES
+                        Name of field to associate with times
+  --load_context.axis_detector LOAD_CONTEXT.AXIS_DETECTOR
+                        Name of the LabelAxis for the detector direction
+  --load_context.axis_sample LOAD_CONTEXT.AXIS_SAMPLE
+                        Name of the OffsetAxis for the sample direction
+  --load_context.azimuth LOAD_CONTEXT.AZIMUTH
+                        Observation shared key for boresight Azimuth
+  --load_context.bands LOAD_CONTEXT.BANDS
+                        Only load this list of band values
+  --load_context.bandwidth LOAD_CONTEXT.BANDWIDTH
+                        Fractional bandwith used in analytic bandpass
+  --load_context.boresight_angle LOAD_CONTEXT.BORESIGHT_ANGLE
+                        Observation shared key for boresight rotation angle
+                        (if it is used)
+  --load_context.boresight_azel LOAD_CONTEXT.BORESIGHT_AZEL
+                        Observation shared key for boresight Az/El quaternions
+  --load_context.boresight_radec LOAD_CONTEXT.BORESIGHT_RADEC
+                        Observation shared key for boresight RA/DEC
+                        quaternions
+  --load_context.combine_wafers
+                        If True, combine all wafers into a single observation
+  --load_context.context_file LOAD_CONTEXT.CONTEXT_FILE
+                        Create a context from this file
+  --load_context.corotator_angle LOAD_CONTEXT.COROTATOR_ANGLE
+                        Observation shared key for corotator_angle (if it is
+                        used)
+  --load_context.daq_units
+                        If True, convert raw data to original int32 DAQ units
+  --load_context.det_data LOAD_CONTEXT.DET_DATA
+                        Observation detdata key for detector signal
+  --load_context.det_data_units LOAD_CONTEXT.DET_DATA_UNITS
+                        Output units if creating detector data
+  --load_context.det_flags LOAD_CONTEXT.DET_FLAGS
+                        Observation detdata key for detector flags
+  --load_context.dets_select LOAD_CONTEXT.DETS_SELECT
+                        The `dets` selection dictionary to pass to get_obs()
+  --load_context.detset_key LOAD_CONTEXT.DETSET_KEY
+                        Column of the focalplane detector_data to use for data
+                        distribution
+  --load_context.detsets LOAD_CONTEXT.DETSETS
+                        Only load this list of detset values
+  --load_context.elevation LOAD_CONTEXT.ELEVATION
+                        Observation shared key for boresight Elevation
+  --load_context.enable
+                        Enable use of load_context
+  --load_context.disable
+                        Disable use of load_context
+  --load_context.hk_platform_aliases LOAD_CONTEXT.HK_PLATFORM_ALIASES
+                        Optional convenience aliases for platform fields
+  --load_context.hk_platform_db LOAD_CONTEXT.HK_PLATFORM_DB
+                        Path to DB for telescope platform housekeeping
+  --load_context.hk_platform_fields LOAD_CONTEXT.HK_PLATFORM_FIELDS
+                        Restrict loading to only these platform fields
+  --load_context.hk_platform_root LOAD_CONTEXT.HK_PLATFORM_ROOT
+                        Load telescope platform housekeeping from this path
+  --load_context.hk_site_aliases LOAD_CONTEXT.HK_SITE_ALIASES
+                        Optional convenience aliases for site fields
+  --load_context.hk_site_db LOAD_CONTEXT.HK_SITE_DB
+                        Path to DB for site housekeeping
+  --load_context.hk_site_fields LOAD_CONTEXT.HK_SITE_FIELDS
+                        Restrict loading to only these site fields
+  --load_context.hk_site_root LOAD_CONTEXT.HK_SITE_ROOT
+                        Load site housekeeping from this path
+  --load_context.hwp_angle LOAD_CONTEXT.HWP_ANGLE
+                        Observation shared key for HWP angle (if it is used)
+  --load_context.no_ignore_preprocess_archive
+                        If True alway compute preprocess on the fly, don't
+                        load from archive.
+  --load_context.name LOAD_CONTEXT.NAME
+                        The 'name' of this class instance
+  --load_context.observation_file LOAD_CONTEXT.OBSERVATION_FILE
+                        Text file containing observation IDs to load
+  --load_context.observation_regex LOAD_CONTEXT.OBSERVATION_REGEX
+                        Regular expression match to apply to observation IDs
+  --load_context.observations LOAD_CONTEXT.OBSERVATIONS
+                        List of observation IDs to load
+  --load_context.preprocess_config LOAD_CONTEXT.PREPROCESS_CONFIG
+                        Apply site-pipeline pre-processing with this
+                        configuration
+  --load_context.readout_ids LOAD_CONTEXT.READOUT_IDS
+                        Only load this list of readout_id values
+  --load_context.roll LOAD_CONTEXT.ROLL
+                        Observation shared key for boresight Roll
+  --load_context.shared_flags LOAD_CONTEXT.SHARED_FLAGS
+                        Observation shared key for common flags
+  --load_context.stream_ids LOAD_CONTEXT.STREAM_IDS
+                        Only load this list of stream_id values
+  --load_context.telescope_name LOAD_CONTEXT.TELESCOPE_NAME
+                        Name of the telescope
+  --load_context.times LOAD_CONTEXT.TIMES
+                        Observation shared key for timestamps
+  --load_context.timing
+                        If True, print timing of exec()
+  --load_context.timing_total
+                        If True, print timing of finalize()
+  --act_sign.det_data ACT_SIGN.DET_DATA
+                        Observation detdata key for the timestream data
+  --act_sign.enable     Enable use of act_sign
+  --act_sign.disable    Disable use of act_sign
+  --act_sign.fp_column ACT_SIGN.FP_COLUMN
+                        Focalplane table column with sign factor
+  --act_sign.name ACT_SIGN.NAME
+                        The 'name' of this class instance
+  --act_sign.timing     If True, print timing of exec()
+  --act_sign.timing_total
+                        If True, print timing of finalize()
+  --az_intervals.azimuth AZ_INTERVALS.AZIMUTH
+                        Observation shared key for Azimuth
+  --az_intervals.no_cut_long
+                        If True, remove very long scanning intervals
+  --az_intervals.no_cut_short
+                        If True, remove very short scanning intervals
+  --az_intervals.debug_root AZ_INTERVALS.DEBUG_ROOT
+                        If not None, dump debug plots to this root file name
+  --az_intervals.enable
+                        Enable use of az_intervals
+  --az_intervals.disable
+                        Disable use of az_intervals
+  --az_intervals.long_limit AZ_INTERVALS.LONG_LIMIT
+                        Maximum length of a scan. Either the maximum length in
+                        time or a fraction of median scan length
+  --az_intervals.name AZ_INTERVALS.NAME
+                        The 'name' of this class instance
+  --az_intervals.scan_leftright_interval AZ_INTERVALS.SCAN_LEFTRIGHT_INTERVAL
+                        Interval name for left to right scans
+  --az_intervals.scan_rightleft_interval AZ_INTERVALS.SCAN_RIGHTLEFT_INTERVAL
+                        Interval name for right to left scans
+  --az_intervals.scanning_interval AZ_INTERVALS.SCANNING_INTERVAL
+                        Interval name for scanning
+  --az_intervals.shared_flag_mask AZ_INTERVALS.SHARED_FLAG_MASK
+                        Bit mask value for bad azimuth pointing
+  --az_intervals.shared_flags AZ_INTERVALS.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --az_intervals.short_limit AZ_INTERVALS.SHORT_LIMIT
+                        Minimum length of a scan. Either the minimum length in
+                        time or a fraction of median scan length
+  --az_intervals.throw_interval AZ_INTERVALS.THROW_INTERVAL
+                        Interval name for scan + turnaround intervals
+  --az_intervals.throw_leftright_interval AZ_INTERVALS.THROW_LEFTRIGHT_INTERVAL
+                        Interval name for left to right scans + turnarounds
+  --az_intervals.throw_rightleft_interval AZ_INTERVALS.THROW_RIGHTLEFT_INTERVAL
+                        Interval name for right to left scans + turnarounds
+  --az_intervals.times AZ_INTERVALS.TIMES
+                        Observation shared key for timestamps
+  --az_intervals.timing
+                        If True, print timing of exec()
+  --az_intervals.timing_total
+                        If True, print timing of finalize()
+  --az_intervals.turn_leftright_interval AZ_INTERVALS.TURN_LEFTRIGHT_INTERVAL
+                        Interval name for turnarounds after left to right
+                        scans
+  --az_intervals.turn_rightleft_interval AZ_INTERVALS.TURN_RIGHTLEFT_INTERVAL
+                        Interval name for turnarounds after right to left
+                        scans
+  --az_intervals.turnaround_interval AZ_INTERVALS.TURNAROUND_INTERVAL
+                        Interval name for turnarounds
+  --az_intervals.window_seconds AZ_INTERVALS.WINDOW_SECONDS
+                        Smoothing window in seconds
+  --weather_model.enable
+                        Enable use of weather_model
+  --weather_model.disable
+                        Disable use of weather_model
+  --weather_model.max_pwv WEATHER_MODEL.MAX_PWV
+                        Maximum PWV for the simulated weather.
+  --weather_model.median_weather
+                        Use median weather parameters instead of sampling from
+                        the distributions
+  --weather_model.name WEATHER_MODEL.NAME
+                        The 'name' of this class instance
+  --weather_model.realization WEATHER_MODEL.REALIZATION
+                        The realization index
+  --weather_model.times WEATHER_MODEL.TIMES
+                        Observation shared key for timestamps
+  --weather_model.timing
+                        If True, print timing of exec()
+  --weather_model.timing_total
+                        If True, print timing of finalize()
+  --weather_model.weather WEATHER_MODEL.WEATHER
+                        Name of built-in weather site (e.g. 'atacama',
+                        'south_pole') or path to HDF5 file
+  --diff_noise_estim.alpha DIFF_NOISE_ESTIM.ALPHA
+                        Slope of the 1/f noise model
+  --diff_noise_estim.det_data DIFF_NOISE_ESTIM.DET_DATA
+                        Observation detdata key to analyze
+  --diff_noise_estim.det_flag_mask DIFF_NOISE_ESTIM.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --diff_noise_estim.det_flags DIFF_NOISE_ESTIM.DET_FLAGS
+                        Observation detdata key for flags to use
+  --diff_noise_estim.det_mask DIFF_NOISE_ESTIM.DET_MASK
+                        Bit mask value for per-detector flagging
+  --diff_noise_estim.enable
+                        Enable use of diff_noise_estim
+  --diff_noise_estim.disable
+                        Disable use of diff_noise_estim
+  --diff_noise_estim.fknee DIFF_NOISE_ESTIM.FKNEE
+                        Knee frequency to use for noise model.
+  --diff_noise_estim.fmin DIFF_NOISE_ESTIM.FMIN
+                        Minimum frequency to use for noise model.
+  --diff_noise_estim.name DIFF_NOISE_ESTIM.NAME
+                        The 'name' of this class instance
+  --diff_noise_estim.noise_model DIFF_NOISE_ESTIM.NOISE_MODEL
+                        The observation key containing the output noise model
+  --diff_noise_estim.shared_flag_mask DIFF_NOISE_ESTIM.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --diff_noise_estim.shared_flags DIFF_NOISE_ESTIM.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --diff_noise_estim.timing
+                        If True, print timing of exec()
+  --diff_noise_estim.timing_total
+                        If True, print timing of finalize()
+  --diff_noise_estim.view DIFF_NOISE_ESTIM.VIEW
+                        Evaluate the sample differences in this view
+  --readout_filter.debug_root READOUT_FILTER.DEBUG_ROOT
+                        Optional root filename for debug plots
+  --readout_filter.det_data READOUT_FILTER.DET_DATA
+                        Observation detdata key for the timestream data
+  --readout_filter.det_flag_mask READOUT_FILTER.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --readout_filter.det_flags READOUT_FILTER.DET_FLAGS
+                        Observation detdata key for flags to use
+  --readout_filter.det_mask READOUT_FILTER.DET_MASK
+                        Bit mask value for per-detector flagging
+  --readout_filter.enable
+                        Enable use of readout_filter
+  --readout_filter.disable
+                        Disable use of readout_filter
+  --readout_filter.iir_params READOUT_FILTER.IIR_PARAMS
+                        Observation key for readout filter parameters
+  --readout_filter.name READOUT_FILTER.NAME
+                        The 'name' of this class instance
+  --readout_filter.shared_flag_mask READOUT_FILTER.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --readout_filter.shared_flags READOUT_FILTER.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --readout_filter.times READOUT_FILTER.TIMES
+                        Observation shared key for timestamps
+  --readout_filter.timing
+                        If True, print timing of exec()
+  --readout_filter.timing_total
+                        If True, print timing of finalize()
+  --readout_filter.wafer_key READOUT_FILTER.WAFER_KEY
+                        Focalplane key for the wafer name
+  --deconvolve_time_constant.batch
+                        If True, batch all detectors and process at once
+  --deconvolve_time_constant.debug DECONVOLVE_TIME_CONSTANT.DEBUG
+                        Path to directory for generating debug plots
+  --deconvolve_time_constant.no_deconvolve
+                        Deconvolve the time constant instead.
+  --deconvolve_time_constant.det_data DECONVOLVE_TIME_CONSTANT.DET_DATA
+                        Observation detdata key apply filtering to
+  --deconvolve_time_constant.det_flag_mask DECONVOLVE_TIME_CONSTANT.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --deconvolve_time_constant.det_flags DECONVOLVE_TIME_CONSTANT.DET_FLAGS
+                        Observation detdata key for flags to use
+  --deconvolve_time_constant.det_mask DECONVOLVE_TIME_CONSTANT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --deconvolve_time_constant.enable
+                        Enable use of deconvolve_time_constant
+  --deconvolve_time_constant.disable
+                        Disable use of deconvolve_time_constant
+  --deconvolve_time_constant.name DECONVOLVE_TIME_CONSTANT.NAME
+                        The 'name' of this class instance
+  --deconvolve_time_constant.realization DECONVOLVE_TIME_CONSTANT.REALIZATION
+                        Realization ID, only used if tau_sigma is nonzero
+  --deconvolve_time_constant.shared_flag_mask DECONVOLVE_TIME_CONSTANT.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging. Flagged
+                        shared samples will be propagated to detector sample
+                        flags
+  --deconvolve_time_constant.shared_flags DECONVOLVE_TIME_CONSTANT.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --deconvolve_time_constant.tau DECONVOLVE_TIME_CONSTANT.TAU
+                        Time constant to apply to all detectors. Overrides
+                        `tau_name`
+  --deconvolve_time_constant.tau_flag_mask DECONVOLVE_TIME_CONSTANT.TAU_FLAG_MASK
+                        Detector flag mask for cutting detectors with invalid
+                        Tau values.
+  --deconvolve_time_constant.tau_name DECONVOLVE_TIME_CONSTANT.TAU_NAME
+                        Key to use to find time constants in the Focalplane.
+  --deconvolve_time_constant.tau_sigma DECONVOLVE_TIME_CONSTANT.TAU_SIGMA
+                        Randomized fractional error to add to each time
+                        constant.
+  --deconvolve_time_constant.timing
+                        If True, print timing of exec()
+  --deconvolve_time_constant.timing_total
+                        If True, print timing of finalize()
+  --sim_ground.azimuth SIM_GROUND.AZIMUTH
+                        Observation shared key for Azimuth
+  --sim_ground.boresight_azel SIM_GROUND.BORESIGHT_AZEL
+                        Observation shared key for boresight AZ/EL
+  --sim_ground.boresight_radec SIM_GROUND.BORESIGHT_RADEC
+                        Observation shared key for boresight RA/DEC
+  --sim_ground.det_data SIM_GROUND.DET_DATA
+                        Observation detdata key to initialize
+  --sim_ground.det_data_units SIM_GROUND.DET_DATA_UNITS
+                        Output units if creating detector data
+  --sim_ground.det_flags SIM_GROUND.DET_FLAGS
+                        Observation detdata key for flags to initialize
+  --sim_ground.detset_key SIM_GROUND.DETSET_KEY
+                        If specified, use this column of the focalplane
+                        detector_data to group detectors
+  --sim_ground.distribute_time
+                        Distribute observation data along the time axis rather
+                        than detector axis
+  --sim_ground.el_mod_amplitude SIM_GROUND.EL_MOD_AMPLITUDE
+                        Range of elevation modulation
+  --sim_ground.el_mod_rate SIM_GROUND.EL_MOD_RATE
+                        Modulate elevation continuously at this rate
+  --sim_ground.el_mod_sine
+                        Modulate elevation with a sine wave instead of a
+                        triangle wave
+  --sim_ground.el_mod_sine_phase SIM_GROUND.EL_MOD_SINE_PHASE
+                        Add a per subscan extra phase to the sine modulation.
+                        If negative adds random phase.
+  --sim_ground.el_mod_step SIM_GROUND.EL_MOD_STEP
+                        Amount to step elevation after each left-right scan
+                        pair
+  --sim_ground.elevation SIM_GROUND.ELEVATION
+                        Observation shared key for Elevation
+  --sim_ground.elnod_end
+                        Perform an el-nod after the scan
+  --sim_ground.elnod_every_scan
+                        Perform el nods every scan
+  --sim_ground.elnod_interval SIM_GROUND.ELNOD_INTERVAL
+                        Interval name for elnods
+  --sim_ground.elnod_mask SIM_GROUND.ELNOD_MASK
+                        Bit mask to raise elevation nod flags with
+  --sim_ground.elnod_start
+                        Perform an el-nod before the scan
+  --sim_ground.elnods SIM_GROUND.ELNODS
+                        List of relative el_nods
+  --sim_ground.enable   Enable use of sim_ground
+  --sim_ground.disable  Disable use of sim_ground
+  --sim_ground.no_fix_rate_on_sky
+                        If True, `scan_rate_az` is given in sky coordinates
+                        and azimuthal rate on mount will be adjusted to meet
+                        it. If False, `scan_rate_az` is used as the mount
+                        azimuthal rate.
+  --sim_ground.hwp_angle SIM_GROUND.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --sim_ground.hwp_rpm SIM_GROUND.HWP_RPM
+                        The rate (in RPM) of the HWP rotation
+  --sim_ground.hwp_step SIM_GROUND.HWP_STEP
+                        For stepped HWP, the angle of each step
+  --sim_ground.hwp_step_time SIM_GROUND.HWP_STEP_TIME
+                        For stepped HWP, the time between steps
+  --sim_ground.max_pwv SIM_GROUND.MAX_PWV
+                        Maximum PWV for the simulated weather.
+  --sim_ground.median_weather
+                        Use median weather parameters instead of sampling from
+                        the distributions
+  --sim_ground.name SIM_GROUND.NAME
+                        The 'name' of this class instance
+  --sim_ground.position SIM_GROUND.POSITION
+                        Observation shared key for position
+  --sim_ground.randomize_phase
+                        If True, the Constant Elevation Scan will begin at a
+                        randomized phase.
+  --sim_ground.realization SIM_GROUND.REALIZATION
+                        The realization index
+  --sim_ground.scan_accel_az SIM_GROUND.SCAN_ACCEL_AZ
+                        Mount scanning rate acceleration for turnarounds
+  --sim_ground.scan_accel_el SIM_GROUND.SCAN_ACCEL_EL
+                        Mount elevation rate acceleration.
+  --sim_ground.scan_cosecant_modulation
+                        Modulate the scan rate according to 1/sin(az) for
+                        uniform depth
+  --sim_ground.scan_leftright_interval SIM_GROUND.SCAN_LEFTRIGHT_INTERVAL
+                        Interval name for left to right scans
+  --sim_ground.scan_rate_az SIM_GROUND.SCAN_RATE_AZ
+                        The sky or mount azimuth scanning rate. See
+                        `fix_rate_on_sky`
+  --sim_ground.scan_rate_el SIM_GROUND.SCAN_RATE_EL
+                        The sky elevation scanning rate
+  --sim_ground.scan_rightleft_interval SIM_GROUND.SCAN_RIGHTLEFT_INTERVAL
+                        Interval name for right to left scans
+  --sim_ground.scanning_interval SIM_GROUND.SCANNING_INTERVAL
+                        Interval name for scanning
+  --sim_ground.schedule_file SIM_GROUND.SCHEDULE_FILE
+                        Ground-based observing schedule file
+  --sim_ground.session_split_key SIM_GROUND.SESSION_SPLIT_KEY
+                        Focalplane key for splitting into observations
+  --sim_ground.shared_flags SIM_GROUND.SHARED_FLAGS
+                        Observation shared key for common flags
+  --sim_ground.no_so3g_compat_mode
+                        Implies use_qpoint=True. Tweak weather in
+                        azel_to_radec to match so3g and disable certain qpoint
+                        defaults.
+  --sim_ground.sort_schedule_file
+                        If True, sort schedule loaded from a file by mean
+                        boresight RA
+  --sim_ground.sun_angle_min SIM_GROUND.SUN_ANGLE_MIN
+                        Minimum angular distance for the scan and the Sun
+  --sim_ground.sun_close_distance SIM_GROUND.SUN_CLOSE_DISTANCE
+                        'Sun close' flagging distance
+  --sim_ground.sun_close_interval SIM_GROUND.SUN_CLOSE_INTERVAL
+                        Interval name for times when the sun is close
+  --sim_ground.sun_close_mask SIM_GROUND.SUN_CLOSE_MASK
+                        Bit mask to raise Sun close flags with
+  --sim_ground.sun_up_interval SIM_GROUND.SUN_UP_INTERVAL
+                        Interval name for times when the sun is up
+  --sim_ground.sun_up_mask SIM_GROUND.SUN_UP_MASK
+                        Bit mask to raise Sun up flags with
+  --sim_ground.telescope_file SIM_GROUND.TELESCOPE_FILE
+                        Path to HDF5 file containing an instrument group.
+  --sim_ground.throw_interval SIM_GROUND.THROW_INTERVAL
+                        Interval name for scan + turnaround intervals
+  --sim_ground.throw_leftright_interval SIM_GROUND.THROW_LEFTRIGHT_INTERVAL
+                        Interval name for left to right scans + turnarounds
+  --sim_ground.throw_rightleft_interval SIM_GROUND.THROW_RIGHTLEFT_INTERVAL
+                        Interval name for right to left scans + turnarounds
+  --sim_ground.times SIM_GROUND.TIMES
+                        Observation shared key for timestamps
+  --sim_ground.timing   If True, print timing of exec()
+  --sim_ground.timing_total
+                        If True, print timing of finalize()
+  --sim_ground.track_azimuth
+                        If True, the azimuth throw is continually adjusted to
+                        center the field.
+  --sim_ground.turn_leftright_interval SIM_GROUND.TURN_LEFTRIGHT_INTERVAL
+                        Interval name for turnarounds after left to right
+                        scans
+  --sim_ground.turn_rightleft_interval SIM_GROUND.TURN_RIGHTLEFT_INTERVAL
+                        Interval name for turnarounds after right to left
+                        scans
+  --sim_ground.turnaround_interval SIM_GROUND.TURNAROUND_INTERVAL
+                        Interval name for turnarounds
+  --sim_ground.turnaround_mask SIM_GROUND.TURNAROUND_MASK
+                        Bit mask to raise turnaround flags with
+  --sim_ground.no_use_ephem
+                        Use PyEphem to convert between horizontal and
+                        equatorial systems
+  --sim_ground.use_qpoint
+                        Use qpoint to convert between horizontal and
+                        equatorial systems
+  --sim_ground.velocity SIM_GROUND.VELOCITY
+                        Observation shared key for velocity
+  --sim_ground.weather SIM_GROUND.WEATHER
+                        Name of built-in weather site (e.g. 'atacama',
+                        'south_pole') or path to HDF5 file
+  --corotate_lat.boresight_azel COROTATE_LAT.BORESIGHT_AZEL
+                        Observation shared key for boresight Az/El
+  --corotate_lat.boresight_radec COROTATE_LAT.BORESIGHT_RADEC
+                        Observation shared key for boresight RA/Dec
+  --corotate_lat.no_corotate_lat
+                        If True, rotate LAT receiver to maintain projected
+                        focalplane orientation
+  --corotate_lat.corotator_angle COROTATE_LAT.COROTATOR_ANGLE
+                        Observation shared key for corotation angle
+  --corotate_lat.elevation COROTATE_LAT.ELEVATION
+                        Observation shared key for boresight elevation
+  --corotate_lat.enable
+                        Enable use of corotate_lat
+  --corotate_lat.disable
+                        Disable use of corotate_lat
+  --corotate_lat.name COROTATE_LAT.NAME
+                        The 'name' of this class instance
+  --corotate_lat.timing
+                        If True, print timing of exec()
+  --corotate_lat.timing_total
+                        If True, print timing of finalize()
+  --perturb_hwp.drift_sigma PERTURB_HWP.DRIFT_SIGMA
+                        1-sigma relative change in spin rate, such as 0.01 /
+                        hour
+  --perturb_hwp.enable  Enable use of perturb_hwp
+  --perturb_hwp.disable
+                        Disable use of perturb_hwp
+  --perturb_hwp.hwp_angle PERTURB_HWP.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --perturb_hwp.name PERTURB_HWP.NAME
+                        The 'name' of this class instance
+  --perturb_hwp.realization PERTURB_HWP.REALIZATION
+                        Realization index
+  --perturb_hwp.time_sigma PERTURB_HWP.TIME_SIGMA
+                        1-sigma difference between real and nominal time
+                        stamps
+  --perturb_hwp.times PERTURB_HWP.TIMES
+                        Observation shared key for timestamps
+  --perturb_hwp.timing  If True, print timing of exec()
+  --perturb_hwp.timing_total
+                        If True, print timing of finalize()
+  --det_pointing_azel_sim.boresight DET_POINTING_AZEL_SIM.BORESIGHT
+                        Observation shared key for boresight
+  --det_pointing_azel_sim.coord_in DET_POINTING_AZEL_SIM.COORD_IN
+                        The input boresight coordinate system ('C', 'E', 'G')
+  --det_pointing_azel_sim.coord_out DET_POINTING_AZEL_SIM.COORD_OUT
+                        The output coordinate system ('C', 'E', 'G')
+  --det_pointing_azel_sim.det_mask DET_POINTING_AZEL_SIM.DET_MASK
+                        Bit mask value for per-detector flagging
+  --det_pointing_azel_sim.enable
+                        Enable use of det_pointing_azel_sim
+  --det_pointing_azel_sim.disable
+                        Disable use of det_pointing_azel_sim
+  --det_pointing_azel_sim.hwp_angle DET_POINTING_AZEL_SIM.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --det_pointing_azel_sim.hwp_angle_offset DET_POINTING_AZEL_SIM.HWP_ANGLE_OFFSET
+                        HWP angle offset to apply when constructing deflection
+  --det_pointing_azel_sim.hwp_deflection_radius DET_POINTING_AZEL_SIM.HWP_DEFLECTION_RADIUS
+                        If non-zero, nominal detector pointing will be
+                        deflected in a circular pattern according to HWP
+                        phase.
+  --det_pointing_azel_sim.name DET_POINTING_AZEL_SIM.NAME
+                        The 'name' of this class instance
+  --det_pointing_azel_sim.quats DET_POINTING_AZEL_SIM.QUATS
+                        Observation detdata key for output quaternions
+  --det_pointing_azel_sim.shared_flag_mask DET_POINTING_AZEL_SIM.SHARED_FLAG_MASK
+                        Bit mask value for optional flagging
+  --det_pointing_azel_sim.shared_flags DET_POINTING_AZEL_SIM.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --det_pointing_azel_sim.timing
+                        If True, print timing of exec()
+  --det_pointing_azel_sim.timing_total
+                        If True, print timing of finalize()
+  --det_pointing_azel_sim.view DET_POINTING_AZEL_SIM.VIEW
+                        Use this view of the data in all observations
+  --det_pointing_radec_sim.boresight DET_POINTING_RADEC_SIM.BORESIGHT
+                        Observation shared key for boresight
+  --det_pointing_radec_sim.coord_in DET_POINTING_RADEC_SIM.COORD_IN
+                        The input boresight coordinate system ('C', 'E', 'G')
+  --det_pointing_radec_sim.coord_out DET_POINTING_RADEC_SIM.COORD_OUT
+                        The output coordinate system ('C', 'E', 'G')
+  --det_pointing_radec_sim.det_mask DET_POINTING_RADEC_SIM.DET_MASK
+                        Bit mask value for per-detector flagging
+  --det_pointing_radec_sim.enable
+                        Enable use of det_pointing_radec_sim
+  --det_pointing_radec_sim.disable
+                        Disable use of det_pointing_radec_sim
+  --det_pointing_radec_sim.hwp_angle DET_POINTING_RADEC_SIM.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --det_pointing_radec_sim.hwp_angle_offset DET_POINTING_RADEC_SIM.HWP_ANGLE_OFFSET
+                        HWP angle offset to apply when constructing deflection
+  --det_pointing_radec_sim.hwp_deflection_radius DET_POINTING_RADEC_SIM.HWP_DEFLECTION_RADIUS
+                        If non-zero, nominal detector pointing will be
+                        deflected in a circular pattern according to HWP
+                        phase.
+  --det_pointing_radec_sim.name DET_POINTING_RADEC_SIM.NAME
+                        The 'name' of this class instance
+  --det_pointing_radec_sim.quats DET_POINTING_RADEC_SIM.QUATS
+                        Observation detdata key for output quaternions
+  --det_pointing_radec_sim.shared_flag_mask DET_POINTING_RADEC_SIM.SHARED_FLAG_MASK
+                        Bit mask value for optional flagging
+  --det_pointing_radec_sim.shared_flags DET_POINTING_RADEC_SIM.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --det_pointing_radec_sim.timing
+                        If True, print timing of exec()
+  --det_pointing_radec_sim.timing_total
+                        If True, print timing of finalize()
+  --det_pointing_radec_sim.view DET_POINTING_RADEC_SIM.VIEW
+                        Use this view of the data in all observations
+  --default_model.enable
+                        Enable use of default_model
+  --default_model.disable
+                        Disable use of default_model
+  --default_model.name DEFAULT_MODEL.NAME
+                        The 'name' of this class instance
+  --default_model.noise_model DEFAULT_MODEL.NOISE_MODEL
+                        The observation key for storing the noise model
+  --default_model.timing
+                        If True, print timing of exec()
+  --default_model.timing_total
+                        If True, print timing of finalize()
+  --elevation_model.enable
+                        Enable use of elevation_model
+  --elevation_model.disable
+                        Disable use of elevation_model
+  --elevation_model.extra_factor ELEVATION_MODEL.EXTRA_FACTOR
+                        Extra multiplier to the NET scaling
+  --elevation_model.modulate_pwv
+                        If True, modulate the NET based on PWV
+  --elevation_model.name ELEVATION_MODEL.NAME
+                        The 'name' of this class instance
+  --elevation_model.noise_a ELEVATION_MODEL.NOISE_A
+                        Parameter 'a' in (a / sin(el) + c). If not set, look
+                        for one in the Focalplane.
+  --elevation_model.noise_c ELEVATION_MODEL.NOISE_C
+                        Parameter 'c' in (a / sin(el) + c). If not set, look
+                        for one in the Focalplane.
+  --elevation_model.noise_model ELEVATION_MODEL.NOISE_MODEL
+                        The observation key containing the input noise model
+  --elevation_model.out_model ELEVATION_MODEL.OUT_MODEL
+                        Create a new noise model with this name
+  --elevation_model.pwv_a0 ELEVATION_MODEL.PWV_A0
+                        Parameter 'a0' in (a0 + pwv * a1 + pwv ** 2 * a2). If
+                        not set, look for one in the Focalplane.
+  --elevation_model.pwv_a1 ELEVATION_MODEL.PWV_A1
+                        Parameter 'a1' in (a0 + pwv * a1 + pwv ** 2 * a2). If
+                        not set, look for one in the Focalplane.
+  --elevation_model.pwv_a2 ELEVATION_MODEL.PWV_A2
+                        Parameter 'a2' in (a0 + pwv * a1 + pwv ** 2 * a2). If
+                        not set, look for one in the Focalplane.
+  --elevation_model.times ELEVATION_MODEL.TIMES
+                        Observation shared key for timestamps
+  --elevation_model.timing
+                        If True, print timing of exec()
+  --elevation_model.timing_total
+                        If True, print timing of finalize()
+  --elevation_model.view ELEVATION_MODEL.VIEW
+                        Use this view of the data in all observations. Use
+                        'middle' if the middle 10 seconds of each observation
+                        is enough to determine the effective observing
+                        elevation
+  --common_mode_noise.NET COMMON_MODE_NOISE.NET
+  --common_mode_noise.alpha COMMON_MODE_NOISE.ALPHA
+  --common_mode_noise.component COMMON_MODE_NOISE.COMPONENT
+                        The noise component index
+  --common_mode_noise.coupling_strength_center COMMON_MODE_NOISE.COUPLING_STRENGTH_CENTER
+                        Mean coupling strength between the detectors and the
+                        common mode
+  --common_mode_noise.coupling_strength_width COMMON_MODE_NOISE.COUPLING_STRENGTH_WIDTH
+                        Width of the coupling strength distribution about
+                        `coupling_strength_center`
+  --common_mode_noise.detset COMMON_MODE_NOISE.DETSET
+                        List of detectors to add the common mode to. Only used
+                        if `focalplane_key` is None
+  --common_mode_noise.enable
+                        Enable use of common_mode_noise
+  --common_mode_noise.disable
+                        Disable use of common_mode_noise
+  --common_mode_noise.fknee COMMON_MODE_NOISE.FKNEE
+  --common_mode_noise.fmin COMMON_MODE_NOISE.FMIN
+  --common_mode_noise.focalplane_key COMMON_MODE_NOISE.FOCALPLANE_KEY
+                        Detectors sharing the focalplane key will have the
+                        same common mode
+  --common_mode_noise.name COMMON_MODE_NOISE.NAME
+                        The 'name' of this class instance
+  --common_mode_noise.noise_model COMMON_MODE_NOISE.NOISE_MODEL
+                        The observation key containing the input noise model
+  --common_mode_noise.out_model COMMON_MODE_NOISE.OUT_MODEL
+                        Create a new noise model with this name
+  --common_mode_noise.realization COMMON_MODE_NOISE.REALIZATION
+                        The noise component index
+  --common_mode_noise.static_coupling
+                        If True, coupling to the common mode is not randomized
+                        over observations and realizations
+  --common_mode_noise.timing
+                        If True, print timing of exec()
+  --common_mode_noise.timing_total
+                        If True, print timing of finalize()
+  --det_pointing_azel.boresight DET_POINTING_AZEL.BORESIGHT
+                        Observation shared key for boresight
+  --det_pointing_azel.coord_in DET_POINTING_AZEL.COORD_IN
+                        The input boresight coordinate system ('C', 'E', 'G')
+  --det_pointing_azel.coord_out DET_POINTING_AZEL.COORD_OUT
+                        The output coordinate system ('C', 'E', 'G')
+  --det_pointing_azel.det_mask DET_POINTING_AZEL.DET_MASK
+                        Bit mask value for per-detector flagging
+  --det_pointing_azel.enable
+                        Enable use of det_pointing_azel
+  --det_pointing_azel.disable
+                        Disable use of det_pointing_azel
+  --det_pointing_azel.hwp_angle DET_POINTING_AZEL.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --det_pointing_azel.hwp_angle_offset DET_POINTING_AZEL.HWP_ANGLE_OFFSET
+                        HWP angle offset to apply when constructing deflection
+  --det_pointing_azel.hwp_deflection_radius DET_POINTING_AZEL.HWP_DEFLECTION_RADIUS
+                        If non-zero, nominal detector pointing will be
+                        deflected in a circular pattern according to HWP
+                        phase.
+  --det_pointing_azel.name DET_POINTING_AZEL.NAME
+                        The 'name' of this class instance
+  --det_pointing_azel.quats DET_POINTING_AZEL.QUATS
+                        Observation detdata key for output quaternions
+  --det_pointing_azel.shared_flag_mask DET_POINTING_AZEL.SHARED_FLAG_MASK
+                        Bit mask value for optional flagging
+  --det_pointing_azel.shared_flags DET_POINTING_AZEL.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --det_pointing_azel.timing
+                        If True, print timing of exec()
+  --det_pointing_azel.timing_total
+                        If True, print timing of finalize()
+  --det_pointing_azel.view DET_POINTING_AZEL.VIEW
+                        Use this view of the data in all observations
+  --det_pointing_radec.boresight DET_POINTING_RADEC.BORESIGHT
+                        Observation shared key for boresight
+  --det_pointing_radec.coord_in DET_POINTING_RADEC.COORD_IN
+                        The input boresight coordinate system ('C', 'E', 'G')
+  --det_pointing_radec.coord_out DET_POINTING_RADEC.COORD_OUT
+                        The output coordinate system ('C', 'E', 'G')
+  --det_pointing_radec.det_mask DET_POINTING_RADEC.DET_MASK
+                        Bit mask value for per-detector flagging
+  --det_pointing_radec.enable
+                        Enable use of det_pointing_radec
+  --det_pointing_radec.disable
+                        Disable use of det_pointing_radec
+  --det_pointing_radec.hwp_angle DET_POINTING_RADEC.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --det_pointing_radec.hwp_angle_offset DET_POINTING_RADEC.HWP_ANGLE_OFFSET
+                        HWP angle offset to apply when constructing deflection
+  --det_pointing_radec.hwp_deflection_radius DET_POINTING_RADEC.HWP_DEFLECTION_RADIUS
+                        If non-zero, nominal detector pointing will be
+                        deflected in a circular pattern according to HWP
+                        phase.
+  --det_pointing_radec.name DET_POINTING_RADEC.NAME
+                        The 'name' of this class instance
+  --det_pointing_radec.quats DET_POINTING_RADEC.QUATS
+                        Observation detdata key for output quaternions
+  --det_pointing_radec.shared_flag_mask DET_POINTING_RADEC.SHARED_FLAG_MASK
+                        Bit mask value for optional flagging
+  --det_pointing_radec.shared_flags DET_POINTING_RADEC.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --det_pointing_radec.timing
+                        If True, print timing of exec()
+  --det_pointing_radec.timing_total
+                        If True, print timing of finalize()
+  --det_pointing_radec.view DET_POINTING_RADEC.VIEW
+                        Use this view of the data in all observations
+  --weights_azel.IAU    If True, use the IAU convention rather than COSMO
+  --weights_azel.cal WEIGHTS_AZEL.CAL
+                        The observation key with a dictionary of pointing
+                        weight calibration for each det
+  --weights_azel.enable
+                        Enable use of weights_azel
+  --weights_azel.disable
+                        Disable use of weights_azel
+  --weights_azel.fp_gamma WEIGHTS_AZEL.FP_GAMMA
+                        Focalplane key for detector gamma offset angle
+  --weights_azel.hwp_angle WEIGHTS_AZEL.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --weights_azel.mode WEIGHTS_AZEL.MODE
+                        The Stokes weights to generate (I, QU or IQU)
+  --weights_azel.name WEIGHTS_AZEL.NAME
+                        The 'name' of this class instance
+  --weights_azel.single_precision
+                        If True, use 32bit float in output
+  --weights_azel.timing
+                        If True, print timing of exec()
+  --weights_azel.timing_total
+                        If True, print timing of finalize()
+  --weights_azel.view WEIGHTS_AZEL.VIEW
+                        Use this view of the data in all observations
+  --weights_azel.weights WEIGHTS_AZEL.WEIGHTS
+                        Observation detdata key for output weights
+  --weights_radec.IAU   If True, use the IAU convention rather than COSMO
+  --weights_radec.cal WEIGHTS_RADEC.CAL
+                        The observation key with a dictionary of pointing
+                        weight calibration for each det
+  --weights_radec.enable
+                        Enable use of weights_radec
+  --weights_radec.disable
+                        Disable use of weights_radec
+  --weights_radec.fp_gamma WEIGHTS_RADEC.FP_GAMMA
+                        Focalplane key for detector gamma offset angle
+  --weights_radec.hwp_angle WEIGHTS_RADEC.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --weights_radec.mode WEIGHTS_RADEC.MODE
+                        The Stokes weights to generate (I, QU or IQU)
+  --weights_radec.name WEIGHTS_RADEC.NAME
+                        The 'name' of this class instance
+  --weights_radec.single_precision
+                        If True, use 32bit float in output
+  --weights_radec.timing
+                        If True, print timing of exec()
+  --weights_radec.timing_total
+                        If True, print timing of finalize()
+  --weights_radec.view WEIGHTS_RADEC.VIEW
+                        Use this view of the data in all observations
+  --weights_radec.weights WEIGHTS_RADEC.WEIGHTS
+                        Observation detdata key for output weights
+  --pixels_healpix_radec.create_dist PIXELS_HEALPIX_RADEC.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --pixels_healpix_radec.enable
+                        Enable use of pixels_healpix_radec
+  --pixels_healpix_radec.disable
+                        Disable use of pixels_healpix_radec
+  --pixels_healpix_radec.name PIXELS_HEALPIX_RADEC.NAME
+                        The 'name' of this class instance
+  --pixels_healpix_radec.no_nest
+                        If True, use NESTED ordering instead of RING
+  --pixels_healpix_radec.nside PIXELS_HEALPIX_RADEC.NSIDE
+                        The NSIDE resolution
+  --pixels_healpix_radec.nside_submap PIXELS_HEALPIX_RADEC.NSIDE_SUBMAP
+                        The NSIDE of the submap resolution
+  --pixels_healpix_radec.pixels PIXELS_HEALPIX_RADEC.PIXELS
+                        Observation detdata key for output pixel indices
+  --pixels_healpix_radec.single_precision
+                        If True, use 32bit int in output
+  --pixels_healpix_radec.timing
+                        If True, print timing of exec()
+  --pixels_healpix_radec.timing_total
+                        If True, print timing of finalize()
+  --pixels_healpix_radec.view PIXELS_HEALPIX_RADEC.VIEW
+                        Use this view of the data in all observations
+  --pixels_healpix_radec_final.create_dist PIXELS_HEALPIX_RADEC_FINAL.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --pixels_healpix_radec_final.enable
+                        Enable use of pixels_healpix_radec_final
+  --pixels_healpix_radec_final.disable
+                        Disable use of pixels_healpix_radec_final
+  --pixels_healpix_radec_final.name PIXELS_HEALPIX_RADEC_FINAL.NAME
+                        The 'name' of this class instance
+  --pixels_healpix_radec_final.no_nest
+                        If True, use NESTED ordering instead of RING
+  --pixels_healpix_radec_final.nside PIXELS_HEALPIX_RADEC_FINAL.NSIDE
+                        The NSIDE resolution
+  --pixels_healpix_radec_final.nside_submap PIXELS_HEALPIX_RADEC_FINAL.NSIDE_SUBMAP
+                        The NSIDE of the submap resolution
+  --pixels_healpix_radec_final.pixels PIXELS_HEALPIX_RADEC_FINAL.PIXELS
+                        Observation detdata key for output pixel indices
+  --pixels_healpix_radec_final.single_precision
+                        If True, use 32bit int in output
+  --pixels_healpix_radec_final.timing
+                        If True, print timing of exec()
+  --pixels_healpix_radec_final.timing_total
+                        If True, print timing of finalize()
+  --pixels_healpix_radec_final.view PIXELS_HEALPIX_RADEC_FINAL.VIEW
+                        Use this view of the data in all observations
+  --pixels_wcs_azel.no_auto_bounds
+                        If True, set the bounding box based on boresight and
+                        field of view
+  --pixels_wcs_azel.bounds PIXELS_WCS_AZEL.BOUNDS
+                        The (lon_min, lon_max, lat_min, lat_max) values
+                        (Quantities)
+  --pixels_wcs_azel.center PIXELS_WCS_AZEL.CENTER
+                        The center Lon/Lat coordinates (Quantities) of the
+                        projection
+  --pixels_wcs_azel.center_offset PIXELS_WCS_AZEL.CENTER_OFFSET
+                        Optional name of shared field with lon, lat offset in
+                        degrees
+  --pixels_wcs_azel.coord_frame PIXELS_WCS_AZEL.COORD_FRAME
+                        Supported values are AZEL, EQU, GAL, ECL
+  --pixels_wcs_azel.create_dist PIXELS_WCS_AZEL.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --pixels_wcs_azel.dimensions PIXELS_WCS_AZEL.DIMENSIONS
+                        The Lon/Lat pixel dimensions of the projection
+  --pixels_wcs_azel.enable
+                        Enable use of pixels_wcs_azel
+  --pixels_wcs_azel.disable
+                        Disable use of pixels_wcs_azel
+  --pixels_wcs_azel.fits_header PIXELS_WCS_AZEL.FITS_HEADER
+                        FITS file containing header to use with pre-existing
+                        WCS parameters
+  --pixels_wcs_azel.name PIXELS_WCS_AZEL.NAME
+                        The 'name' of this class instance
+  --pixels_wcs_azel.pixels PIXELS_WCS_AZEL.PIXELS
+                        Observation detdata key for output pixel indices
+  --pixels_wcs_azel.projection PIXELS_WCS_AZEL.PROJECTION
+                        Supported values are CAR, CEA, MER, ZEA, TAN, SFL
+  --pixels_wcs_azel.resolution PIXELS_WCS_AZEL.RESOLUTION
+                        The Lon/Lat projection resolution (Quantities) along
+                        the 2 axes
+  --pixels_wcs_azel.single_precision
+                        If True, use 32bit int in output
+  --pixels_wcs_azel.submaps PIXELS_WCS_AZEL.SUBMAPS
+                        Number of submaps to use
+  --pixels_wcs_azel.timing
+                        If True, print timing of exec()
+  --pixels_wcs_azel.timing_total
+                        If True, print timing of finalize()
+  --pixels_wcs_azel.no_use_astropy
+                        If True, use astropy for world to pix conversion
+  --pixels_wcs_azel.view PIXELS_WCS_AZEL.VIEW
+                        Use this view of the data in all observations
+  --pixels_wcs_azel_final.no_auto_bounds
+                        If True, set the bounding box based on boresight and
+                        field of view
+  --pixels_wcs_azel_final.bounds PIXELS_WCS_AZEL_FINAL.BOUNDS
+                        The (lon_min, lon_max, lat_min, lat_max) values
+                        (Quantities)
+  --pixels_wcs_azel_final.center PIXELS_WCS_AZEL_FINAL.CENTER
+                        The center Lon/Lat coordinates (Quantities) of the
+                        projection
+  --pixels_wcs_azel_final.center_offset PIXELS_WCS_AZEL_FINAL.CENTER_OFFSET
+                        Optional name of shared field with lon, lat offset in
+                        degrees
+  --pixels_wcs_azel_final.coord_frame PIXELS_WCS_AZEL_FINAL.COORD_FRAME
+                        Supported values are AZEL, EQU, GAL, ECL
+  --pixels_wcs_azel_final.create_dist PIXELS_WCS_AZEL_FINAL.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --pixels_wcs_azel_final.dimensions PIXELS_WCS_AZEL_FINAL.DIMENSIONS
+                        The Lon/Lat pixel dimensions of the projection
+  --pixels_wcs_azel_final.enable
+                        Enable use of pixels_wcs_azel_final
+  --pixels_wcs_azel_final.disable
+                        Disable use of pixels_wcs_azel_final
+  --pixels_wcs_azel_final.fits_header PIXELS_WCS_AZEL_FINAL.FITS_HEADER
+                        FITS file containing header to use with pre-existing
+                        WCS parameters
+  --pixels_wcs_azel_final.name PIXELS_WCS_AZEL_FINAL.NAME
+                        The 'name' of this class instance
+  --pixels_wcs_azel_final.pixels PIXELS_WCS_AZEL_FINAL.PIXELS
+                        Observation detdata key for output pixel indices
+  --pixels_wcs_azel_final.projection PIXELS_WCS_AZEL_FINAL.PROJECTION
+                        Supported values are CAR, CEA, MER, ZEA, TAN, SFL
+  --pixels_wcs_azel_final.resolution PIXELS_WCS_AZEL_FINAL.RESOLUTION
+                        The Lon/Lat projection resolution (Quantities) along
+                        the 2 axes
+  --pixels_wcs_azel_final.single_precision
+                        If True, use 32bit int in output
+  --pixels_wcs_azel_final.submaps PIXELS_WCS_AZEL_FINAL.SUBMAPS
+                        Number of submaps to use
+  --pixels_wcs_azel_final.timing
+                        If True, print timing of exec()
+  --pixels_wcs_azel_final.timing_total
+                        If True, print timing of finalize()
+  --pixels_wcs_azel_final.no_use_astropy
+                        If True, use astropy for world to pix conversion
+  --pixels_wcs_azel_final.view PIXELS_WCS_AZEL_FINAL.VIEW
+                        Use this view of the data in all observations
+  --pixels_wcs_radec.no_auto_bounds
+                        If True, set the bounding box based on boresight and
+                        field of view
+  --pixels_wcs_radec.bounds PIXELS_WCS_RADEC.BOUNDS
+                        The (lon_min, lon_max, lat_min, lat_max) values
+                        (Quantities)
+  --pixels_wcs_radec.center PIXELS_WCS_RADEC.CENTER
+                        The center Lon/Lat coordinates (Quantities) of the
+                        projection
+  --pixels_wcs_radec.center_offset PIXELS_WCS_RADEC.CENTER_OFFSET
+                        Optional name of shared field with lon, lat offset in
+                        degrees
+  --pixels_wcs_radec.coord_frame PIXELS_WCS_RADEC.COORD_FRAME
+                        Supported values are AZEL, EQU, GAL, ECL
+  --pixels_wcs_radec.create_dist PIXELS_WCS_RADEC.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --pixels_wcs_radec.dimensions PIXELS_WCS_RADEC.DIMENSIONS
+                        The Lon/Lat pixel dimensions of the projection
+  --pixels_wcs_radec.enable
+                        Enable use of pixels_wcs_radec
+  --pixels_wcs_radec.disable
+                        Disable use of pixels_wcs_radec
+  --pixels_wcs_radec.fits_header PIXELS_WCS_RADEC.FITS_HEADER
+                        FITS file containing header to use with pre-existing
+                        WCS parameters
+  --pixels_wcs_radec.name PIXELS_WCS_RADEC.NAME
+                        The 'name' of this class instance
+  --pixels_wcs_radec.pixels PIXELS_WCS_RADEC.PIXELS
+                        Observation detdata key for output pixel indices
+  --pixels_wcs_radec.projection PIXELS_WCS_RADEC.PROJECTION
+                        Supported values are CAR, CEA, MER, ZEA, TAN, SFL
+  --pixels_wcs_radec.resolution PIXELS_WCS_RADEC.RESOLUTION
+                        The Lon/Lat projection resolution (Quantities) along
+                        the 2 axes
+  --pixels_wcs_radec.single_precision
+                        If True, use 32bit int in output
+  --pixels_wcs_radec.submaps PIXELS_WCS_RADEC.SUBMAPS
+                        Number of submaps to use
+  --pixels_wcs_radec.timing
+                        If True, print timing of exec()
+  --pixels_wcs_radec.timing_total
+                        If True, print timing of finalize()
+  --pixels_wcs_radec.no_use_astropy
+                        If True, use astropy for world to pix conversion
+  --pixels_wcs_radec.view PIXELS_WCS_RADEC.VIEW
+                        Use this view of the data in all observations
+  --pixels_wcs_radec_final.no_auto_bounds
+                        If True, set the bounding box based on boresight and
+                        field of view
+  --pixels_wcs_radec_final.bounds PIXELS_WCS_RADEC_FINAL.BOUNDS
+                        The (lon_min, lon_max, lat_min, lat_max) values
+                        (Quantities)
+  --pixels_wcs_radec_final.center PIXELS_WCS_RADEC_FINAL.CENTER
+                        The center Lon/Lat coordinates (Quantities) of the
+                        projection
+  --pixels_wcs_radec_final.center_offset PIXELS_WCS_RADEC_FINAL.CENTER_OFFSET
+                        Optional name of shared field with lon, lat offset in
+                        degrees
+  --pixels_wcs_radec_final.coord_frame PIXELS_WCS_RADEC_FINAL.COORD_FRAME
+                        Supported values are AZEL, EQU, GAL, ECL
+  --pixels_wcs_radec_final.create_dist PIXELS_WCS_RADEC_FINAL.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --pixels_wcs_radec_final.dimensions PIXELS_WCS_RADEC_FINAL.DIMENSIONS
+                        The Lon/Lat pixel dimensions of the projection
+  --pixels_wcs_radec_final.enable
+                        Enable use of pixels_wcs_radec_final
+  --pixels_wcs_radec_final.disable
+                        Disable use of pixels_wcs_radec_final
+  --pixels_wcs_radec_final.fits_header PIXELS_WCS_RADEC_FINAL.FITS_HEADER
+                        FITS file containing header to use with pre-existing
+                        WCS parameters
+  --pixels_wcs_radec_final.name PIXELS_WCS_RADEC_FINAL.NAME
+                        The 'name' of this class instance
+  --pixels_wcs_radec_final.pixels PIXELS_WCS_RADEC_FINAL.PIXELS
+                        Observation detdata key for output pixel indices
+  --pixels_wcs_radec_final.projection PIXELS_WCS_RADEC_FINAL.PROJECTION
+                        Supported values are CAR, CEA, MER, ZEA, TAN, SFL
+  --pixels_wcs_radec_final.resolution PIXELS_WCS_RADEC_FINAL.RESOLUTION
+                        The Lon/Lat projection resolution (Quantities) along
+                        the 2 axes
+  --pixels_wcs_radec_final.single_precision
+                        If True, use 32bit int in output
+  --pixels_wcs_radec_final.submaps PIXELS_WCS_RADEC_FINAL.SUBMAPS
+                        Number of submaps to use
+  --pixels_wcs_radec_final.timing
+                        If True, print timing of exec()
+  --pixels_wcs_radec_final.timing_total
+                        If True, print timing of finalize()
+  --pixels_wcs_radec_final.no_use_astropy
+                        If True, use astropy for world to pix conversion
+  --pixels_wcs_radec_final.view PIXELS_WCS_RADEC_FINAL.VIEW
+                        Use this view of the data in all observations
+  --hwpfilter.det_data HWPFILTER.DET_DATA
+                        Observation detdata key
+  --hwpfilter.det_flag_mask HWPFILTER.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --hwpfilter.det_flags HWPFILTER.DET_FLAGS
+                        Observation detdata key for flags to use
+  --hwpfilter.det_mask HWPFILTER.DET_MASK
+                        Bit mask value for per-detector flagging
+  --hwpfilter.detrend   Subtract the fitted trend along with the HWP template
+  --hwpfilter.enable    Enable use of hwpfilter
+  --hwpfilter.disable   Disable use of hwpfilter
+  --hwpfilter.filter_order HWPFILTER.FILTER_ORDER
+                        Order of a Fourier expansion to fit as a function of
+                        HWP angle.
+  --hwpfilter.hwp_angle HWPFILTER.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --hwpfilter.hwp_flag_mask HWPFILTER.HWP_FLAG_MASK
+                        Bit mask to use when adding flags based on HWP filter
+                        failures.
+  --hwpfilter.name HWPFILTER.NAME
+                        The 'name' of this class instance
+  --hwpfilter.reverse   Instead of subtracting the templates, add them back
+                        based on saved amplitudes
+  --hwpfilter.save_amplitudes HWPFILTER.SAVE_AMPLITUDES
+                        Store the template amplitudes in observation metadata
+                        using this key.
+  --hwpfilter.shared_flag_mask HWPFILTER.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --hwpfilter.shared_flags HWPFILTER.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --hwpfilter.timing    If True, print timing of exec()
+  --hwpfilter.timing_total
+                        If True, print timing of finalize()
+  --hwpfilter.trend_order HWPFILTER.TREND_ORDER
+                        Order of a Legendre polynomial to fit along with the
+                        HWPSS template.
+  --hwpfilter.view HWPFILTER.VIEW
+                        Use this view of the data in all observations
+  --hwpss_model.chunk_time HWPSS_MODEL.CHUNK_TIME
+                        The overlapping time chunks over which to compute the
+                        HWPSS template
+  --hwpss_model.chunk_view HWPSS_MODEL.CHUNK_VIEW
+                        The intervals over which to independently compute the
+                        HWPSS template
+  --hwpss_model.debug HWPSS_MODEL.DEBUG
+                        Path to directory for generating debug plots
+  --hwpss_model.det_data HWPSS_MODEL.DET_DATA
+                        Observation detdata key
+  --hwpss_model.det_flag_mask HWPSS_MODEL.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --hwpss_model.det_flags HWPSS_MODEL.DET_FLAGS
+                        Observation detdata key for flags to use
+  --hwpss_model.det_mask HWPSS_MODEL.DET_MASK
+                        Bit mask value for per-detector flagging
+  --hwpss_model.enable  Enable use of hwpss_model
+  --hwpss_model.disable
+                        Disable use of hwpss_model
+  --hwpss_model.fill_gaps
+                        If True, fill gaps with a simple noise model
+  --hwpss_model.harmonics HWPSS_MODEL.HARMONICS
+                        Number of harmonics to consider in the expansion
+  --hwpss_model.hwp_angle HWPSS_MODEL.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --hwpss_model.hwp_flag_mask HWPSS_MODEL.HWP_FLAG_MASK
+                        Bit mask to use when adding flags based on HWP filter
+                        failures.
+  --hwpss_model.name HWPSS_MODEL.NAME
+                        The 'name' of this class instance
+  --hwpss_model.relcal_continuous HWPSS_MODEL.RELCAL_CONTINUOUS
+                        Build interpolated relative calibration timestreams
+  --hwpss_model.relcal_cut_sigma HWPSS_MODEL.RELCAL_CUT_SIGMA
+                        Sigma cut for outlier rejection based on relative
+                        calibration
+  --hwpss_model.relcal_fixed HWPSS_MODEL.RELCAL_FIXED
+                        Build a relative calibration dictionary in this
+                        observation key
+  --hwpss_model.save_model HWPSS_MODEL.SAVE_MODEL
+                        Save the model to this observation key
+  --hwpss_model.shared_flag_mask HWPSS_MODEL.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --hwpss_model.shared_flags HWPSS_MODEL.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --hwpss_model.subtract_model
+                        Subtract the model from the input data
+  --hwpss_model.time_drift
+                        If True, include time drift terms in the model
+  --hwpss_model.times HWPSS_MODEL.TIMES
+                        Observation shared key for timestamps
+  --hwpss_model.timing  If True, print timing of exec()
+  --hwpss_model.timing_total
+                        If True, print timing of finalize()
+  --simple_jumpcorrect.apply_jumps SIMPLE_JUMPCORRECT.APPLY_JUMPS
+                        Do not compute jumps, instead apply the specified
+                        dictionary of values
+  --simple_jumpcorrect.det_data SIMPLE_JUMPCORRECT.DET_DATA
+                        Observation detdata key to analyze
+  --simple_jumpcorrect.det_flag_mask SIMPLE_JUMPCORRECT.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --simple_jumpcorrect.det_flags SIMPLE_JUMPCORRECT.DET_FLAGS
+                        Observation detdata key for flags to use
+  --simple_jumpcorrect.det_mask SIMPLE_JUMPCORRECT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --simple_jumpcorrect.enable
+                        Enable use of simple_jumpcorrect
+  --simple_jumpcorrect.disable
+                        Disable use of simple_jumpcorrect
+  --simple_jumpcorrect.no_fill_gaps
+                        Fill gaps with a linear trend
+  --simple_jumpcorrect.fill_gaps_buffer_time SIMPLE_JUMPCORRECT.FILL_GAPS_BUFFER_TIME
+                        Buffer time around flagged regions used for filling
+  --simple_jumpcorrect.fill_gaps_order SIMPLE_JUMPCORRECT.FILL_GAPS_ORDER
+                        Polynomial order for fit across gap
+  --simple_jumpcorrect.filterlen SIMPLE_JUMPCORRECT.FILTERLEN
+                        Matched filter length
+  --simple_jumpcorrect.jump_limit SIMPLE_JUMPCORRECT.JUMP_LIMIT
+                        Jump detection threshold in units of RMS
+  --simple_jumpcorrect.jump_mask SIMPLE_JUMPCORRECT.JUMP_MASK
+                        Bit mask value to apply at glitch positions
+  --simple_jumpcorrect.jump_radius SIMPLE_JUMPCORRECT.JUMP_RADIUS
+                        Number of additional samples to flag around a jump
+  --simple_jumpcorrect.name SIMPLE_JUMPCORRECT.NAME
+                        The 'name' of this class instance
+  --simple_jumpcorrect.njump_limit SIMPLE_JUMPCORRECT.NJUMP_LIMIT
+                        If the detector has more than `njump_limit` jumps the
+                        detector the detector and time stream will be flagged
+                        as invalid.
+  --simple_jumpcorrect.nsample_min SIMPLE_JUMPCORRECT.NSAMPLE_MIN
+                        Minimum number of good samples in an interval
+  --simple_jumpcorrect.phase SIMPLE_JUMPCORRECT.PHASE
+                        Observation shared key for scan phase (to reject scan-
+                        synchronous jumps)
+  --simple_jumpcorrect.phase_tol SIMPLE_JUMPCORRECT.PHASE_TOL
+                        When `phase` is not None, jumps closer than
+                        `phase_tol` are synchronous and not corrected
+  --simple_jumpcorrect.reset_det_flags
+                        Replace existing detector flags
+  --simple_jumpcorrect.save_jumps SIMPLE_JUMPCORRECT.SAVE_JUMPS
+                        Save the jump corrections to a dictionary of values
+                        per observation
+  --simple_jumpcorrect.shared_flag_mask SIMPLE_JUMPCORRECT.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --simple_jumpcorrect.shared_flags SIMPLE_JUMPCORRECT.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --simple_jumpcorrect.timing
+                        If True, print timing of exec()
+  --simple_jumpcorrect.timing_total
+                        If True, print timing of finalize()
+  --simple_jumpcorrect.view SIMPLE_JUMPCORRECT.VIEW
+                        Find jumps in this view
+  --simple_deglitch.det_data SIMPLE_DEGLITCH.DET_DATA
+                        Observation detdata key to analyze
+  --simple_deglitch.det_flag_mask SIMPLE_DEGLITCH.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --simple_deglitch.det_flags SIMPLE_DEGLITCH.DET_FLAGS
+                        Observation detdata key for flags to use
+  --simple_deglitch.det_mask SIMPLE_DEGLITCH.DET_MASK
+                        Bit mask value for per-detector flagging
+  --simple_deglitch.enable
+                        Enable use of simple_deglitch
+  --simple_deglitch.disable
+                        Disable use of simple_deglitch
+  --simple_deglitch.no_fill_gaps
+                        Fill gaps with a trend line and white noise
+  --simple_deglitch.fill_gaps_buffer_time SIMPLE_DEGLITCH.FILL_GAPS_BUFFER_TIME
+                        Buffer time around flagged regions used for filling
+  --simple_deglitch.fill_gaps_order SIMPLE_DEGLITCH.FILL_GAPS_ORDER
+                        Polynomial order for fit across gap
+  --simple_deglitch.glitch_limit SIMPLE_DEGLITCH.GLITCH_LIMIT
+                        Glitch detection threshold in units of RMS
+  --simple_deglitch.glitch_mask SIMPLE_DEGLITCH.GLITCH_MASK
+                        Bit mask value to apply at glitch positions
+  --simple_deglitch.glitch_radius SIMPLE_DEGLITCH.GLITCH_RADIUS
+                        Number of additional samples to flag around a glitch
+  --simple_deglitch.medfilt_kernel_size SIMPLE_DEGLITCH.MEDFILT_KERNEL_SIZE
+                        Median filter kernel width. Either 0 (full interval)
+                        or a positive odd number
+  --simple_deglitch.name SIMPLE_DEGLITCH.NAME
+                        The 'name' of this class instance
+  --simple_deglitch.nglitch_limit SIMPLE_DEGLITCH.NGLITCH_LIMIT
+                        Maximum number of glitches in a view
+  --simple_deglitch.nsample_min SIMPLE_DEGLITCH.NSAMPLE_MIN
+                        Minimum number of good samples in an interval.
+  --simple_deglitch.reset_det_flags
+                        Replace existing detector flags
+  --simple_deglitch.shared_flag_mask SIMPLE_DEGLITCH.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --simple_deglitch.shared_flags SIMPLE_DEGLITCH.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --simple_deglitch.timing
+                        If True, print timing of exec()
+  --simple_deglitch.timing_total
+                        If True, print timing of finalize()
+  --simple_deglitch.view SIMPLE_DEGLITCH.VIEW
+                        Find glitches in this view
+  --diff_noise_cut.alpha DIFF_NOISE_CUT.ALPHA
+                        Slope of the 1/f noise model
+  --diff_noise_cut.det_data DIFF_NOISE_CUT.DET_DATA
+                        Observation detdata key to analyze
+  --diff_noise_cut.det_flag_mask DIFF_NOISE_CUT.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --diff_noise_cut.det_flags DIFF_NOISE_CUT.DET_FLAGS
+                        Observation detdata key for flags to use
+  --diff_noise_cut.det_mask DIFF_NOISE_CUT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --diff_noise_cut.enable
+                        Enable use of diff_noise_cut
+  --diff_noise_cut.disable
+                        Disable use of diff_noise_cut
+  --diff_noise_cut.fknee DIFF_NOISE_CUT.FKNEE
+                        Knee frequency to use for noise model.
+  --diff_noise_cut.fmin DIFF_NOISE_CUT.FMIN
+                        Minimum frequency to use for noise model.
+  --diff_noise_cut.name DIFF_NOISE_CUT.NAME
+                        The 'name' of this class instance
+  --diff_noise_cut.noise_model DIFF_NOISE_CUT.NOISE_MODEL
+                        The observation key containing the output noise model
+  --diff_noise_cut.shared_flag_mask DIFF_NOISE_CUT.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --diff_noise_cut.shared_flags DIFF_NOISE_CUT.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --diff_noise_cut.timing
+                        If True, print timing of exec()
+  --diff_noise_cut.timing_total
+                        If True, print timing of finalize()
+  --diff_noise_cut.view DIFF_NOISE_CUT.VIEW
+                        Evaluate the sample differences in this view
+  --diff_noise_cut_flag.det_data DIFF_NOISE_CUT_FLAG.DET_DATA
+                        Observation detdata key for timestreams (only if RMS
+                        cut enabled)
+  --diff_noise_cut_flag.det_flag_mask DIFF_NOISE_CUT_FLAG.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging (only if
+                        RMS cut used)
+  --diff_noise_cut_flag.det_flags DIFF_NOISE_CUT_FLAG.DET_FLAGS
+                        Observation detdata key for flags to use
+  --diff_noise_cut_flag.det_mask DIFF_NOISE_CUT_FLAG.DET_MASK
+                        Bit mask value for per-detector flagging
+  --diff_noise_cut_flag.enable
+                        Enable use of diff_noise_cut_flag
+  --diff_noise_cut_flag.disable
+                        Disable use of diff_noise_cut_flag
+  --diff_noise_cut_flag.focalplane_key DIFF_NOISE_CUT_FLAG.FOCALPLANE_KEY
+                        Process detectors in groups based on this column
+  --diff_noise_cut_flag.focalplane_value DIFF_NOISE_CUT_FLAG.FOCALPLANE_VALUE
+                        Only consider detectors with this focalplane value
+  --diff_noise_cut_flag.low_noise_limit DIFF_NOISE_CUT_FLAG.LOW_NOISE_LIMIT
+                        Fraction of median NET or RMS to cut anomalously low
+                        detectors at
+  --diff_noise_cut_flag.name DIFF_NOISE_CUT_FLAG.NAME
+                        The 'name' of this class instance
+  --diff_noise_cut_flag.noise_model DIFF_NOISE_CUT_FLAG.NOISE_MODEL
+                        The observation key containing the noise model
+  --diff_noise_cut_flag.outlier_flag_mask DIFF_NOISE_CUT_FLAG.OUTLIER_FLAG_MASK
+                        Bit mask to raise flags with
+  --diff_noise_cut_flag.sigma_NET DIFF_NOISE_CUT_FLAG.SIGMA_NET
+                        Flag detectors with NET values outside this range
+  --diff_noise_cut_flag.sigma_fknee DIFF_NOISE_CUT_FLAG.SIGMA_FKNEE
+                        Flag detectors with knee frequency values outside this
+                        range
+  --diff_noise_cut_flag.sigma_rms DIFF_NOISE_CUT_FLAG.SIGMA_RMS
+                        In addition to flagging based on estimated model, also
+                        apply overall TOD cut
+  --diff_noise_cut_flag.timing
+                        If True, print timing of exec()
+  --diff_noise_cut_flag.timing_total
+                        If True, print timing of finalize()
+  --noise_cut.det_data NOISE_CUT.DET_DATA
+                        Observation detdata key apply filtering to
+  --noise_cut.det_flag_mask NOISE_CUT.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --noise_cut.det_flags NOISE_CUT.DET_FLAGS
+                        Observation detdata key for flags to use
+  --noise_cut.det_mask NOISE_CUT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --noise_cut.enable    Enable use of noise_cut
+  --noise_cut.disable   Disable use of noise_cut
+  --noise_cut.focalplane_key NOISE_CUT.FOCALPLANE_KEY
+                        When set, PSDs are measured over averaged TODs
+  --noise_cut.lagmax NOISE_CUT.LAGMAX
+                        Maximum lag to consider for the covariance function.
+                        Will be truncated the length of the longest view.
+  --noise_cut.mapfile NOISE_CUT.MAPFILE
+                        Optional HEALPix map to sample and subtract from the
+                        signal
+  --noise_cut.mask_flag_mask NOISE_CUT.MASK_FLAG_MASK
+                        Bit mask for raising processing mask flags
+  --noise_cut.mask_flags NOISE_CUT.MASK_FLAGS
+                        Observation detdata key for processing mask flags
+  --noise_cut.maskfile NOISE_CUT.MASKFILE
+                        Optional HEALPix processing mask
+  --noise_cut.name NOISE_CUT.NAME
+                        The 'name' of this class instance
+  --noise_cut.naverage NOISE_CUT.NAVERAGE
+                        Smoothing kernel width for downsampled data
+  --noise_cut.nbin_psd NOISE_CUT.NBIN_PSD
+                        Bin the resulting PSD
+  --noise_cut.no_nocross
+                        Do not evaluate cross-PSDs. Overridden by `pairs`
+  --noise_cut.nosingle  Do not evaluate individual PSDs. Overridden by `pairs`
+  --noise_cut.nsum NOISE_CUT.NSUM
+                        Downsampling factor for decimated data
+  --noise_cut.out_model NOISE_CUT.OUT_MODEL
+                        Create a new noise model with this name
+  --noise_cut.output_dir NOISE_CUT.OUTPUT_DIR
+                        If specified, write output data products to this
+                        directory
+  --noise_cut.pairs NOISE_CUT.PAIRS
+                        Detector pairs to estimate noise for. Overrides
+                        `nosingle` and `nocross`
+  --noise_cut.pixel_dist NOISE_CUT.PIXEL_DIST
+                        The Data key where the PixelDistribution object is
+                        located. Only relevant if `maskfile` and/or `mapfile`
+                        are set
+  --noise_cut.no_pol    Sample also the polarized part of the map
+  --noise_cut.remove_common_mode
+                        Remove common mode signal before estimation
+  --noise_cut.save_cov  Save also the sample covariance
+  --noise_cut.shared_flag_mask NOISE_CUT.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --noise_cut.shared_flags NOISE_CUT.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --noise_cut.stationary_period NOISE_CUT.STATIONARY_PERIOD
+                        Break the observation into several estimation periods
+                        of this length
+  --noise_cut.symmetric
+                        If True, treat positive and negative lags as
+                        equivalent in the cross correlator
+  --noise_cut.times NOISE_CUT.TIMES
+                        Observation shared key for timestamps
+  --noise_cut.timing    If True, print timing of exec()
+  --noise_cut.timing_total
+                        If True, print timing of finalize()
+  --noise_cut.view NOISE_CUT.VIEW
+                        Only measure the covariance within each view
+  --noise_cut_fit.bad_fit_mask NOISE_CUT_FIT.BAD_FIT_MASK
+                        Bit mask to raise for bad fits
+  --noise_cut_fit.det_mask NOISE_CUT_FIT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --noise_cut_fit.enable
+                        Enable use of noise_cut_fit
+  --noise_cut_fit.disable
+                        Disable use of noise_cut_fit
+  --noise_cut_fit.f_min NOISE_CUT_FIT.F_MIN
+                        Low-frequency rolloff of model in the fit
+  --noise_cut_fit.least_squares_ftol NOISE_CUT_FIT.LEAST_SQUARES_FTOL
+                        The ftol value passed to the least_squares solver
+  --noise_cut_fit.least_squares_gtol NOISE_CUT_FIT.LEAST_SQUARES_GTOL
+                        The gtol value passed to the least_squares solver
+  --noise_cut_fit.least_squares_xtol NOISE_CUT_FIT.LEAST_SQUARES_XTOL
+                        The xtol value passed to the least_squares solver
+  --noise_cut_fit.name NOISE_CUT_FIT.NAME
+                        The 'name' of this class instance
+  --noise_cut_fit.noise_model NOISE_CUT_FIT.NOISE_MODEL
+                        The observation key containing the input noise model
+  --noise_cut_fit.out_model NOISE_CUT_FIT.OUT_MODEL
+                        Create a new noise model with this name
+  --noise_cut_fit.timing
+                        If True, print timing of exec()
+  --noise_cut_fit.timing_total
+                        If True, print timing of finalize()
+  --noise_cut_fit.white_noise_max NOISE_CUT_FIT.WHITE_NOISE_MAX
+                        The maximum frequency to consider for the white noise
+                        plateau
+  --noise_cut_fit.white_noise_min NOISE_CUT_FIT.WHITE_NOISE_MIN
+                        The minimum frequency to consider for the white noise
+                        plateau
+  --noise_cut_flag.det_data NOISE_CUT_FLAG.DET_DATA
+                        Observation detdata key for timestreams (only if RMS
+                        cut enabled)
+  --noise_cut_flag.det_flag_mask NOISE_CUT_FLAG.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging (only if
+                        RMS cut used)
+  --noise_cut_flag.det_flags NOISE_CUT_FLAG.DET_FLAGS
+                        Observation detdata key for flags to use
+  --noise_cut_flag.det_mask NOISE_CUT_FLAG.DET_MASK
+                        Bit mask value for per-detector flagging
+  --noise_cut_flag.enable
+                        Enable use of noise_cut_flag
+  --noise_cut_flag.disable
+                        Disable use of noise_cut_flag
+  --noise_cut_flag.focalplane_key NOISE_CUT_FLAG.FOCALPLANE_KEY
+                        Process detectors in groups based on this column
+  --noise_cut_flag.focalplane_value NOISE_CUT_FLAG.FOCALPLANE_VALUE
+                        Only consider detectors with this focalplane value
+  --noise_cut_flag.low_noise_limit NOISE_CUT_FLAG.LOW_NOISE_LIMIT
+                        Fraction of median NET or RMS to cut anomalously low
+                        detectors at
+  --noise_cut_flag.name NOISE_CUT_FLAG.NAME
+                        The 'name' of this class instance
+  --noise_cut_flag.noise_model NOISE_CUT_FLAG.NOISE_MODEL
+                        The observation key containing the noise model
+  --noise_cut_flag.outlier_flag_mask NOISE_CUT_FLAG.OUTLIER_FLAG_MASK
+                        Bit mask to raise flags with
+  --noise_cut_flag.sigma_NET NOISE_CUT_FLAG.SIGMA_NET
+                        Flag detectors with NET values outside this range
+  --noise_cut_flag.sigma_fknee NOISE_CUT_FLAG.SIGMA_FKNEE
+                        Flag detectors with knee frequency values outside this
+                        range
+  --noise_cut_flag.sigma_rms NOISE_CUT_FLAG.SIGMA_RMS
+                        In addition to flagging based on estimated model, also
+                        apply overall TOD cut
+  --noise_cut_flag.timing
+                        If True, print timing of exec()
+  --noise_cut_flag.timing_total
+                        If True, print timing of finalize()
+  --raw_statistics.det_data RAW_STATISTICS.DET_DATA
+                        Observation detdata key to analyze
+  --raw_statistics.det_flag_mask RAW_STATISTICS.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --raw_statistics.det_flags RAW_STATISTICS.DET_FLAGS
+                        Observation detdata key for flags to use
+  --raw_statistics.det_mask RAW_STATISTICS.DET_MASK
+                        Bit mask value for per-detector flagging
+  --raw_statistics.enable
+                        Enable use of raw_statistics
+  --raw_statistics.disable
+                        Disable use of raw_statistics
+  --raw_statistics.name RAW_STATISTICS.NAME
+                        The 'name' of this class instance
+  --raw_statistics.output_dir RAW_STATISTICS.OUTPUT_DIR
+                        If specified, write output data products to this
+                        directory
+  --raw_statistics.shared_flag_mask RAW_STATISTICS.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --raw_statistics.shared_flags RAW_STATISTICS.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --raw_statistics.timing
+                        If True, print timing of exec()
+  --raw_statistics.timing_total
+                        If True, print timing of finalize()
+  --raw_statistics.view RAW_STATISTICS.VIEW
+                        Use this view of the data in all observations
+  --demodulate.demod_flag_mask DEMODULATE.DEMOD_FLAG_MASK
+                        Bit mask value for demod & downsample flagging
+  --demodulate.det_data DEMODULATE.DET_DATA
+                        Observation detdata key apply filtering to. Use ';' if
+                        multiple signal flavors should be demodulated.
+  --demodulate.det_flag_mask DEMODULATE.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --demodulate.det_flags DEMODULATE.DET_FLAGS
+                        Observation detdata key for flags to use
+  --demodulate.det_mask DEMODULATE.DET_MASK
+                        Bit mask value for per-detector flagging
+  --demodulate.do_2f    also cache the 2f-demodulated signal
+  --demodulate.enable   Enable use of demodulate
+  --demodulate.disable  Disable use of demodulate
+  --demodulate.fcut DEMODULATE.FCUT
+                        Low pass cut-off frequency in units of HWP frequency
+  --demodulate.fmax_2f DEMODULATE.FMAX_2F
+                        High frequency end of the 2f-bandpass filter in units
+                        of HWP frequency
+  --demodulate.fmax_4f DEMODULATE.FMAX_4F
+                        High frequency end of the 4fbandpass filter in units
+                        of HWP frequency
+  --demodulate.fmin_2f DEMODULATE.FMIN_2F
+                        Low frequency end of the 2f-bandpass filter in units
+                        of HWP frequency
+  --demodulate.fmin_4f DEMODULATE.FMIN_4F
+                        Low frequency end of the 4f-bandpass filter in units
+                        of HWP frequency
+  --demodulate.hwp_angle DEMODULATE.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --demodulate.in_place
+                        Modify the data object in-place. Implies purge=True.
+  --demodulate.keep_dets_frac DEMODULATE.KEEP_DETS_FRAC
+                        If less than this fraction of detectors are good, cut
+                        the observation
+  --demodulate.mode DEMODULATE.MODE
+                        Return I, QU or IQU timestreams.
+  --demodulate.name DEMODULATE.NAME
+                        The 'name' of this class instance
+  --demodulate.noise_model DEMODULATE.NOISE_MODEL
+                        Observation key containing the noise model
+  --demodulate.nskip DEMODULATE.NSKIP
+                        Downsampling factor
+  --demodulate.purge    Remove inputs after demodulation
+  --demodulate.shared_flag_mask DEMODULATE.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --demodulate.shared_flags DEMODULATE.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --demodulate.times DEMODULATE.TIMES
+                        Observation shared key for timestamps
+  --demodulate.timing   If True, print timing of exec()
+  --demodulate.timing_total
+                        If True, print timing of finalize()
+  --demodulate.window DEMODULATE.WINDOW
+                        Window function name recognized by scipy.signal.firwin
+  --demodulate.wkernel DEMODULATE.WKERNEL
+                        Override automatic filter kernel size
+  --demod_noise_estim.det_data DEMOD_NOISE_ESTIM.DET_DATA
+                        Observation detdata key apply filtering to
+  --demod_noise_estim.det_flag_mask DEMOD_NOISE_ESTIM.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --demod_noise_estim.det_flags DEMOD_NOISE_ESTIM.DET_FLAGS
+                        Observation detdata key for flags to use
+  --demod_noise_estim.det_mask DEMOD_NOISE_ESTIM.DET_MASK
+                        Bit mask value for per-detector flagging
+  --demod_noise_estim.enable
+                        Enable use of demod_noise_estim
+  --demod_noise_estim.disable
+                        Disable use of demod_noise_estim
+  --demod_noise_estim.focalplane_key DEMOD_NOISE_ESTIM.FOCALPLANE_KEY
+                        When set, PSDs are measured over averaged TODs
+  --demod_noise_estim.lagmax DEMOD_NOISE_ESTIM.LAGMAX
+                        Maximum lag to consider for the covariance function.
+                        Will be truncated the length of the longest view.
+  --demod_noise_estim.mapfile DEMOD_NOISE_ESTIM.MAPFILE
+                        Optional HEALPix map to sample and subtract from the
+                        signal
+  --demod_noise_estim.mask_flag_mask DEMOD_NOISE_ESTIM.MASK_FLAG_MASK
+                        Bit mask for raising processing mask flags
+  --demod_noise_estim.mask_flags DEMOD_NOISE_ESTIM.MASK_FLAGS
+                        Observation detdata key for processing mask flags
+  --demod_noise_estim.maskfile DEMOD_NOISE_ESTIM.MASKFILE
+                        Optional HEALPix processing mask
+  --demod_noise_estim.name DEMOD_NOISE_ESTIM.NAME
+                        The 'name' of this class instance
+  --demod_noise_estim.naverage DEMOD_NOISE_ESTIM.NAVERAGE
+                        Smoothing kernel width for downsampled data
+  --demod_noise_estim.nbin_psd DEMOD_NOISE_ESTIM.NBIN_PSD
+                        Bin the resulting PSD
+  --demod_noise_estim.no_nocross
+                        Do not evaluate cross-PSDs. Overridden by `pairs`
+  --demod_noise_estim.nosingle
+                        Do not evaluate individual PSDs. Overridden by `pairs`
+  --demod_noise_estim.nsum DEMOD_NOISE_ESTIM.NSUM
+                        Downsampling factor for decimated data
+  --demod_noise_estim.out_model DEMOD_NOISE_ESTIM.OUT_MODEL
+                        Create a new noise model with this name
+  --demod_noise_estim.output_dir DEMOD_NOISE_ESTIM.OUTPUT_DIR
+                        If specified, write output data products to this
+                        directory
+  --demod_noise_estim.pairs DEMOD_NOISE_ESTIM.PAIRS
+                        Detector pairs to estimate noise for. Overrides
+                        `nosingle` and `nocross`
+  --demod_noise_estim.pixel_dist DEMOD_NOISE_ESTIM.PIXEL_DIST
+                        The Data key where the PixelDistribution object is
+                        located. Only relevant if `maskfile` and/or `mapfile`
+                        are set
+  --demod_noise_estim.no_pol
+                        Sample also the polarized part of the map
+  --demod_noise_estim.remove_common_mode
+                        Remove common mode signal before estimation
+  --demod_noise_estim.save_cov
+                        Save also the sample covariance
+  --demod_noise_estim.shared_flag_mask DEMOD_NOISE_ESTIM.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --demod_noise_estim.shared_flags DEMOD_NOISE_ESTIM.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --demod_noise_estim.stationary_period DEMOD_NOISE_ESTIM.STATIONARY_PERIOD
+                        Break the observation into several estimation periods
+                        of this length
+  --demod_noise_estim.symmetric
+                        If True, treat positive and negative lags as
+                        equivalent in the cross correlator
+  --demod_noise_estim.times DEMOD_NOISE_ESTIM.TIMES
+                        Observation shared key for timestamps
+  --demod_noise_estim.timing
+                        If True, print timing of exec()
+  --demod_noise_estim.timing_total
+                        If True, print timing of finalize()
+  --demod_noise_estim.view DEMOD_NOISE_ESTIM.VIEW
+                        Only measure the covariance within each view
+  --demod_noise_estim_fit.bad_fit_mask DEMOD_NOISE_ESTIM_FIT.BAD_FIT_MASK
+                        Bit mask to raise for bad fits
+  --demod_noise_estim_fit.det_mask DEMOD_NOISE_ESTIM_FIT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --demod_noise_estim_fit.enable
+                        Enable use of demod_noise_estim_fit
+  --demod_noise_estim_fit.disable
+                        Disable use of demod_noise_estim_fit
+  --demod_noise_estim_fit.f_min DEMOD_NOISE_ESTIM_FIT.F_MIN
+                        Low-frequency rolloff of model in the fit
+  --demod_noise_estim_fit.least_squares_ftol DEMOD_NOISE_ESTIM_FIT.LEAST_SQUARES_FTOL
+                        The ftol value passed to the least_squares solver
+  --demod_noise_estim_fit.least_squares_gtol DEMOD_NOISE_ESTIM_FIT.LEAST_SQUARES_GTOL
+                        The gtol value passed to the least_squares solver
+  --demod_noise_estim_fit.least_squares_xtol DEMOD_NOISE_ESTIM_FIT.LEAST_SQUARES_XTOL
+                        The xtol value passed to the least_squares solver
+  --demod_noise_estim_fit.name DEMOD_NOISE_ESTIM_FIT.NAME
+                        The 'name' of this class instance
+  --demod_noise_estim_fit.noise_model DEMOD_NOISE_ESTIM_FIT.NOISE_MODEL
+                        The observation key containing the input noise model
+  --demod_noise_estim_fit.out_model DEMOD_NOISE_ESTIM_FIT.OUT_MODEL
+                        Create a new noise model with this name
+  --demod_noise_estim_fit.timing
+                        If True, print timing of exec()
+  --demod_noise_estim_fit.timing_total
+                        If True, print timing of finalize()
+  --demod_noise_estim_fit.white_noise_max DEMOD_NOISE_ESTIM_FIT.WHITE_NOISE_MAX
+                        The maximum frequency to consider for the white noise
+                        plateau
+  --demod_noise_estim_fit.white_noise_min DEMOD_NOISE_ESTIM_FIT.WHITE_NOISE_MIN
+                        The minimum frequency to consider for the white noise
+                        plateau
+  --groundfilter.azimuth GROUNDFILTER.AZIMUTH
+                        Observation shared key for Azimuth
+  --groundfilter.bin_width GROUNDFILTER.BIN_WIDTH
+                        Azimuthal bin width of ground filter
+  --groundfilter.boresight_azel GROUNDFILTER.BORESIGHT_AZEL
+                        Observation shared key for boresight Az/El
+  --groundfilter.det_data GROUNDFILTER.DET_DATA
+                        Observation detdata key
+  --groundfilter.det_flag_mask GROUNDFILTER.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --groundfilter.det_flags GROUNDFILTER.DET_FLAGS
+                        Observation detdata key for flags to use
+  --groundfilter.det_mask GROUNDFILTER.DET_MASK
+                        Bit mask value for per-detector flagging
+  --groundfilter.detrend
+                        Subtract the fitted trend along with the ground
+                        template
+  --groundfilter.enable
+                        Enable use of groundfilter
+  --groundfilter.disable
+                        Disable use of groundfilter
+  --groundfilter.filter_order GROUNDFILTER.FILTER_ORDER
+                        Order of a Legendre polynomial to fit as a function of
+                        azimuth.
+  --groundfilter.ground_flag_mask GROUNDFILTER.GROUND_FLAG_MASK
+                        Bit mask to use when adding flags based on ground
+                        filter failures.
+  --groundfilter.leftright_interval GROUNDFILTER.LEFTRIGHT_INTERVAL
+                        Intervals for left-to-right scans
+  --groundfilter.name GROUNDFILTER.NAME
+                        The 'name' of this class instance
+  --groundfilter.pattern GROUNDFILTER.PATTERN
+                        Regex pattern to match against detector names. Only
+                        detectors that match the pattern are filtered.
+  --groundfilter.rightleft_interval GROUNDFILTER.RIGHTLEFT_INTERVAL
+                        Intervals for right-to-left scans
+  --groundfilter.shared_flag_mask GROUNDFILTER.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --groundfilter.shared_flags GROUNDFILTER.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --groundfilter.split_template
+                        Apply a different template for left and right scans
+  --groundfilter.timing
+                        If True, print timing of exec()
+  --groundfilter.timing_total
+                        If True, print timing of finalize()
+  --groundfilter.trend_order GROUNDFILTER.TREND_ORDER
+                        Order of a Legendre polynomial to fit along with the
+                        ground template.
+  --groundfilter.view GROUNDFILTER.VIEW
+                        Use this view of the data in all observations
+  --common_mode_filter.det_data COMMON_MODE_FILTER.DET_DATA
+                        Observation detdata key apply filtering to
+  --common_mode_filter.det_flag_mask COMMON_MODE_FILTER.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --common_mode_filter.det_flags COMMON_MODE_FILTER.DET_FLAGS
+                        Observation detdata key for flags to use
+  --common_mode_filter.det_mask COMMON_MODE_FILTER.DET_MASK
+                        Bit mask value for per-detector flagging
+  --common_mode_filter.enable
+                        Enable use of common_mode_filter
+  --common_mode_filter.disable
+                        Disable use of common_mode_filter
+  --common_mode_filter.focalplane_key COMMON_MODE_FILTER.FOCALPLANE_KEY
+                        Which focalplane key to match
+  --common_mode_filter.name COMMON_MODE_FILTER.NAME
+                        The 'name' of this class instance
+  --common_mode_filter.pattern COMMON_MODE_FILTER.PATTERN
+                        Regex pattern to match against detector names. Only
+                        detectors that match the pattern are filtered.
+  --common_mode_filter.plot
+                        If True, plot regression coefficients
+  --common_mode_filter.redistribute
+                        If True, redistribute data before and after filtering
+                        for optimal data locality.
+  --common_mode_filter.no_regress
+                        If True, regress the common mode rather than subtract
+  --common_mode_filter.shared_flag_mask COMMON_MODE_FILTER.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --common_mode_filter.shared_flags COMMON_MODE_FILTER.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --common_mode_filter.times COMMON_MODE_FILTER.TIMES
+                        Observation shared key for timestamps
+  --common_mode_filter.timing
+                        If True, print timing of exec()
+  --common_mode_filter.timing_total
+                        If True, print timing of finalize()
+  --polyfilter1D.det_data POLYFILTER1D.DET_DATA
+                        Observation detdata key apply filtering to
+  --polyfilter1D.det_flag_mask POLYFILTER1D.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --polyfilter1D.det_flags POLYFILTER1D.DET_FLAGS
+                        Observation detdata key for flags to use
+  --polyfilter1D.det_mask POLYFILTER1D.DET_MASK
+                        Bit mask value for per-detector flagging
+  --polyfilter1D.enable
+                        Enable use of polyfilter1D
+  --polyfilter1D.disable
+                        Disable use of polyfilter1D
+  --polyfilter1D.name POLYFILTER1D.NAME
+                        The 'name' of this class instance
+  --polyfilter1D.order POLYFILTER1D.ORDER
+                        Polynomial order
+  --polyfilter1D.pattern POLYFILTER1D.PATTERN
+                        Regex pattern to match against detector names. Only
+                        detectors that match the pattern are filtered.
+  --polyfilter1D.poly_flag_mask POLYFILTER1D.POLY_FLAG_MASK
+                        Shared flag bit mask for samples outside of filtering
+                        view
+  --polyfilter1D.shared_flag_mask POLYFILTER1D.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --polyfilter1D.shared_flags POLYFILTER1D.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --polyfilter1D.timing
+                        If True, print timing of exec()
+  --polyfilter1D.timing_total
+                        If True, print timing of finalize()
+  --polyfilter1D.view POLYFILTER1D.VIEW
+                        Use this view of the data in all observations
+  --polyfilter2D.det_data POLYFILTER2D.DET_DATA
+                        Observation detdata key apply filtering to
+  --polyfilter2D.det_flag_mask POLYFILTER2D.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --polyfilter2D.det_flags POLYFILTER2D.DET_FLAGS
+                        Observation detdata key for flags to use
+  --polyfilter2D.det_mask POLYFILTER2D.DET_MASK
+                        Bit mask value for per-detector flagging
+  --polyfilter2D.enable
+                        Enable use of polyfilter2D
+  --polyfilter2D.disable
+                        Disable use of polyfilter2D
+  --polyfilter2D.focalplane_key POLYFILTER2D.FOCALPLANE_KEY
+                        Which focalplane key to match
+  --polyfilter2D.name POLYFILTER2D.NAME
+                        The 'name' of this class instance
+  --polyfilter2D.order POLYFILTER2D.ORDER
+                        Polynomial order
+  --polyfilter2D.pattern POLYFILTER2D.PATTERN
+                        Regex pattern to match against detector names. Only
+                        detectors that match the pattern are filtered.
+  --polyfilter2D.poly_flag_mask POLYFILTER2D.POLY_FLAG_MASK
+                        Bit mask value for samples that fail to filter
+  --polyfilter2D.shared_flag_mask POLYFILTER2D.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --polyfilter2D.shared_flags POLYFILTER2D.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --polyfilter2D.times POLYFILTER2D.TIMES
+                        Observation shared key for timestamps
+  --polyfilter2D.timing
+                        If True, print timing of exec()
+  --polyfilter2D.timing_total
+                        If True, print timing of finalize()
+  --polyfilter2D.view POLYFILTER2D.VIEW
+                        Use this view of the data in all observations
+  --noise_estim.det_data NOISE_ESTIM.DET_DATA
+                        Observation detdata key apply filtering to
+  --noise_estim.det_flag_mask NOISE_ESTIM.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --noise_estim.det_flags NOISE_ESTIM.DET_FLAGS
+                        Observation detdata key for flags to use
+  --noise_estim.det_mask NOISE_ESTIM.DET_MASK
+                        Bit mask value for per-detector flagging
+  --noise_estim.enable  Enable use of noise_estim
+  --noise_estim.disable
+                        Disable use of noise_estim
+  --noise_estim.focalplane_key NOISE_ESTIM.FOCALPLANE_KEY
+                        When set, PSDs are measured over averaged TODs
+  --noise_estim.lagmax NOISE_ESTIM.LAGMAX
+                        Maximum lag to consider for the covariance function.
+                        Will be truncated the length of the longest view.
+  --noise_estim.mapfile NOISE_ESTIM.MAPFILE
+                        Optional HEALPix map to sample and subtract from the
+                        signal
+  --noise_estim.mask_flag_mask NOISE_ESTIM.MASK_FLAG_MASK
+                        Bit mask for raising processing mask flags
+  --noise_estim.mask_flags NOISE_ESTIM.MASK_FLAGS
+                        Observation detdata key for processing mask flags
+  --noise_estim.maskfile NOISE_ESTIM.MASKFILE
+                        Optional HEALPix processing mask
+  --noise_estim.name NOISE_ESTIM.NAME
+                        The 'name' of this class instance
+  --noise_estim.naverage NOISE_ESTIM.NAVERAGE
+                        Smoothing kernel width for downsampled data
+  --noise_estim.nbin_psd NOISE_ESTIM.NBIN_PSD
+                        Bin the resulting PSD
+  --noise_estim.no_nocross
+                        Do not evaluate cross-PSDs. Overridden by `pairs`
+  --noise_estim.nosingle
+                        Do not evaluate individual PSDs. Overridden by `pairs`
+  --noise_estim.nsum NOISE_ESTIM.NSUM
+                        Downsampling factor for decimated data
+  --noise_estim.out_model NOISE_ESTIM.OUT_MODEL
+                        Create a new noise model with this name
+  --noise_estim.output_dir NOISE_ESTIM.OUTPUT_DIR
+                        If specified, write output data products to this
+                        directory
+  --noise_estim.pairs NOISE_ESTIM.PAIRS
+                        Detector pairs to estimate noise for. Overrides
+                        `nosingle` and `nocross`
+  --noise_estim.pixel_dist NOISE_ESTIM.PIXEL_DIST
+                        The Data key where the PixelDistribution object is
+                        located. Only relevant if `maskfile` and/or `mapfile`
+                        are set
+  --noise_estim.no_pol  Sample also the polarized part of the map
+  --noise_estim.remove_common_mode
+                        Remove common mode signal before estimation
+  --noise_estim.save_cov
+                        Save also the sample covariance
+  --noise_estim.shared_flag_mask NOISE_ESTIM.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --noise_estim.shared_flags NOISE_ESTIM.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --noise_estim.stationary_period NOISE_ESTIM.STATIONARY_PERIOD
+                        Break the observation into several estimation periods
+                        of this length
+  --noise_estim.symmetric
+                        If True, treat positive and negative lags as
+                        equivalent in the cross correlator
+  --noise_estim.times NOISE_ESTIM.TIMES
+                        Observation shared key for timestamps
+  --noise_estim.timing  If True, print timing of exec()
+  --noise_estim.timing_total
+                        If True, print timing of finalize()
+  --noise_estim.view NOISE_ESTIM.VIEW
+                        Only measure the covariance within each view
+  --noise_estim_fit.bad_fit_mask NOISE_ESTIM_FIT.BAD_FIT_MASK
+                        Bit mask to raise for bad fits
+  --noise_estim_fit.det_mask NOISE_ESTIM_FIT.DET_MASK
+                        Bit mask value for per-detector flagging
+  --noise_estim_fit.enable
+                        Enable use of noise_estim_fit
+  --noise_estim_fit.disable
+                        Disable use of noise_estim_fit
+  --noise_estim_fit.f_min NOISE_ESTIM_FIT.F_MIN
+                        Low-frequency rolloff of model in the fit
+  --noise_estim_fit.least_squares_ftol NOISE_ESTIM_FIT.LEAST_SQUARES_FTOL
+                        The ftol value passed to the least_squares solver
+  --noise_estim_fit.least_squares_gtol NOISE_ESTIM_FIT.LEAST_SQUARES_GTOL
+                        The gtol value passed to the least_squares solver
+  --noise_estim_fit.least_squares_xtol NOISE_ESTIM_FIT.LEAST_SQUARES_XTOL
+                        The xtol value passed to the least_squares solver
+  --noise_estim_fit.name NOISE_ESTIM_FIT.NAME
+                        The 'name' of this class instance
+  --noise_estim_fit.noise_model NOISE_ESTIM_FIT.NOISE_MODEL
+                        The observation key containing the input noise model
+  --noise_estim_fit.out_model NOISE_ESTIM_FIT.OUT_MODEL
+                        Create a new noise model with this name
+  --noise_estim_fit.timing
+                        If True, print timing of exec()
+  --noise_estim_fit.timing_total
+                        If True, print timing of finalize()
+  --noise_estim_fit.white_noise_max NOISE_ESTIM_FIT.WHITE_NOISE_MAX
+                        The maximum frequency to consider for the white noise
+                        plateau
+  --noise_estim_fit.white_noise_min NOISE_ESTIM_FIT.WHITE_NOISE_MIN
+                        The minimum frequency to consider for the white noise
+                        plateau
+  --processing_mask_pixels.create_dist PROCESSING_MASK_PIXELS.CREATE_DIST
+                        Create the submap distribution for all detectors and
+                        store in the Data key specified
+  --processing_mask_pixels.enable
+                        Enable use of processing_mask_pixels
+  --processing_mask_pixels.disable
+                        Disable use of processing_mask_pixels
+  --processing_mask_pixels.name PROCESSING_MASK_PIXELS.NAME
+                        The 'name' of this class instance
+  --processing_mask_pixels.no_nest
+                        If True, use NESTED ordering instead of RING
+  --processing_mask_pixels.nside PROCESSING_MASK_PIXELS.NSIDE
+                        The NSIDE resolution
+  --processing_mask_pixels.nside_submap PROCESSING_MASK_PIXELS.NSIDE_SUBMAP
+                        The NSIDE of the submap resolution
+  --processing_mask_pixels.pixels PROCESSING_MASK_PIXELS.PIXELS
+                        Observation detdata key for output pixel indices
+  --processing_mask_pixels.single_precision
+                        If True, use 32bit int in output
+  --processing_mask_pixels.timing
+                        If True, print timing of exec()
+  --processing_mask_pixels.timing_total
+                        If True, print timing of finalize()
+  --processing_mask_pixels.view PROCESSING_MASK_PIXELS.VIEW
+                        Use this view of the data in all observations
+  --processing_mask.det_flags PROCESSING_MASK.DET_FLAGS
+                        Observation detdata key for flags to use
+  --processing_mask.det_flags_value PROCESSING_MASK.DET_FLAGS_VALUE
+                        The detector flag value to set where the mask result
+                        is non-zero
+  --processing_mask.det_mask PROCESSING_MASK.DET_MASK
+                        Bit mask value for per-detector flagging
+  --processing_mask.enable
+                        Enable use of processing_mask
+  --processing_mask.disable
+                        Disable use of processing_mask
+  --processing_mask.file PROCESSING_MASK.FILE
+                        Path to healpix FITS file
+  --processing_mask.mask_bits PROCESSING_MASK.MASK_BITS
+                        The number to bitwise-and with each mask value to form
+                        the result
+  --processing_mask.name PROCESSING_MASK.NAME
+                        The 'name' of this class instance
+  --processing_mask.pixel_dist PROCESSING_MASK.PIXEL_DIST
+                        The Data key where the PixelDistribution object is
+                        located
+  --processing_mask.save_mask
+                        If True, do not delete mask during finalize
+  --processing_mask.save_pointing
+                        If True, do not clear detector pointing matrices if we
+                        generate the pixel distribution
+  --processing_mask.timing
+                        If True, print timing of exec()
+  --processing_mask.timing_total
+                        If True, print timing of finalize()
+  --flag_sso.det_flag_mask FLAG_SSO.DET_FLAG_MASK
+                        Bit mask to raise flags with
+  --flag_sso.det_flags FLAG_SSO.DET_FLAGS
+                        Observation detdata key for flags to use
+  --flag_sso.enable     Enable use of flag_sso
+  --flag_sso.disable    Disable use of flag_sso
+  --flag_sso.name FLAG_SSO.NAME
+                        The 'name' of this class instance
+  --flag_sso.sso_names FLAG_SSO.SSO_NAMES
+                        Names of the SSOs, must be recognized by pyEphem
+  --flag_sso.sso_radii FLAG_SSO.SSO_RADII
+                        Radii around the sources to flag
+  --flag_sso.times FLAG_SSO.TIMES
+                        Observation shared key for timestamps
+  --flag_sso.timing     If True, print timing of exec()
+  --flag_sso.timing_total
+                        If True, print timing of finalize()
+  --flag_sso.view FLAG_SSO.VIEW
+                        Use this view of the data in all observations
+  --h_n.det_flag_mask H_N.DET_FLAG_MASK
+                        Bit mask value for optional detector flagging
+  --h_n.det_flags H_N.DET_FLAGS
+                        Observation detdata key for flags to use
+  --h_n.enable          Enable use of h_n
+  --h_n.disable         Disable use of h_n
+  --h_n.hwp_angle H_N.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --h_n.include_pol_angle
+                        If True, include the polarization angle in the angle
+                        used to compute h_n
+  --h_n.name H_N.NAME   The 'name' of this class instance
+  --h_n.nmax H_N.NMAX   Maximum `n` to evaluate.
+  --h_n.nmin H_N.NMIN   Minimum `n` to evaluate.
+  --h_n.noise_model H_N.NOISE_MODEL
+                        Observation key containing the noise model
+  --h_n.output_dir H_N.OUTPUT_DIR
+                        Write output data products to this directory
+  --h_n.pixel_dist H_N.PIXEL_DIST
+                        The Data key where the PixelDist object should be
+                        stored
+  --h_n.rcond_threshold H_N.RCOND_THRESHOLD
+                        Minimum value for inverse condition number cut.
+  --h_n.save_pointing   If True, do not clear detector pointing matrices after
+                        use
+  --h_n.shared_flag_mask H_N.SHARED_FLAG_MASK
+                        Bit mask value for optional telescope flagging
+  --h_n.shared_flags H_N.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --h_n.sync_type H_N.SYNC_TYPE
+                        Communication algorithm: 'allreduce' or 'alltoallv'
+  --h_n.timing          If True, print timing of exec()
+  --h_n.timing_total    If True, print timing of finalize()
+  --cadence_map.det_flag_mask CADENCE_MAP.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --cadence_map.det_flags CADENCE_MAP.DET_FLAGS
+                        Observation detdata key for flags to use
+  --cadence_map.det_mask CADENCE_MAP.DET_MASK
+                        Bit mask value for per-detector flagging
+  --cadence_map.enable  Enable use of cadence_map
+  --cadence_map.disable
+                        Disable use of cadence_map
+  --cadence_map.name CADENCE_MAP.NAME
+                        The 'name' of this class instance
+  --cadence_map.output_dir CADENCE_MAP.OUTPUT_DIR
+                        Write output data products to this directory
+  --cadence_map.pixel_dist CADENCE_MAP.PIXEL_DIST
+                        The Data key containing the submap distribution
+  --cadence_map.save_pointing
+                        If True, do not clear pixel numbers after use
+  --cadence_map.shared_flag_mask CADENCE_MAP.SHARED_FLAG_MASK
+                        Bit mask value for optional telescope flagging
+  --cadence_map.shared_flags CADENCE_MAP.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --cadence_map.times CADENCE_MAP.TIMES
+                        Observation shared key for timestamps
+  --cadence_map.timing  If True, print timing of exec()
+  --cadence_map.timing_total
+                        If True, print timing of finalize()
+  --crosslinking.crosslinking_map CROSSLINKING.CROSSLINKING_MAP
+                        The output Data object for the crosslinking map
+  --crosslinking.det_data_units CROSSLINKING.DET_DATA_UNITS
+                        Output units if creating detector data
+  --crosslinking.det_flag_mask CROSSLINKING.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --crosslinking.det_flags CROSSLINKING.DET_FLAGS
+                        Observation detdata key for flags to use
+  --crosslinking.det_mask CROSSLINKING.DET_MASK
+                        Bit mask value for per-detector flagging
+  --crosslinking.enable
+                        Enable use of crosslinking
+  --crosslinking.disable
+                        Disable use of crosslinking
+  --crosslinking.name CROSSLINKING.NAME
+                        The 'name' of this class instance
+  --crosslinking.noise_model CROSSLINKING.NOISE_MODEL
+                        The output noise model with uniform weights
+  --crosslinking.output_dir CROSSLINKING.OUTPUT_DIR
+                        Write output data products to this directory
+  --crosslinking.pixel_dist CROSSLINKING.PIXEL_DIST
+                        The Data key where the PixelDist object should be
+                        stored
+  --crosslinking.save_pointing
+                        If True, do not clear pixel numbers after use
+  --crosslinking.shared_flag_mask CROSSLINKING.SHARED_FLAG_MASK
+                        Bit mask value for optional telescope flagging
+  --crosslinking.shared_flags CROSSLINKING.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --crosslinking.sync_type CROSSLINKING.SYNC_TYPE
+                        Communication algorithm: 'allreduce' or 'alltoallv'
+  --crosslinking.timing
+                        If True, print timing of exec()
+  --crosslinking.timing_total
+                        If True, print timing of finalize()
+  --mlmapmaker.area MLMAPMAKER.AREA
+                        Load the enmap geometry from this file
+  --mlmapmaker.boresight MLMAPMAKER.BORESIGHT
+                        Observation shared key for boresight Az/El
+  --mlmapmaker.center_at MLMAPMAKER.CENTER_AT
+                        The format is [from=](ra:dec|name),[to=(ra:dec|name)],
+                        [up=(ra:dec|name|system)]
+  --mlmapmaker.checkpoint_interval MLMAPMAKER.CHECKPOINT_INTERVAL
+                        If greater than zero, the CG solver will store its
+                        state andrestart from a checkpoint when available.
+  --mlmapmaker.comps MLMAPMAKER.COMPS
+                        Components (must be 'T', 'QU' or 'TQU')
+  --mlmapmaker.no_deslope
+                        If True, each observation will have the mean and slope
+                        removed.
+  --mlmapmaker.det_data MLMAPMAKER.DET_DATA
+                        Observation detdata key for the timestream data
+  --mlmapmaker.det_flag_mask MLMAPMAKER.DET_FLAG_MASK
+                        Bit mask value for optional detector flagging
+  --mlmapmaker.det_flags MLMAPMAKER.DET_FLAGS
+                        Observation detdata key for flags to use
+  --mlmapmaker.downsample MLMAPMAKER.DOWNSAMPLE
+                        Downsample TOD by these factors.
+  --mlmapmaker.downweight MLMAPMAKER.DOWNWEIGHT
+                        Downweight the lowest frequency bins when using
+                        NmatDetvecs noise model.Set to empty list [] or None
+                        would disable downweighting.When using NmatDetvecs
+                        noise model, the noise covariance N = D + VV'is the
+                        sum of uncorrelated part and auto-power in each
+                        frequency bin.ACT uses downweight = [1e-4, 0.25,
+                        0.50], the lowest three frequency bins in D will
+                        multiply by factor [1e4, 4.0, 2.0].This option is
+                        ignored when using other noise models.
+  --mlmapmaker.dtype_map MLMAPMAKER.DTYPE_MAP
+                        Numpy dtype of map products
+  --mlmapmaker.enable   Enable use of mlmapmaker
+  --mlmapmaker.disable  Disable use of mlmapmaker
+  --mlmapmaker.interpol MLMAPMAKER.INTERPOL
+                        Either one or a comma-separated list of interpolation
+                        modes
+  --mlmapmaker.maxerr MLMAPMAKER.MAXERR
+                        Maximum error in the CG solver
+  --mlmapmaker.maxiter MLMAPMAKER.MAXITER
+                        List of maximum number of CG iterations for each pass.
+  --mlmapmaker.name MLMAPMAKER.NAME
+                        The 'name' of this class instance
+  --mlmapmaker.nmat_dir MLMAPMAKER.NMAT_DIR
+                        Where to read/write/cache noise matrices. See
+                        nmat_mode. If None, write to {out_dir}/nmats
+  --mlmapmaker.nmat_mode MLMAPMAKER.NMAT_MODE
+                        How to initialize the noise matrix. 'build': Always
+                        build from data in obs. 'cache': Use if available in
+                        nmat_dir, otherwise build and save. 'load': Load from
+                        nmat_dir, error if missing. 'save': Build from obs
+                        data and save.
+  --mlmapmaker.nmat_type MLMAPMAKER.NMAT_TYPE
+                        Noise matrix type is either `NmatDetvecs`,
+                        `NmatUncorr`, `NmatWhite`, `NmatUnit` or `Nmat`
+  --mlmapmaker.noise_model MLMAPMAKER.NOISE_MODEL
+                        Observation key containing the noise model
+  --mlmapmaker.out_dir MLMAPMAKER.OUT_DIR
+                        The output directory
+  --mlmapmaker.purge_det_data
+                        If True, clear all observation detector data after
+                        accumulating
+  --mlmapmaker.shared_flag_mask MLMAPMAKER.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --mlmapmaker.shared_flags MLMAPMAKER.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --mlmapmaker.site MLMAPMAKER.SITE
+                        Site to use when making maps
+  --mlmapmaker.skip_existing
+                        If True, the mapmaker will not write any map products
+                        that already exist on disk. See `checkpoint`.
+  --mlmapmaker.srcsamp MLMAPMAKER.SRCSAMP
+                        path to mask file where True regions indicate where
+                        bright object mitigation should be applied. Mask is in
+                        equatorial coordinates. Not tiled, so should be low-
+                        res to not waste memory.
+  --mlmapmaker.no_tiled
+                        If True, the map will be represented as distributed
+                        tiles in memory. For large maps this is faster and
+                        more memory efficient, but for small maps it has some
+                        overhead due to extra communication.
+  --mlmapmaker.times MLMAPMAKER.TIMES
+                        Observation shared key for timestamps
+  --mlmapmaker.timing   If True, print timing of exec()
+  --mlmapmaker.timing_total
+                        If True, print timing of finalize()
+  --mlmapmaker.no_truncate_tod
+                        Truncate TOD to an easily factorizable length to
+                        ensure efficient FFT.
+  --mlmapmaker.verbose MLMAPMAKER.VERBOSE
+                        Set verbosity in MLMapmaker. If None, use toast
+                        loglevel
+  --mlmapmaker.view MLMAPMAKER.VIEW
+                        Use this view of the data in all observations
+  --mlmapmaker.weather MLMAPMAKER.WEATHER
+                        Weather to assume when making maps
+  --mlmapmaker.no_write_bin
+                        Write out the binned map
+  --mlmapmaker.write_div MLMAPMAKER.WRITE_DIV
+                        Components (must be 'T', 'QU', 'TQU', 'all', None, or
+                        '')
+  --mlmapmaker.no_write_hits
+                        Write out the hitcount map
+  --mlmapmaker.write_iter_map MLMAPMAKER.WRITE_ITER_MAP
+                        Number of iterations between saved maps. Set to zero
+                        to disable.
+  --mlmapmaker.no_write_rhs
+                        Write out the right hand side of the mapmaking
+                        equation
+  --binner.binned BINNER.BINNED
+                        The Data key where the binned map should be stored
+  --binner.covariance BINNER.COVARIANCE
+                        The Data key containing the noise covariance PixelData
+                        instance
+  --binner.det_data BINNER.DET_DATA
+                        Observation detdata key for the timestream data
+  --binner.det_data_units BINNER.DET_DATA_UNITS
+                        Desired timestream units
+  --binner.det_flag_mask BINNER.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --binner.det_flags BINNER.DET_FLAGS
+                        Observation detdata key for flags to use
+  --binner.det_mask BINNER.DET_MASK
+                        Bit mask value for per-detector flagging
+  --binner.enable       Enable use of binner
+  --binner.disable      Disable use of binner
+  --binner.full_pointing
+                        If True, expand pointing for all detectors and save
+  --binner.name BINNER.NAME
+                        The 'name' of this class instance
+  --binner.noise_model BINNER.NOISE_MODEL
+                        Observation key containing the noise model
+  --binner.noiseweighted BINNER.NOISEWEIGHTED
+                        The Data key where the noiseweighted map should be
+                        stored
+  --binner.pixel_dist BINNER.PIXEL_DIST
+                        The Data key where the PixelDist object should be
+                        stored
+  --binner.shared_flag_mask BINNER.SHARED_FLAG_MASK
+                        Bit mask value for optional telescope flagging
+  --binner.shared_flags BINNER.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --binner.sync_type BINNER.SYNC_TYPE
+                        Communication algorithm: 'allreduce' or 'alltoallv'
+  --binner.timing       If True, print timing of exec()
+  --binner.timing_total
+                        If True, print timing of finalize()
+  --binner_final.binned BINNER_FINAL.BINNED
+                        The Data key where the binned map should be stored
+  --binner_final.covariance BINNER_FINAL.COVARIANCE
+                        The Data key containing the noise covariance PixelData
+                        instance
+  --binner_final.det_data BINNER_FINAL.DET_DATA
+                        Observation detdata key for the timestream data
+  --binner_final.det_data_units BINNER_FINAL.DET_DATA_UNITS
+                        Desired timestream units
+  --binner_final.det_flag_mask BINNER_FINAL.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --binner_final.det_flags BINNER_FINAL.DET_FLAGS
+                        Observation detdata key for flags to use
+  --binner_final.det_mask BINNER_FINAL.DET_MASK
+                        Bit mask value for per-detector flagging
+  --binner_final.enable
+                        Enable use of binner_final
+  --binner_final.disable
+                        Disable use of binner_final
+  --binner_final.full_pointing
+                        If True, expand pointing for all detectors and save
+  --binner_final.name BINNER_FINAL.NAME
+                        The 'name' of this class instance
+  --binner_final.noise_model BINNER_FINAL.NOISE_MODEL
+                        Observation key containing the noise model
+  --binner_final.noiseweighted BINNER_FINAL.NOISEWEIGHTED
+                        The Data key where the noiseweighted map should be
+                        stored
+  --binner_final.pixel_dist BINNER_FINAL.PIXEL_DIST
+                        The Data key where the PixelDist object should be
+                        stored
+  --binner_final.shared_flag_mask BINNER_FINAL.SHARED_FLAG_MASK
+                        Bit mask value for optional telescope flagging
+  --binner_final.shared_flags BINNER_FINAL.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --binner_final.sync_type BINNER_FINAL.SYNC_TYPE
+                        Communication algorithm: 'allreduce' or 'alltoallv'
+  --binner_final.timing
+                        If True, print timing of exec()
+  --binner_final.timing_total
+                        If True, print timing of finalize()
+  --mapmaker.convergence MAPMAKER.CONVERGENCE
+                        Relative convergence limit
+  --mapmaker.det_data MAPMAKER.DET_DATA
+                        Observation detdata key for the timestream data
+  --mapmaker.enable     Enable use of mapmaker
+  --mapmaker.disable    Disable use of mapmaker
+  --mapmaker.focalplane_key MAPMAKER.FOCALPLANE_KEY
+                        Focalplane key for split mapmaking.
+  --mapmaker.iter_max MAPMAKER.ITER_MAX
+                        Maximum number of iterations
+  --mapmaker.iter_min MAPMAKER.ITER_MIN
+                        Minimum number of iterations
+  --mapmaker.keep_final_products
+                        If True, keep the map domain products in data after
+                        write
+  --mapmaker.keep_solver_products
+                        If True, keep the map domain solver products in data
+  --mapmaker.map_rcond_threshold MAPMAKER.MAP_RCOND_THRESHOLD
+                        For final map, minimum value for inverse pixel
+                        condition number cut.
+  --mapmaker.mask MAPMAKER.MASK
+                        Data key for pixel mask to use in solving. First bit
+                        of pixel values is tested
+  --mapmaker.mc_index MAPMAKER.MC_INDEX
+                        The Monte-Carlo index
+  --mapmaker.mc_mode    If True, re-use solver flags, sparse covariances, etc
+  --mapmaker.name MAPMAKER.NAME
+                        The 'name' of this class instance
+  --mapmaker.output_dir MAPMAKER.OUTPUT_DIR
+                        Write output data products to this directory
+  --mapmaker.overwrite_cleaned
+                        If True and save_cleaned is True, overwrite the input
+                        data
+  --mapmaker.pattern MAPMAKER.PATTERN
+                        Regex pattern to match against detector names. Only
+                        these are mapped.
+  --mapmaker.report_memory
+                        Report memory throughout the execution
+  --mapmaker.reset_pix_dist
+                        Clear any existing pixel distribution. Useful when
+                        applying repeatedly to different data objects.
+  --mapmaker.save_cleaned
+                        If True, save the template-subtracted detector
+                        timestreams
+  --mapmaker.solve_rcond_threshold MAPMAKER.SOLVE_RCOND_THRESHOLD
+                        When solving, minimum value for inverse pixel
+                        condition number cut.
+  --mapmaker.times MAPMAKER.TIMES
+                        Observation shared key for timestamps
+  --mapmaker.timing     If True, print timing of exec()
+  --mapmaker.timing_total
+                        If True, print timing of finalize()
+  --mapmaker.no_write_binmap
+                        If True, write the projected map *before* template
+                        subtraction
+  --mapmaker.no_write_cov
+                        If True, write the white noise covariance matrices.
+  --mapmaker.write_hdf5
+                        If True, outputs are in HDF5 rather than FITS format.
+  --mapmaker.write_hdf5_serial
+                        If True, force serial HDF5 write of output maps.
+  --mapmaker.no_write_hits
+                        If True, write the hits map
+  --mapmaker.write_invcov
+                        If True, write the inverse white noise covariance
+                        matrices.
+  --mapmaker.no_write_map
+                        If True, write the projected map
+  --mapmaker.write_noiseweighted_map
+                        If True, write the noise-weighted map
+  --mapmaker.no_write_rcond
+                        If True, write the reciprocal condition numbers.
+  --mapmaker.write_solver_products
+                        If True, write out equivalent solver products.
+  --filterbin.amplitude_dir FILTERBIN.AMPLITUDE_DIR
+                        Write the template amplitudes to this directory
+  --filterbin.azimuth FILTERBIN.AZIMUTH
+                        Observation shared key for Azimuth
+  --filterbin.cache_dir FILTERBIN.CACHE_DIR
+                        Cache directory for additive observation matrix
+                        products
+  --filterbin.deproject_map FILTERBIN.DEPROJECT_MAP
+                        Healpix map containing the deprojection templates:
+                        intensity map and its derivatives
+  --filterbin.deproject_nnz FILTERBIN.DEPROJECT_NNZ
+                        Number of deprojection templates to regress. Must be
+                        less than or equal to number of columns in
+                        `deproject_map`.
+  --filterbin.deproject_pattern FILTERBIN.DEPROJECT_PATTERN
+                        Regular expression to test detector names with. Only
+                        matching detectors will be deprojected. Used to
+                        identify differenced TOD.
+  --filterbin.det_data FILTERBIN.DET_DATA
+                        Observation detdata key for the timestream data
+  --filterbin.det_flag_mask FILTERBIN.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --filterbin.det_flags FILTERBIN.DET_FLAGS
+                        Observation detdata key for flags to use
+  --filterbin.det_mask FILTERBIN.DET_MASK
+                        Bit mask value for per-detector flagging
+  --filterbin.enable    Enable use of filterbin
+  --filterbin.disable   Disable use of filterbin
+  --filterbin.filter_config_file FILTERBIN.FILTER_CONFIG_FILE
+                        YAML file containing a dictionary of filter
+                        configurations per observation.
+  --filterbin.filter_detector_mask FILTERBIN.FILTER_DETECTOR_MASK
+                        Bit mask value for detectors that fail filtering
+  --filterbin.filter_flag_mask FILTERBIN.FILTER_FLAG_MASK
+                        Bit mask value for flagging samples that fail
+                        filtering
+  --filterbin.ground_filter_bin_width FILTERBIN.GROUND_FILTER_BIN_WIDTH
+                        Azimuthal bin width of ground filter
+  --filterbin.ground_filter_order FILTERBIN.GROUND_FILTER_ORDER
+                        Order of a Legendre polynomial to fit as a function of
+                        azimuth.
+  --filterbin.ground_template_expansion_order FILTERBIN.GROUND_TEMPLATE_EXPANSION_ORDER
+                        Taylor-expand each azimuthal bin in time
+  --filterbin.ground_template_time_step FILTERBIN.GROUND_TEMPLATE_TIME_STEP
+                        Break ground template into discrete time steps
+                        [seconds]
+  --filterbin.hwp_angle FILTERBIN.HWP_ANGLE
+                        Observation shared key for HWP angle
+  --filterbin.hwp_filter_order FILTERBIN.HWP_FILTER_ORDER
+                        Order of HWP-synchronous signal filter.
+  --filterbin.keep_final_products
+                        If True, keep the map domain products in data after
+                        write
+  --filterbin.leftright_interval FILTERBIN.LEFTRIGHT_INTERVAL
+                        Intervals for left-to-right scans
+  --filterbin.maskfile FILTERBIN.MASKFILE
+                        Optional processing mask
+  --filterbin.mc_index FILTERBIN.MC_INDEX
+                        The Monte-Carlo index
+  --filterbin.mc_mode   If True, re-use solver flags, sparse covariances, etc
+  --filterbin.n_save_templates FILTERBIN.N_SAVE_TEMPLATES
+                        Number of templates examples to save. Only enabled
+                        when amplitude_dir is not None
+  --filterbin.name FILTERBIN.NAME
+                        The 'name' of this class instance
+  --filterbin.noiseweight_obs_matrix
+                        If True, observation matrix should match noise-
+                        weighted maps
+  --filterbin.nskip FILTERBIN.NSKIP
+                        Only use every n:th detector. Useful for quick-and-
+                        dirty observation matrix calculation.
+  --filterbin.output_dir FILTERBIN.OUTPUT_DIR
+                        Write output data products to this directory
+  --filterbin.poly_filter_order FILTERBIN.POLY_FILTER_ORDER
+                        Polynomial order
+  --filterbin.poly_filter_view FILTERBIN.POLY_FILTER_VIEW
+                        Intervals for polynomial filtering
+  --filterbin.precomputed_template_view FILTERBIN.PRECOMPUTED_TEMPLATE_VIEW
+                        Intervals for precomputed template filtering. See
+                        `precomputed_templates`
+  --filterbin.precomputed_templates FILTERBIN.PRECOMPUTED_TEMPLATES
+                        Observation key to a dictionary of time domain
+                        templates to project out. The dictionary must include
+                        a `det_to_key` dictionary which maps each detector to
+                        a key in the dictionary. That key will then return a
+                        list of templates to fit against that detector. See
+                        `precomputed_template_view`.
+  --filterbin.rcond_threshold FILTERBIN.RCOND_THRESHOLD
+                        Minimum value for inverse pixel condition number cut.
+  --filterbin.report_memory
+                        Report memory throughout the execution
+  --filterbin.reset_pix_dist
+                        Clear any existing pixel distribution. Useful when
+                        applyingrepeatedly to different data objects.
+  --filterbin.rightleft_interval FILTERBIN.RIGHTLEFT_INTERVAL
+                        Intervals for right-to-left scans
+  --filterbin.shared_flag_mask FILTERBIN.SHARED_FLAG_MASK
+                        Bit mask value for optional telescope flagging
+  --filterbin.shared_flags FILTERBIN.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --filterbin.split_ground_template
+                        Apply a different template for left and right scans
+  --filterbin.template_rcond_limit FILTERBIN.TEMPLATE_RCOND_LIMIT
+                        Threshold for handling degenerate template
+                        covariances. If the limit is is positive and rcond <
+                        limit, use pseudoinverse. If the limit is negative and
+                        rcond < abs(limit), reject detector.
+  --filterbin.times FILTERBIN.TIMES
+                        Observation shared key for timestamps
+  --filterbin.timing    If True, print timing of exec()
+  --filterbin.timing_total
+                        If True, print timing of finalize()
+  --filterbin.write_binmap
+                        If True, write the unfiltered map
+  --filterbin.no_write_cov
+                        If True, write the white noise covariance matrices.
+  --filterbin.write_hdf5
+                        If True, output maps are in HDF5 rather than FITS
+                        format.
+  --filterbin.write_hdf5_serial
+                        If True, force serial HDF5 write of output maps.
+  --filterbin.no_write_hits
+                        If True, write the hits map
+  --filterbin.write_invcov
+                        If True, write the inverse white noise covariance
+                        matrices.
+  --filterbin.no_write_map
+                        If True, write the filtered map
+  --filterbin.write_noiseweighted_binmap
+                        If True, write the noise-weighted unfiltered map
+  --filterbin.write_noiseweighted_map
+                        If True, write the noise-weighted filtered map
+  --filterbin.write_obs_matrix
+                        Write the observation matrix
+  --filterbin.no_write_rcond
+                        If True, write the reciprocal condition numbers.
+  --splits.enable       Enable use of splits
+  --splits.disable      Disable use of splits
+  --splits.name SPLITS.NAME
+                        The 'name' of this class instance
+  --splits.output_dir SPLITS.OUTPUT_DIR
+                        Top-level output directory
+  --splits.shared_flag_mask SPLITS.SHARED_FLAG_MASK
+                        Bit mask value for flagging when splits_as_flags is
+                        True
+  --splits.shared_flags SPLITS.SHARED_FLAGS
+                        Observation shared key for telescope flags to use when
+                        splits_as_flags is True
+  --splits.skip_existing
+                        If the mapmaker reports that all requested output
+                        files exist for a split, skip the mapmaking step.
+  --splits.splits SPLITS.SPLITS
+                        The list of named splits to apply
+  --splits.splits_as_flags
+                        If True, splits are applied through flagging rather
+                        than views. This can be more efficient if there are
+                        only a few samples in each interval.
+  --splits.timing       If True, print timing of exec()
+  --splits.timing_total
+                        If True, print timing of finalize()
+  --splits.write_cov    If True, write the white noise covariance matrices.
+  --splits.no_write_hits
+                        If True, write the hits map
+  --splits.no_write_invcov
+                        If True, write the inverse white noise covariance
+                        matrices.
+  --splits.no_write_map
+                        If True, write the filtered/destriped map
+  --splits.write_noiseweighted_map
+                        If True, write the noise-weighted map (for fast co-
+                        add)
+  --splits.write_rcond  If True, write the reciprocal condition numbers.
+  --filtered_statistics.det_data FILTERED_STATISTICS.DET_DATA
+                        Observation detdata key to analyze
+  --filtered_statistics.det_flag_mask FILTERED_STATISTICS.DET_FLAG_MASK
+                        Bit mask value for detector sample flagging
+  --filtered_statistics.det_flags FILTERED_STATISTICS.DET_FLAGS
+                        Observation detdata key for flags to use
+  --filtered_statistics.det_mask FILTERED_STATISTICS.DET_MASK
+                        Bit mask value for per-detector flagging
+  --filtered_statistics.enable
+                        Enable use of filtered_statistics
+  --filtered_statistics.disable
+                        Disable use of filtered_statistics
+  --filtered_statistics.name FILTERED_STATISTICS.NAME
+                        The 'name' of this class instance
+  --filtered_statistics.output_dir FILTERED_STATISTICS.OUTPUT_DIR
+                        If specified, write output data products to this
+                        directory
+  --filtered_statistics.shared_flag_mask FILTERED_STATISTICS.SHARED_FLAG_MASK
+                        Bit mask value for optional shared flagging
+  --filtered_statistics.shared_flags FILTERED_STATISTICS.SHARED_FLAGS
+                        Observation shared key for telescope flags to use
+  --filtered_statistics.timing
+                        If True, print timing of exec()
+  --filtered_statistics.timing_total
+                        If True, print timing of finalize()
+  --filtered_statistics.view FILTERED_STATISTICS.VIEW
+                        Use this view of the data in all observations
+  --mem_count.enable    Enable use of mem_count
+  --mem_count.disable   Disable use of mem_count
+  --mem_count.name MEM_COUNT.NAME
+                        The 'name' of this class instance
+  --mem_count.prefix MEM_COUNT.PREFIX
+                        Prefix for log messages
+  --mem_count.silent    If True, return the memory used but do not log the
+                        result
+  --mem_count.timing    If True, print timing of exec()
+  --mem_count.timing_total
+                        If True, print timing of finalize()
+  --baselines.debug_plots BASELINES.DEBUG_PLOTS
+                        If not None, make debugging plots in this directory
+  --baselines.det_data BASELINES.DET_DATA
+                        Observation detdata key for the timestream data
+  --baselines.det_data_units BASELINES.DET_DATA_UNITS
+                        Desired units of detector data
+  --baselines.det_flag_mask BASELINES.DET_FLAG_MASK
+                        Bit mask value for solver flags
+  --baselines.det_flags BASELINES.DET_FLAGS
+                        Observation detdata key for solver flags to use
+  --baselines.det_mask BASELINES.DET_MASK
+                        Bit mask value for per-detector flagging
+  --baselines.enable    Enable use of baselines
+  --baselines.disable   Disable use of baselines
+  --baselines.good_fraction BASELINES.GOOD_FRACTION
+                        Fraction of unflagged samples needed to keep a given
+                        offset amplitude
+  --baselines.name BASELINES.NAME
+                        The 'name' of this class instance
+  --baselines.noise_model BASELINES.NOISE_MODEL
+                        Observation key containing the optional noise model
+  --baselines.pattern BASELINES.PATTERN
+                        Regex pattern to match against detector names. Only
+                        these are projected.
+  --baselines.precond_width BASELINES.PRECOND_WIDTH
+                        Preconditioner width in terms of offsets / baselines
+  --baselines.step_time BASELINES.STEP_TIME
+                        Time per baseline step
+  --baselines.times BASELINES.TIMES
+                        Observation shared key for timestamps
+  --baselines.use_noise_prior
+                        Use detector PSDs to build the noise prior and
+                        preconditioner
+  --baselines.view BASELINES.VIEW
+                        Use this view of the data in all observations
+  --azss.bins AZSS.BINS
+                        Number of bins between min / max values of data key
+  --azss.det_data AZSS.DET_DATA
+                        Observation detdata key for the timestream data
+  --azss.det_data_units AZSS.DET_DATA_UNITS
+                        Desired units of detector data
+  --azss.det_flag_mask AZSS.DET_FLAG_MASK
+                        Bit mask value for solver flags
+  --azss.det_flags AZSS.DET_FLAGS
+                        Observation detdata key for solver flags to use
+  --azss.det_mask AZSS.DET_MASK
+                        Bit mask value for per-detector flagging
+  --azss.enable         Enable use of azss
+  --azss.disable        Disable use of azss
+  --azss.flag_mask AZSS.FLAG_MASK
+                        Bit mask value for flags
+  --azss.flags AZSS.FLAGS
+                        Observation data key for flags to use
+  --azss.increment AZSS.INCREMENT
+                        The increment of the data key for each bin
+  --azss.is_detdata_key
+                        If True, the periodic data and flags are detector
+                        fields, not shared
+  --azss.key AZSS.KEY   Observation data key for the periodic quantity
+  --azss.minimum_bin_hits AZSS.MINIMUM_BIN_HITS
+                        Minimum number of samples per amplitude bin
+  --azss.name AZSS.NAME
+                        The 'name' of this class instance
+  --azss.pattern AZSS.PATTERN
+                        Regex pattern to match against detector names. Only
+                        these are projected.
+  --azss.view AZSS.VIEW
+                        Use this view of the data in all observations
+  --fourier2d.correlation_amplitude FOURIER2D.CORRELATION_AMPLITUDE
+                        Scale factor of the filter
+  --fourier2d.correlation_length FOURIER2D.CORRELATION_LENGTH
+                        Correlation length in time
+  --fourier2d.debug_plots FOURIER2D.DEBUG_PLOTS
+                        If not None, make debugging plots in this directory
+  --fourier2d.det_data FOURIER2D.DET_DATA
+                        Observation detdata key for the timestream data
+  --fourier2d.det_data_units FOURIER2D.DET_DATA_UNITS
+                        Desired units of detector data
+  --fourier2d.det_flag_mask FOURIER2D.DET_FLAG_MASK
+                        Bit mask value for solver flags
+  --fourier2d.det_flags FOURIER2D.DET_FLAGS
+                        Observation detdata key for solver flags to use
+  --fourier2d.det_mask FOURIER2D.DET_MASK
+                        Bit mask value for per-detector flagging
+  --fourier2d.enable    Enable use of fourier2d
+  --fourier2d.disable   Disable use of fourier2d
+  --fourier2d.fit_subharmonics
+                        If True, fit subharmonics
+  --fourier2d.name FOURIER2D.NAME
+                        The 'name' of this class instance
+  --fourier2d.noise_model FOURIER2D.NOISE_MODEL
+                        Observation key containing the optional noise model
+  --fourier2d.order FOURIER2D.ORDER
+                        The filter order
+  --fourier2d.pattern FOURIER2D.PATTERN
+                        Regex pattern to match against detector names. Only
+                        these are projected.
+  --fourier2d.times FOURIER2D.TIMES
+                        Observation shared key for timestamps
+  --fourier2d.view FOURIER2D.VIEW
+                        Use this view of the data in all observations

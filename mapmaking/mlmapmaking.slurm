@@ -47,8 +47,8 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 # Paths -- fill these in
 # -----------------------------------------------------------------------
 HDF5_VOLUME=/shared_home/henachman/SO_PointingReqs/sim_outputs/toast_outputs/simple_hr20arcmin/toast_obs   # directory of per-observation .h5 files
-AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/PS_maps/area.fits           # geometry file from the earlier steps
-OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/map_outputs/simple_hr20arcmin
+AREA_FILE=/shared_home/henachman/SO_PointingReqs/sim_sky_maps/PS_maps/tan_area.fits           # geometry file from the earlier steps
+OUT_DIR=${SLURM_SUBMIT_DIR}/sim_outputs/map_outputs/simple_hr20arcmin_tan
 
 mkdir -p "${OUT_DIR}"
 

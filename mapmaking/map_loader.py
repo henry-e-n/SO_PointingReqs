@@ -17,9 +17,12 @@ def main(args):
         raise FileNotFoundError(f"File {path_to_file} does not exist.")
 
     toast.vis.plot_wcs_maps(
-        mapfile=str(path_to_file),
+        hitfile=os.path.join(args.directory, "mlmapmaker_sky_hits.fits"),
+        mapfile=os.path.join(args.directory, "mlmapmaker_sky_map.fits"),
         format="png",
-        cmap="RdBu",
+        cmap=args.cmap,
+        truth=args.truth,
+        graticule=args.graticule
     )
 
 if __name__ == "__main__":
@@ -28,6 +31,24 @@ if __name__ == "__main__":
         "directory",
         type=str,
         help="Directory containing the mlmapmaker_sky_map.fits file.",
+    )
+    parser.add_argument(
+        "--cmap",
+        type=str,
+        default="viridis",
+        help="Colormap to use for the plot (default: viridis).",
+    )
+    parser.add_argument(
+        "--truth",
+        type=str,
+        default=None,
+        help="Optional path to a truth map for comparison.",
+    )
+    parser.add_argument(
+        "--graticule",
+        action="store_true",
+        default=False,
+        help="Whether to overlay a graticule on the map.",
     )
     args = parser.parse_args()
 
