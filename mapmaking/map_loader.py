@@ -21,8 +21,7 @@ def main(args):
         mapfile=os.path.join(args.directory, "mlmapmaker_sky_map.fits"),
         format="png",
         cmap=args.cmap,
-        truth=args.truth,
-        graticule=args.graticule
+        truth=args.truth
     )
 
 if __name__ == "__main__":

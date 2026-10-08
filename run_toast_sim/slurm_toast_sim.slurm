@@ -64,7 +64,8 @@ srun python run_toast_sim/toast_sim.py \
 --input_map sim_sky_maps/PS_maps/sim_maps/hr_simple_map_10arcmin.fits \
 --schedule_file sim_sky_maps/PS_maps/test_schedule.txt \
 --save_intermediate \
---out_dir sim_outputs/toast_outputs/simple_hr10arcmin \
+--out_dir /cephfs/soukdata/user_data/henachman/sim_outputs/simple_hr10arcmin_jitter \
+-j \
 --make_map  \
 --no_atmosphere  \
 --no_scan_sync

@@ -1,0 +1,17 @@
+{\bf 2026-09-18}
+Made a rudamentary pointing jitter operator that is based on adding a sinusoidal pattern with random gaussian noise of the form:
+ \begin{equation}
+    \begin{split}
+        \Delta \text{lon} = - A \sin{\nu t} - (\text{np.random.rand()}\delta_{az} - \delta_{az}/2) \\
+        \Delta \text{lat} = A \sin{\nu t} + (\text{np.random.rand()}\delta_{el} - \delta_{el}/2) \\
+        
+    \end{split}
+\end{equation}{\bf 2026-09-18}
+Made a rudamentary pointing jitter operator that is based on adding a sinusoidal pattern with random gaussian noise of the form:
+ \begin{equation}
+    \begin{split}
+        \Delta \text{lon} = - A \sin{\nu t} - (\text{np.random.rand()}\delta_{az} - \delta_{az}/2) \\
+        \Delta \text{lat} = A \sin{\nu t} + (\text{np.random.rand()}\delta_{el} - \delta_{el}/2) \\
+        
+    \end{split}
+\end{equation}

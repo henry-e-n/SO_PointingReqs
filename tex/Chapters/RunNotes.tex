@@ -1,0 +1,16 @@
+\section{Run Notes}
+
+{\bf To run a basic (non-LAT specific) simulation with a pointing offset:}
+\begin{verbatim}
+    srun python run_toast_sim/toast_sim.py \
+    sim_sky_maps/maps/map_with_3FWHM_source.fits \
+    toast_tutorial/out_sim_ground/custom_map/test_schedule.txt \
+    --load_telescope run_toast_sim/telescope.hdf5 \
+    --pointing_offset \
+    --out_dir "${OUT_DIR}" \
+\end{verbatim}
+then
+\begin{verbatim}
+    sbatch run_toast_sim/slurm_toast_sim.slurm <Name of OutDir>
+\end{verbatim}
+

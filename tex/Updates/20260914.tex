@@ -1,5 +1,3 @@
-\section{Updates}
-
 {\bf 2026-09-14 - } I think I have accumulated most of the various parts I will need for this simulation workflow. 
 
 I have a notebook now that can make a simple map with input $C_\ell$ and place a point source at a specified RA/Dec. although the code says it is lon lat, but this is just a coordinate difference. So long as the simulated sky maker and the scanning use the same coordinates we should be fine.
@@ -34,32 +32,3 @@ Next Steps:
     \item Make a more realistic point source.
     \item Sim a more realistic LAT. 
 \end{itemize}
-
-{\bf 2026-09-18}
-Made a rudamentary pointing jitter operator that is based on adding a sinusoidal pattern with random gaussian noise of the form:
- \begin{equation}
-    \begin{split}
-        \Delta \text{lon} = - A \sin{\nu t} - (\text{np.random.rand()}\delta_{az} - \delta_{az}/2) \\
-        \Delta \text{lat} = A \sin{\nu t} + (\text{np.random.rand()}\delta_{el} - \delta_{el}/2) \\
-        
-    \end{split}
-\end{equation}
-
-
-\section{Run Notes}
-
-To run with a pointing offset
-\begin{verbatim}
-    srun python run_toast_sim/toast_sim.py \
-    sim_sky_maps/maps/map_with_3FWHM_source.fits \
-    toast_tutorial/out_sim_ground/custom_map/test_schedule.txt \
-    --load_telescope run_toast_sim/telescope.hdf5 \
-    --pointing_offset \
-    --out_dir "${OUT_DIR}" \
-\end{verbatim}
-then
-\begin{verbatim}
-    sbatch run_toast_sim/slurm_toast_sim.slurm <Name of OutDir>
-\end{verbatim}
-
-To run with a pointing jitter

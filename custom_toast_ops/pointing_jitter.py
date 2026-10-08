@@ -1,5 +1,6 @@
 # A new TOAST operator for adding a pointing offset to the telescope pointing.
 # This is modeled after the HWP Wobble operator.
+# Author : Henry Nachman
 
 import numpy as np
 
