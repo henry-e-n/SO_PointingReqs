@@ -85,8 +85,9 @@ def fit_beam_gaussian(image_data):
 # %%
 # Generate a mock skewed beam with noise
 
+data_path = "/shared_home/henachman/data/sim_outputs/"
 maps_to_load = [
-    "/shared_home/henachman/data/sim_outputs/simple_hr10arcmin/mapmaker/mlmapmaker_sky_map.fits"
+    f"{data_path}/simple_hr10arcmin/mapmaker/mlmapmaker_sky_map.fits"
 ]
 
 with fits.open(maps_to_load[0]) as hdul1:
@@ -133,7 +134,7 @@ plt.show()
 # Function stolen from 
 # https://github.com/simonsobs/mf-cmg-paper-beams/blob/main/abscal_pipeline/abscal_utils.py
 def calc_rad_profile(map, binsize=0.5, normalize=True, positive_only=False):
-    """Fucntion to calculate the radial profile of an input beam map.
+    """Function to calculate the radial profile of an input beam map.
     Assumes that the beam center is at the center of the map. 
 
     Args:
