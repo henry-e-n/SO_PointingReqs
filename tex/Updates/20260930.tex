@@ -1,18 +1,18 @@
-{\bf 2026-09-30}
+{\bf 2026-09-30}\\
 I have a simple simulation pipeline that can make a toast simulation scanning a custom map, with or without pointing jitter. Then run a ml mapmaker or a filter bin mapmaker on the resulting TOD. 
 
 The input map looks like this - for a 10arcmin source:
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/simple_map_wsource.png}
+    \includegraphics[width=0.75\textwidth]{Updates/figures/simple_map_wsource.png}
     \caption{Input map for the simulation.}
     \label{fig:input_map}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/simple_map_wsource_gnom.png}
+    \includegraphics[width=0.75\textwidth]{Updates/figures/simple_map_wsource_gnom.png}
     \caption{Input map for the simulation - gnomonic projection of the source.}
     \label{fig:input_map_gnom}
 \end{figure}
@@ -22,16 +22,27 @@ The toast sim also produces some pointing visualizations to confirm that the poi
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/boresight_residuals.png}
+    \includegraphics[width=0.75\textwidth]{Updates/figures/boresight_residuals.png}
     \caption{Pointing jitter boresight residuals.}
     \label{fig:boresight_res}
+\end{figure}
+
+This can be viewed in 3D:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Updates/figures/jitter_html.png}
+    \caption{Pointing jitter boresight residuals.}
+    \label{fig:boresight_html}
 \end{figure}
 
 After the ml mapmaker, the resulting map look like:
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/simple_nojitter_mlmap_I.png}
+    \includegraphics[width=0.75\textwidth]{Updates/figures/simple_nojitter_mlmap_I.png}
     \caption{Output I map of ML mapmaker with no jitter.}
     \label{fig:mlmap}
 \end{figure}
+
+This work has been a good proof of concept for implementing a pointing jitter, however, there are major limitations to this setup for simulating a realistic LAT scan. First, this telescope/focal plane objects are not representative of a realistic LAT. Second, other elements of the simulation like noise, atmosphere, etc. are not included in a realistic manner. It would see that the best way to proceed is to learn how the realistic LAT sims are actually run and incorporate my pointing jitter into that framework.
