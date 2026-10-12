@@ -1,0 +1,11 @@
+{\bf 2026-10-11}\\
+
+Adding the custom operator is unfortunately non-trivial. Just calling the operator argument with something like \verb+--pointing_jitter.enable+ does not inherently tell the sim how and when to run the operator.
+
+Based on some trial and error (and lots of debugging print statements) it seems like code need to be added to the following places:
+
+With this in place, I reran the sims with a 2 arcmin source and pointing jitter of $\delta_{az}, \delta_{el} \sim 0.0001$ and $\delta_{az}, \delta_{el} \sim 0.001$.
+
+Unfortunately, the output maps looks identical as shown by the following difference plot.
+
+It is a little hard to tell if this is because the pointing jitter operator is not working, not in the right place in the code, or simply not having a level of impact strong enough to notice in this sort of map.
