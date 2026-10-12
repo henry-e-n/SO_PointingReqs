@@ -27,12 +27,12 @@ class PointingOffset(Operator):
     API = Int(0, help="Internal interface version for this operator")
 
     dxi = List(
-        [0.0],
+        [0.001],
         help="The deflection in Xi coordinates (in radians) to be applied to the telescope boresight pointing",
     )
 
     deta = List(
-        [0.0],
+        [0.001],
         help="The deflection in Eta coordinates (in radians) to be applied to the telescope boresight pointing",
     )
 
