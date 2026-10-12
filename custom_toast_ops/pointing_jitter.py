@@ -17,7 +17,7 @@ from toast.ops.operator import Operator
 from toast.utils import Logger
 from toast.observation import default_values as defaults
 import toast.qarray as qa
-
+import astropy.units as u
 
 @trait_docs
 class PointingJitter(Operator):
@@ -28,34 +28,30 @@ class PointingJitter(Operator):
 
     API = Int(0, help="Internal interface version for this operator")
 
+    seed = Int(0, help="Random number generator seed for the pointing jitter")
     sigma_az = Float(
         0.0,
-        help="Gaussian az offset rms [rad] to be applied to the telescope boresight pointing",
+        help="Gaussian az offset rms [arcsec] to be applied to the telescope boresight pointing",
     )
 
     sigma_el = Float(
         0.0,
-        help="Gaussian el offset rms [rad] to be applied to the telescope boresight pointing",
+        help="Gaussian el offset rms [arcsec] to be applied to the telescope boresight pointing",
     )
 
     sigma_psi = Float(
             0.0,
-            help="Gaussian roll offset (corotator) rms [rad] to be applied to the telescope boresight pointing",
+            help="Gaussian roll offset (corotator) rms [arcsec] to be applied to the telescope boresight pointing",
         )
 
-    corotator_max = Float(
-        0.0,
-        help="The maximum deflection in the corotator angle (in radians) to be applied to the telescope boresight pointing",
-    )
-
     sin_amp = Float(
-        1.0,
+        0.0,
         help="The amplitude of the sinusoidal jitter (in radians) to be applied to the telescope boresight pointing",
     )
 
     sin_freq = Float(
         1.0,
-        help="The frequency of the sinusoidal jitter (in 1/samples) to be applied to the telescope boresight pointing",
+        help="The frequency of the sinusoidal jitter (in rad/samples) to be applied to the telescope boresight pointing",
     )
 
     boresight_azel = Unicode(
@@ -88,8 +84,11 @@ class PointingJitter(Operator):
 
     @function_timer
     def _exec(self, data, detectors=None, **kwargs):
-        print(f"\nExecuting PointingJitter operator with max_daz={self.max_daz}, max_del={self.max_del}, and corotator_max={self.corotator_max}")
         log = Logger.get()
+        log.info(f"\nExecuting PointingJitter operator with seed={self.seed}, sigma_az={self.sigma_az}, sigma_el={self.sigma_el}, sigma_psi={self.sigma_psi}, sin_amp={self.sin_amp}, sin_freq={self.sin_freq}")
+        self.sigma_az = (self.sigma_az*u.arcsec).to(u.rad).value
+        self.sigma_el = (self.sigma_el*u.arcsec).to(u.rad).value
+        self.sigma_psi = (self.sigma_psi*u.arcsec).to(u.rad).value
         x, y, z = np.eye(3) # Creates a diagonal vector for the rotation axes
         for ob in data.obs:
 
@@ -100,7 +99,7 @@ class PointingJitter(Operator):
             # Draw from random Gaussian
             draws = [
                 toast.rng.random(num_samples, key=(self.seed, ob.uid),
-                                 counter=(1,first), sampler="gaussian")
+                                 counter=(i,first), sampler="gaussian")
                 for i in range(3)
             ]
             t = np.arange(first, first + num_samples)
@@ -118,13 +117,18 @@ class PointingJitter(Operator):
             #     qa.rotation(z, dpsi_term)
             # )
 
-            lon_arr, lat_arr, psi_arr = qa.to_lonlat_angles(ob.shared[self.boresight_azel].data)
+            azel_nom = ob.shared[self.boresight_azel].data
+            lon_arr, lat_arr, psi_arr = qa.to_lonlat_angles(azel_nom)
             # add the noise term
             lon_arr += lon_noise
             lat_arr += lat_noise
             psi_arr += psi_noise
 
-            q_off = qa.from_lonlat_angles(lon_arr, lat_arr, psi_arr)
+            azel_jitter = qa.from_lonlat_angles(lon_arr, lat_arr, psi_arr)
+            # azel jitter is the jittered quaternion
+            # to get deflection quaternion, we need to multiply by the inverse of the nominal quaternion
+
+            q_off = qa.mult(qa.inv(azel_nom), azel_jitter)
 
             for key_in, key_out in (
                 (self.boresight_azel, self.boresight_azel_out),
@@ -137,6 +141,8 @@ class PointingJitter(Operator):
                 new = None
                 if ob.comm_col_rank == 0:
                     new = qa.mult(ob.shared[key_in].data, q_off)
+                    # Now we get the new jittered pointing (in the given coordinate system)
+                    # By multiplying the input nominal pointing by the deflection quaternion
                 ob.shared[key_out].set(new, fromrank=0)
 
             
@@ -168,44 +174,44 @@ class PointingJitter(Operator):
 
 
 """
-            # The old way of doing things
-            # Make an array of random values between 0 and max
-            az_rand_jitter = np.random.randn(num_samples)*self.max_daz - self.max_daz/2
-            el_rand_jitter = np.random.randn(num_samples)*self.max_del - self.max_del/2
-            corotator_jitter = np.random.randn(num_samples)*self.corotator_max - self.corotator_max/2
-            
-            az_sin = self.sin_amp*np.sin(self.sin_freq*np.arange(num_samples))
-            el_sin = self.sin_amp*np.sin(self.sin_freq*np.arange(num_samples))
+# The old way of doing things
+# Make an array of random values between 0 and max
+az_rand_jitter = np.random.randn(num_samples)*self.max_daz - self.max_daz/2
+el_rand_jitter = np.random.randn(num_samples)*self.max_del - self.max_del/2
+corotator_jitter = np.random.randn(num_samples)*self.corotator_max - self.corotator_max/2
 
-            lon_noise = -az_rand_jitter - az_sin
-            lat_noise = el_rand_jitter + el_sin
-            psi_noise = el_rand_jitter + el_sin
+az_sin = self.sin_amp*np.sin(self.sin_freq*np.arange(num_samples))
+el_sin = self.sin_amp*np.sin(self.sin_freq*np.arange(num_samples))
 
-            if ob.comm_col_rank == 0:
-                lon_arr, lat_arr, psi_arr = qa.to_lonlat_angles(ob.shared[self.boresight_azel].data)
-                # add the noise term
-                lon_arr += lon_noise
-                lat_arr += lat_noise
-                psi_arr += psi_noise
+lon_noise = -az_rand_jitter - az_sin
+lat_noise = el_rand_jitter + el_sin
+psi_noise = el_rand_jitter + el_sin
 
-                # Recompose into quaternions
-                bore = qa.from_lonlat_angles(lon_arr, lat_arr, psi_arr)
-            else:
-                bore = None
-            ob.shared[self.boresight_azel].set(bore)
+if ob.comm_col_rank == 0:
+    lon_arr, lat_arr, psi_arr = qa.to_lonlat_angles(ob.shared[self.boresight_azel].data)
+    # add the noise term
+    lon_arr += lon_noise
+    lat_arr += lat_noise
+    psi_arr += psi_noise
 
-            if ob.comm_col_rank == 0:
-                lon_arr, lat_arr, psi_arr = qa.to_lonlat_angles(ob.shared[self.boresight_radec].data)
-                # add the noise term
-                lon_arr += lon_noise
-                lat_arr += lat_noise
-                psi_arr += psi_noise
+    # Recompose into quaternions
+    bore = qa.from_lonlat_angles(lon_arr, lat_arr, psi_arr)
+else:
+    bore = None
+ob.shared[self.boresight_azel].set(bore)
 
-                # Recompose into quaternions
-                bore = qa.from_lonlat_angles(lon_arr, lat_arr, psi_arr)
-            else:
-                bore = None
-            ob.shared[self.boresight_radec].set(bore)
+if ob.comm_col_rank == 0:
+    lon_arr, lat_arr, psi_arr = qa.to_lonlat_angles(ob.shared[self.boresight_radec].data)
+    # add the noise term
+    lon_arr += lon_noise
+    lat_arr += lat_noise
+    psi_arr += psi_noise
 
-            del bore
-            """
+    # Recompose into quaternions
+    bore = qa.from_lonlat_angles(lon_arr, lat_arr, psi_arr)
+else:
+    bore = None
+ob.shared[self.boresight_radec].set(bore)
+
+del bore
+"""
