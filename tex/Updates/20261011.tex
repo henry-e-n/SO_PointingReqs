@@ -2,7 +2,7 @@
 
 Adding the custom operator is unfortunately non-trivial. Just calling the operator argument with something like \verb+--pointing_jitter.enable+ does not inherently tell the sim how and when to run the operator.
 
-Based on some trial and error (and lots of debugging print statements) it seems like code need to be added to the following places:
+Based on some trial and error (and lots of debugging print statements) it seems like code needs to be added to the so\_sim.simulate\_data, and wrk.pointing.py file (if not elsewhere as well).
 
 With this in place, I reran the sims with a 2 arcmin source and pointing jitter of $\delta_{az}, \delta_{el} \sim 0.0001$ and $\delta_{az}, \delta_{el} \sim 0.001$.
 

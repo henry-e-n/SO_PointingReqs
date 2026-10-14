@@ -1,5 +1,5 @@
 \documentclass[11pt]{article}
-\usepackage[a4paper, total={6.5in, 9in}]{geometry}
+\usepackage[a4paper, total={6.5in, 9in}, headheight=14.5pt]{geometry}
 
 \geometry{letterpaper}
 \geometry{portrait}
@@ -31,6 +31,19 @@
 % For referencing and bibliography
 \usepackage{hyperref} % add hyperlink and hypertext capabilities 
 \usepackage[]{natbib}
+\usepackage{fancyhdr}
+
+% 3. Change the page style to fancy
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[L]{H. Nachman}       % Left Header
+\fancyhead[C]{LAT Pointing Jitter Simulations}                   % Center Header
+\fancyhead[R]{\thepage}               % Right Header (Dynamically shows current Section)
+\renewcommand{\headrulewidth}{0.4pt}
+
+
 \setcitestyle{authoryear, round}
 
 \bibliographystyle{apalike}
@@ -51,14 +64,19 @@ Correspondence to:  henry.nachman@utexas.edu}
 {\it Austin, Texas}\\
  }
 
-\maketitle
+% \maketitle
 
-\input{Chapters/Chapter1}
-\input{Chapters/Chapter2}
+% \input{Chapters/Chapter1}
+% \input{Chapters/Chapter2}
 
-\section{Updates}
-\include{Updates/20260930.tex}
+\pagebreak
+
+% \section{Updates}
+\include{Updates/20261012.tex}
+\include{Updates/20261011.tex}
 \include{Updates/20261008.tex}
+\include{Updates/20260930.tex}
+
 
 
 \pagebreak
