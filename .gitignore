@@ -1,6 +1,7 @@
 # Large Output files
 *.sqlite
 *.sqlite-journal
+*.npz
 
 # Ignore the following directories
 toast_tutorial/out_sim_ground/*
