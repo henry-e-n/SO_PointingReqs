@@ -160,7 +160,10 @@ def diff_plot(map1, map2, rot, xsize=1000, reso=0.05, cmap='RdBu_r', deg=True, s
 
 
 
-def single_plot(hpmap, rot, xsize=1000, reso=0.05, cmap="RdBu_r", deg=True, show=True, **kwargs):   
+def single_plot(hpmap, rot, xsize=1000, reso=0.05, cmap="RdBu_r", deg=True, show=True, hits=None, **kwargs):
+    if hits is not None:
+        hpmap[np.where(hits==0)] = hp.UNSEEN
+   
     map1_gnom = hp.gnomview(hpmap, 
         rot=rot, 
         xsize=xsize,
@@ -169,7 +172,8 @@ def single_plot(hpmap, rot, xsize=1000, reso=0.05, cmap="RdBu_r", deg=True, show
         cmap=cmap,
         return_projected_map=True,
         no_plot=True,
-        nest=True
+        nest=True,
+        badcolor='gray'
     )
     x_size, y_size = np.shape(map1_gnom)
     x_ticks = np.linspace(0, x_size, 7)
@@ -244,6 +248,31 @@ def get_center(map):
 
     return [ra, dec]
 
+def get_mol_center(hits_map):
+    # 1. Identify which pixels have hits (where hits > 0)
+    # (If your map uses hp.UNSEEN for unhit pixels, use: valid_pix = (hits_map != hp.UNSEEN))
+    valid_mask = hits_map > 0
+    hit_pixels = np.where(valid_mask)[0]
+    weights = hits_map[valid_mask]
+
+    # 2. Get the resolution parameter (nside) of your map
+    nside = hp.get_nside(hits_map)
+
+    # 3. Convert the hit pixel indices into 3D Cartesian vectors (x, y, z)
+    x, y, z = hp.pix2vec(nside, hit_pixels, nest=True)
+
+    # 4. Calculate the weighted average vector to find the true centroid
+    center_x = np.average(x, weights=weights)
+    center_y = np.average(y, weights=weights)
+    center_z = np.average(z, weights=weights)
+
+    # 5. Convert the average vector back to angular coordinates
+    # Set lonlat=True to get (Longitude, Latitude) in degrees directly
+    lon, lat = hp.vec2ang(np.array([center_x, center_y, center_z]), lonlat=True)
+    
+    print(f"Center of hits map: {lon}°, {lat}°")
+    rot = [lon[0], lat[0], 0]
+    return rot
 
 def centroid_center(map, rot_guess, max_pix=False):
     from photutils.centroids import centroid_com, centroid_2dg, centroid_quadratic
