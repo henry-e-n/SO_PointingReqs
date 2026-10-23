@@ -1,0 +1,31 @@
+{\bf 2026-10-19}\\
+
+
+It looks like the key to getting the toast sim to apply the custom pointing was to add the following arguments to the toast sim command line:
+
+\begin{verbatim}
+    --det_pointing_radec_sim.enable \
+    --det_pointing_azel_sim.enable \
+    --scan_map_pixels.enable \
+    --scan_map_pixels.nside 8192 \
+\end{verbatim}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{Updates/figures/offset_working_diffmap.png}
+    \caption{Caption for the figure}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{Updates/figures/mars_offset_working_diffmap.png}
+    \caption{Caption for the figure}
+\end{figure}
+
+At first the jitter map was not working but it was just because I had messed up the units on the jitter rms.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{Updates/figures/mars_jitter_diffmap.png}
+    \caption{Caption for the figure}
+\end{figure}
