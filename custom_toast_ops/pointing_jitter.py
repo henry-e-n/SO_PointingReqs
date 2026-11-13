@@ -22,8 +22,16 @@ import astropy.units as u
 @trait_docs
 class PointingJitter(Operator):
     """
-    Add a pointing offset to the telescope pointing.
-    This offset can be either static (constant) or time-dependent.
+    Add a pointing jitter to the telescope pointing.
+
+    This jitter is defined as:
+
+    $\delta_{lon} = -\sigma_{az} \cdot \mathcal{Z}_{az} - A \sin{f t}$
+
+    $\delta_{lat} = \sigma_{el} \cdot \mathcal{Z}_{el} + A \sin{f t}$
+    
+    $\delta_{\psi} = \sigma_{\psi} \cdot \mathcal{Z}_{\psi}$
+
     """
 
     API = Int(0, help="Internal interface version for this operator")
@@ -43,6 +51,11 @@ class PointingJitter(Operator):
             0.0,
             help="Gaussian roll offset (corotator) rms [arcsec] to be applied to the telescope boresight pointing",
         )
+
+    variance_r = Float(
+        0.0,
+        help="The variance in the jitter value as defined by $\sigma_r^2$. This overwrites the sigma_r parameter."
+    )
 
     sin_amp = Float(
         0.0,
@@ -86,10 +99,13 @@ class PointingJitter(Operator):
     def _exec(self, data, detectors=None, **kwargs):
         log = Logger.get()
         log.info(f"\nExecuting PointingJitter operator with seed={self.seed}, sigma_az={self.sigma_az}, sigma_el={self.sigma_el}, sigma_psi={self.sigma_psi}, sin_amp={self.sin_amp}, sin_freq={self.sin_freq}")
+        if self.variance_r != 0.0:
+            # Variance has been defined - set sigma az and sigma el to sqrt of variance
+            self.sigma_az = np.sqrt((self.variance_r*u.arcsec*u.arcsec)).to(u.rad).value
+            self.sigma_el = np.sqrt((self.variance_r*u.arcsec*u.arcsec)).to(u.rad).value
         self.sigma_az = (self.sigma_az*u.arcsec).to(u.rad).value
         self.sigma_el = (self.sigma_el*u.arcsec).to(u.rad).value
         self.sigma_psi = (self.sigma_psi*u.arcsec).to(u.rad).value
-        x, y, z = np.eye(3) # Creates a diagonal vector for the rotation axes
         for ob in data.obs:
 
             # Define the deflection in Xi Eta coordinates

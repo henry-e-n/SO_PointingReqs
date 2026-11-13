@@ -4,20 +4,28 @@ This repository is dedicated to the project of determining the SO (LAT) Pointing
 
 ---
 
-**CMB_sims** - jupyter notebooks for simulating CMB with CAMB and creating power spectra from maps.
+[**beam_fitting**](beam_fitting) - Code for extracting beam statistics from point source maps.
 
-**custom_toast_ops** - Module containing custom TOAST operators.
+[**check_outputs**](check_outputs) - Code for quickly viewing the output TOD from TOAST sims.
 
-**mapmaking** - Includes jupyter notebooks and slurm scripts for making maps (from TOD). Also includes the outputs of these scripts.
+[**CMB_sims**](CMB_sims) - jupyter notebooks for simulating CMB with CAMB and creating power spectra from maps.
 
-**pixell** - Jupyter notebooks using pixell.
+[**custom_toast_ops**](custom_toast_ops) - Module containing custom TOAST operators.
 
-**quaternion_practice** - Jupyter notebooks for learning how to use quaternions.
+[**mapmaking**](mapmaking) - Includes jupyter notebooks and slurm scripts for making maps (from TOD). Also includes the outputs of these scripts.
 
-**run_toast_sim** - Contains the python script to run a TOAST simulation. Also stores the outputs the TOAST sim.
+[**pixell**](pixell) - Jupyter notebooks using pixell.
 
-**sim_sky_maps** - Notebooks and scripts for simulating a sky map, as well as the fits files for custom maps.
+[**power_spectra**](power_spectra) - Scripts and notebooks for producing power spectra from simulated maps. Mostly taken from [pspy](https://github.com/simonsobs/pspy/tree/master).
 
-**tex** - LaTeX notes.
+[**quaternion_practice**](quaternion_practice) - Jupyter notebooks for learning how to use quaternions.
 
-**toast_tutorial** - Contains various jupyter notebooks for learning how to use TOAST
+[**run_toast_sim**](run_toast_sim) - Contains the python script to run a TOAST simulation. Also stores the outputs the TOAST sim.
+
+[**sim_sky_maps**](sim_sky_maps) - Notebooks and scripts for simulating a sky map, as well as the fits files for custom maps.
+
+[**tex**](tex) - LaTeX notes.
+
+[**toast_tutorial**](toast_tutorial) - Contains various jupyter notebooks for learning how to use TOAST
+
+[**utils**](utils) - Contains python files with various functions that might be useful for later. Including but not limited to: map creation, map loading, map plotting, and more.

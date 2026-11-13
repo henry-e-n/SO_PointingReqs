@@ -1,0 +1,6 @@
+start run_CAR
+generate sims
+generate window
+compute mcm
+compute alms and bin spectra
+compute spectra

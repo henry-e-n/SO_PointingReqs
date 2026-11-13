@@ -57,18 +57,18 @@ def load_h5_map(path_to_job, path_to_data, hits=True):
         # nest = dset.attrs["ORDERING"] == "NESTED"
         I_map, Q_map, U_map = dset[0], dset[1], dset[2]          # stokes I; use dset[1], dset[2] for Q, U
 
-    for map in [I_map, Q_map, U_map]:
-        map = map.astype(float)
-        map[map == 0] = hp.UNSEEN    # blank the unhit pixels
-
     hits_map = None
     if hits==True:
         hitmap_path = f"{path_to_data}{path_to_job}/filterbin_filtered_hits.h5"
         with h5py.File(hitmap_path, "r") as f:
             dset = f["map"]
             hits_map = dset[0]
-    return I_map, Q_map, U_map, hits_map
 
+        unseen_mask = (hits_map == 0)
+        for map in [I_map, Q_map, U_map]:
+            map[hits_map == 0] = hp.UNSEEN    # blank the unhit pixels
+
+    return I_map, Q_map, U_map, hits_map, unseen_mask
 
 
 def diff_plot(map1, map2, rot, xsize=1000, reso=0.05, cmap='RdBu_r', deg=True, show=True, **kwargs):
@@ -397,3 +397,53 @@ def sparse_gnomview(nside, nest, pix, vals, rot_est, xsize=600, reso=0.5, est_ro
     plt.imshow(img, origin="lower", **kw)
     plt.colorbar()
     return img
+
+
+# MARK: PS Funcs
+
+def cosine_window(N):
+    "makes a cosine window for apodizing to avoid edges effects in the 2d FFT" 
+    # make a 2d coordinate system
+    N=int(N) 
+    ones = np.ones(N)
+    inds  = (((np.arange(N)+.5 - N/2.)/N) *np.pi) ## eg runs from -pi/2 to pi/2
+    X = np.outer(ones,inds)
+    Y = np.transpose(X)
+  
+    # make a window map
+    window_map = np.cos(X) * np.cos(Y)
+   
+    # return the window map
+    return(window_map)
+
+def calculate_2d_spectrum(Map1,Map2,delta_ell,ell_max,pix_size,N):
+    "calcualtes the power spectrum of a 2d map by FFTing, squaring, and azimuthally averaging"
+    ell_min = 0
+    N=int(N)
+    # make a 2d ell coordinate system
+    ones = np.ones(N)
+    inds  = (np.arange(N)+.5 - N/2.) /(N-1.)
+    kX = np.outer(ones,inds) / (pix_size/60. * np.pi/180.)
+    kY = np.transpose(kX)
+    K = np.sqrt(kX**2. + kY**2.)
+    ell_scale_factor = 2. * np.pi 
+    ell2d = K * ell_scale_factor
+    
+    # make an array to hold the power spectrum results
+    N_bins = int((ell_max-ell_min)/delta_ell)
+    ell_array = np.arange(N_bins)
+    CL_array = np.zeros(N_bins)
+    
+    # get the 2d fourier transform of the map
+    FMap1 = np.fft.ifft2(np.fft.fftshift(Map1))
+    FMap2 = np.fft.ifft2(np.fft.fftshift(Map2))
+    PSMap = np.fft.fftshift(np.real(np.conj(FMap1) * FMap2))
+    # fill out the spectra
+
+    for i in range(N_bins):
+        ell_array[i] = (i + 0.5) * delta_ell + ell_min
+        inds_in_bin = ((ell2d >= (i*delta_ell  + ell_min)) * (ell2d < ((i+1)* delta_ell + ell_min))).nonzero()
+        CL_array[i] = np.mean(PSMap[inds_in_bin])
+
+    # return the power spectrum and ell bins
+    return(ell_array,CL_array*(pix_size /60.* np.pi/180.) /4)

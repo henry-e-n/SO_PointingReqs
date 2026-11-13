@@ -2,7 +2,7 @@
 *.sqlite
 *.sqlite-journal
 *.npz
-
+*.fits
 # Ignore the following directories
 toast_tutorial/out_sim_ground/*
 sim_outputs/*
